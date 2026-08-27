@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react'
 import { useT } from '../lib/i18n'
+import { flushDemand, hasAsked, registerDemand } from '../lib/proxyDemand'
 import { proxiesFor, proxyUrl } from '../lib/proxies'
 import { OutboundLink } from './OutboundLink'
 import type { Drop } from '../lib/types'
@@ -9,9 +11,24 @@ import type { Drop } from '../lib/types'
  * someone learns they are blocked that makes it useful at all.
  */
 export function ProxyRoute({ drop }: { drop: Drop }) {
-  const { t, tl } = useT()
+  const { t, tl, locale } = useT()
   const { blockers, services, needed } = proxiesFor(drop)
+
+  const [asked, setAsked] = useState(false)
+  const [queued, setQueued] = useState(false)
+
+  useEffect(() => {
+    setAsked(hasAsked(drop.slug))
+    void flushDemand()
+  }, [drop.slug])
+
   if (!needed) return null
+
+  const ask = async () => {
+    setAsked(true)
+    const result = await registerDemand(drop.slug, locale)
+    if (result === 'queued') setQueued(true)
+  }
 
   const reason =
     blockers.shipping && blockers.payment
@@ -58,6 +75,32 @@ export function ProxyRoute({ drop }: { drop: Drop }) {
         </div>
 
         <p className="mt-3 text-[11px] leading-relaxed text-faint">{t('proxyDisclaimer')}</p>
+
+        {/*
+          A tally, not an offer. Someone standing here has just learned they
+          cannot buy this, which is the only honest moment to ask the question —
+          and the answer is the number that decides whether a proxy service is
+          worth building at all.
+        */}
+        <div className="mt-4 border-t border-line-soft pt-4">
+          <h3 className="text-[12px] font-semibold text-fg">{t('demandAsk')}</h3>
+          <p className="mt-1 text-[11px] leading-relaxed text-muted">{t('demandLead')}</p>
+
+          {asked ? (
+            <p className="mt-2.5 text-[12px] text-easy">
+              {t('demandDone')}
+              {queued && <span className="ml-2 text-faint">{t('demandQueued')}</span>}
+            </p>
+          ) : (
+            <button
+              type="button"
+              onClick={ask}
+              className="mt-2.5 rounded-md border border-line bg-surface-2 px-3.5 py-2 text-[12px] font-semibold text-fg transition hover:border-accent"
+            >
+              {t('demandButton')}
+            </button>
+          )}
+        </div>
       </div>
     </section>
   )

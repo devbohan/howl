@@ -1,11 +1,17 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { ProxyRoute } from '../ProxyRoute'
 import { makeChannel, makeDrop } from '../../test/fixtures'
 import { renderApp } from '../../test/render'
 
 const drop = (shipsWorldwide: boolean, acceptsForeignCard: boolean) =>
   makeDrop({ channels: [makeChannel({ shipsWorldwide, acceptsForeignCard })] })
+
+afterEach(() => {
+  localStorage.clear()
+  vi.unstubAllGlobals()
+})
 
 describe('ProxyRoute', () => {
   it('stays out of the way when the drop can already be bought from abroad', () => {
@@ -64,5 +70,34 @@ describe('ProxyRoute', () => {
     renderApp(<ProxyRoute drop={drop(false, false)} />, { locale: 'zh-CN' })
     expect(screen.getByText('这件你没法直接买')).toBeInTheDocument()
     expect(screen.getAllByText(/代购/).length).toBeGreaterThan(0)
+  })
+})
+
+describe('proxy demand tally', () => {
+  const blocked = () => drop(false, false)
+
+  it('asks the question only where someone is actually stuck', () => {
+    const { container } = renderApp(<ProxyRoute drop={drop(true, true)} />)
+    expect(container.textContent ?? '').not.toContain('Still stuck')
+  })
+
+  it('offers to be counted, and says plainly it is not a service', () => {
+    renderApp(<ProxyRoute drop={blocked()} />)
+    expect(screen.getByText(/Still stuck/)).toBeInTheDocument()
+    expect(screen.getByText(/not a service, and nothing is promised/)).toBeInTheDocument()
+  })
+
+  it('collects no contact details — there is no input to fill in', () => {
+    const { container } = renderApp(<ProxyRoute drop={blocked()} />)
+    expect(container.querySelectorAll('input, textarea, form')).toHaveLength(0)
+  })
+
+  it('confirms the count and says nothing else will happen', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true }))
+    const user = userEvent.setup()
+    renderApp(<ProxyRoute drop={blocked()} />)
+
+    await user.click(screen.getByRole('button', { name: /would want someone to buy/ }))
+    expect(await screen.findByText(/we collect no contact details/)).toBeInTheDocument()
   })
 })

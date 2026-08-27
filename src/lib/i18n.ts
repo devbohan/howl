@@ -159,6 +159,13 @@ const en = {
   proxyGo: 'Search there',
   proxyDisclaimer: 'These are independent services, not ours. We take no part in the purchase and earn a commission on some of these links.',
 
+  demandAsk: 'Still stuck?',
+  demandLead: 'None of these fit, or the whole thing is too much trouble? Say so. We are only counting — this is not a service, and nothing is promised.',
+  demandButton: 'I would want someone to buy this for me',
+  demandDone: 'Counted. Nothing else happens — we collect no contact details.',
+  demandQueued: 'Saved on this device, will retry.',
+  demandCount: 'people said the same on this drop',
+
   vipTitle: 'Get told 24 hours earlier.',
   vipBody: 'Free accounts get a browser push 1 hour before entry opens. VIP gets Discord and Telegram alerts the moment a drop is confirmed, plus the full import playbook for every red-tier drop.',
   vipCta: 'See VIP plans',
@@ -326,6 +333,13 @@ const ja: Record<Key, string> = {
   proxyGo: 'そこで探す',
   proxyDisclaimer: 'これらは当サイトとは無関係の第三者サービスです。購入には一切関与しません。一部リンクから手数料を受け取ります。',
 
+  demandAsk: 'それでも無理そうですか？',
+  demandLead: 'どれも合わない、あるいは手間が大きすぎる——そう思ったら教えてください。数を数えているだけで、サービスの提供ではなく、何もお約束もしません。',
+  demandButton: '誰かに代わりに買ってほしい',
+  demandDone: 'カウントしました。連絡先は取得していないので、これ以上は何も起きません。',
+  demandQueued: 'この端末に保存しました。後で再送します。',
+  demandCount: '人が同じことを言っています',
+
   vipTitle: '24時間早く、知る。',
   vipBody: '無料プランは受付開始1時間前のブラウザ通知。VIPは情報確定と同時にDiscord・Telegramへ即時通知、さらに難易度「赤」の全商品に完全攻略ガイドが付きます。',
   vipCta: 'VIPプランを見る',
@@ -491,6 +505,13 @@ const zhCN: Record<Key, string> = {
   proxyGo: '去那边搜',
   proxyDisclaimer: '这些是与本站无关的第三方服务。我们不参与交易，部分链接会给我们佣金。',
 
+  demandAsk: '还是搞不定？',
+  demandLead: '这些都不合适，或者整件事太麻烦——那就说一声。我们只是在数人数，这不是一项服务，也不承诺任何事。',
+  demandButton: '我希望有人帮我买',
+  demandDone: '已计入。不会再发生别的事——我们没有收集任何联系方式。',
+  demandQueued: '已存在本设备，之后重试。',
+  demandCount: '人在这件商品上说了同样的话',
+
   vipTitle: '比别人早 24 小时知道。',
   vipBody: '免费用户在登记开始前 1 小时收到浏览器推送。VIP 在情报确认的瞬间就能收到 Discord / Telegram 秒推，并解锁全部红色难度商品的完整海淘攻略。',
   vipCta: '查看 VIP 权益',
@@ -650,6 +671,13 @@ const zhTW: Record<Key, string> = {
   proxyKindForwarder: '轉運',
   proxyGo: '去那邊搜',
   proxyDisclaimer: '這些是與本站無關的第三方服務。我們不參與交易，部分連結會給我們佣金。',
+
+  demandAsk: '還是搞不定？',
+  demandLead: '這些都不合適，或者整件事太麻煩——那就說一聲。我們只是在數人數，這不是一項服務，也不承諾任何事。',
+  demandButton: '我希望有人幫我買',
+  demandDone: '已計入。不會再發生別的事——我們沒有收集任何聯絡方式。',
+  demandQueued: '已存在本裝置，之後重試。',
+  demandCount: '人在這件商品上說了同樣的話',
 
   vipTitle: '比別人早 24 小時知道。',
   vipBody: '免費用戶在登記開始前 1 小時收到瀏覽器推播。VIP 在情報確認的瞬間就能收到 Discord / Telegram 即時通知，並解鎖全部紅色難度商品的完整攻略。',

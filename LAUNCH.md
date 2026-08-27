@@ -55,6 +55,23 @@ CREATE TABLE want_votes (
 
 实现见 [functions/api/wants.ts](functions/api/wants.ts)。
 
+### [ ] 绑定 `DEMAND_DB`（代购需求计数）
+
+```bash
+npx wrangler d1 create howl-demand   # 绑定变量名：DEMAND_DB
+```
+
+```sql
+CREATE TABLE proxy_demand (
+  day TEXT NOT NULL, slug TEXT NOT NULL, locale TEXT NOT NULL,
+  hits INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (day, slug, locale)
+);
+```
+
+只存日期、商品、语种、次数——**没有任何联系方式**，所以这张表里没有可泄露的东西。
+`GET /api/proxy-demand` 需要 `ADMIN_PASSWORD`。
+
 ### [ ] Google Search Console + Bing 站长验证
 
 **GSC 只从验证之日起累积数据，验证前的搜索表现永久看不到。** 晚一天少一天，而它是判断 SEO 有没有起量的唯一依据。

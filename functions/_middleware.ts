@@ -8,6 +8,8 @@
  *   GET /api/clicks — the outbound-click report. This is the business: which
  *                   retailers we send buyers to and which drops convert. It is
  *                   the single most sensitive thing the site can serve.
+ *   GET /api/proxy-demand — how many people want a proxy service. The number
+ *                   that decides whether to build one; not for competitors.
  *
  * POST /api/clicks and both halves of /api/wants stay open — they are how
  * visitors contribute, and they are write-mostly.
@@ -27,8 +29,9 @@ const PROTECTED_PATHS = ['/admin.html', '/admin']
 function isProtected(request: Request) {
   const url = new URL(request.url)
   if (PROTECTED_PATHS.some((p) => url.pathname === p || url.pathname.startsWith(p + '/'))) return true
-  // Reading the click report is privileged; recording a click is not.
-  return url.pathname === '/api/clicks' && request.method === 'GET'
+  // Reading a report is privileged; contributing to one is not.
+  const REPORTS = ['/api/clicks', '/api/proxy-demand']
+  return REPORTS.includes(url.pathname) && request.method === 'GET'
 }
 
 /** Constant-time compare, so the response time cannot leak the password. */
