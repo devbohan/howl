@@ -23,7 +23,7 @@ const drop = (overrides: Partial<Drop> = {}): Drop => ({
     { id: 'c1', name: 'Store', region: 'JP', url: 'https://x.test', status: 'upcoming', shipsWorldwide: true, acceptsForeignCard: true },
   ],
   frictionNotes: [{ en: 'note' }],
-  art: { from: '#123456', to: '#000000', glyph: '👟' },
+  art: { from: '#123456', to: '#000000' },
   ...overrides,
 })
 

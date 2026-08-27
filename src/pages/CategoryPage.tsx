@@ -7,7 +7,7 @@ import { NewsTicker } from '../components/NewsTicker'
 import { VipBanner } from '../components/VipBanner'
 import { DROPS } from '../data/mock'
 import { useT } from '../lib/i18n'
-import { CATEGORIES, CATEGORY_ART, CATEGORY_ICON, CATEGORY_KEY } from '../lib/labels'
+import { CATEGORIES, CATEGORY_ART, CATEGORY_KEY } from '../lib/labels'
 import { useCurrency } from '../lib/prefs'
 import { dropState, isAvailableNow, sortWeight, type Phase } from '../lib/schedule'
 import { useNow } from '../lib/useNow'
@@ -69,10 +69,9 @@ export function CategoryPage() {
       </Link>
 
       <section
-        className="mt-3 flex items-center gap-4 rounded-2xl border border-line px-5 py-6 sm:px-7"
+        className="mt-3 rounded-2xl border border-line px-5 py-6 sm:px-7"
         style={{ background: `radial-gradient(110% 160% at 12% 20%, ${art.from} 0%, ${art.to} 75%)` }}
       >
-        <span className="text-4xl leading-none">{CATEGORY_ICON[cat]}</span>
         <div>
           <h1 className="text-xl font-extrabold tracking-tight text-white sm:text-2xl">{t(CATEGORY_KEY[cat])}</h1>
           <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] text-white/85">
@@ -80,8 +79,8 @@ export function CategoryPage() {
               {visible.length} {t('filterResults')}
             </span>
             {liveCount > 0 && (
-              <span className="inline-flex items-center gap-1.5 text-accent">
-                <span className="live-dot h-1.5 w-1.5 rounded-full bg-accent" />
+              <span className="inline-flex items-center gap-1.5 text-live">
+                <span className="live-dot h-1.5 w-1.5 rounded-full bg-live" />
                 <span className="font-mono tabular-nums">{liveCount}</span> {t('heroLive')}
               </span>
             )}

@@ -3,18 +3,15 @@ import { DICT, LOCALE_LABELS } from '../i18n'
 import {
   CATEGORIES,
   CATEGORY_ART,
-  CATEGORY_ICON,
   CATEGORY_KEY,
   FRICTIONS,
   FRICTION_DESC_KEY,
-  FRICTION_DOT,
   FRICTION_KEY,
   MECHANICS,
   MECHANIC_KEY,
   MEDIA_KIND_KEY,
   PLATFORM_LABEL,
   REGIONS,
-  REGION_FLAG,
   REGION_KEY,
 } from '../labels'
 import { LOCALES } from '../types'
@@ -50,27 +47,45 @@ describe('label maps', () => {
   it('maps every category', () => {
     for (const c of CATEGORIES) {
       expect(DICT.en[CATEGORY_KEY[c]]).toBeTruthy()
-      expect(CATEGORY_ICON[c]).toBeTruthy()
       expect(CATEGORY_ART[c].from).toMatch(/^#[0-9a-f]{3,8}$/i)
       expect(CATEGORY_ART[c].to).toMatch(/^#[0-9a-f]{3,8}$/i)
     }
   })
 
   it('maps every region, mechanic and friction level', () => {
-    for (const r of REGIONS) {
-      expect(DICT.en[REGION_KEY[r]]).toBeTruthy()
-      expect(REGION_FLAG[r]).toBeTruthy()
-    }
+    for (const r of REGIONS) expect(DICT.en[REGION_KEY[r]]).toBeTruthy()
     for (const m of MECHANICS) expect(DICT.en[MECHANIC_KEY[m]]).toBeTruthy()
     for (const f of FRICTIONS) {
       expect(DICT.en[FRICTION_KEY[f]]).toBeTruthy()
       expect(DICT.en[FRICTION_DESC_KEY[f]]).toBeTruthy()
-      expect(FRICTION_DOT[f]).toBeTruthy()
     }
   })
 
   it('maps every media kind and platform', () => {
     for (const key of Object.values(MEDIA_KIND_KEY)) expect(DICT.en[key]).toBeTruthy()
     for (const label of Object.values(PLATFORM_LABEL)) expect(label).toBeTruthy()
+  })
+})
+
+describe('no emoji in the interface vocabulary', () => {
+  const EMOJI = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/u
+
+  it('no dictionary string carries one', () => {
+    const offenders = Object.entries(DICT).flatMap(([locale, dict]) =>
+      Object.entries(dict)
+        .filter(([, value]) => EMOJI.test(value))
+        .map(([key]) => `${locale}.${key}`),
+    )
+    expect(offenders).toEqual([])
+  })
+
+  it('no label map carries one', () => {
+    const values = [
+      ...Object.values(PLATFORM_LABEL),
+      ...Object.values(CATEGORY_KEY),
+      ...Object.values(REGION_KEY),
+      ...Object.values(MECHANIC_KEY),
+    ]
+    expect(values.filter((v) => EMOJI.test(v))).toEqual([])
   })
 })

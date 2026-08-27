@@ -2,15 +2,12 @@ import { useState } from 'react'
 import { useT, type Key } from '../lib/i18n'
 import {
   CATEGORIES,
-  CATEGORY_ICON,
   CATEGORY_KEY,
   FRICTIONS,
-  FRICTION_DOT,
   FRICTION_KEY,
   MECHANICS,
   MECHANIC_KEY,
   REGIONS,
-  REGION_FLAG,
   REGION_KEY,
 } from '../lib/labels'
 import type { Category, Friction, Mechanic, Region } from '../lib/types'
@@ -61,14 +58,12 @@ function Row<T extends string>({
   values,
   current,
   keyMap,
-  prefix,
   onPick,
 }: {
   labelKey: Key
   values: T[]
   current: T | null
   keyMap: Record<T, Key>
-  prefix?: Record<T, string>
   onPick: (value: T | null) => void
 }) {
   const { t } = useT()
@@ -83,7 +78,6 @@ function Row<T extends string>({
         </Chip>
         {values.map((value) => (
           <Chip key={value} active={current === value} onClick={() => onPick(current === value ? null : value)}>
-            {prefix ? `${prefix[value]} ` : ''}
             {t(keyMap[value])}
           </Chip>
         ))}
@@ -147,7 +141,6 @@ export function FilterBar({
             values={CATEGORIES}
             current={filters.category}
             keyMap={CATEGORY_KEY}
-            prefix={CATEGORY_ICON}
             onPick={(category) => onChange({ ...filters, category })}
           />
         )}
@@ -156,7 +149,6 @@ export function FilterBar({
           values={REGIONS}
           current={filters.region}
           keyMap={REGION_KEY}
-          prefix={REGION_FLAG}
           onPick={(region) => onChange({ ...filters, region })}
         />
         <Row
@@ -171,7 +163,6 @@ export function FilterBar({
           values={FRICTIONS}
           current={filters.friction}
           keyMap={FRICTION_KEY}
-          prefix={FRICTION_DOT}
           onPick={(friction) => onChange({ ...filters, friction })}
         />
         {active > 0 && (

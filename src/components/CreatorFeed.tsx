@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { CATEGORY_MEDIA } from '../data/creators'
+import { HeatMark } from './icons'
 import { formatCount, rankFeed } from '../lib/feed'
 import { formatRelative } from '../lib/format'
 import { LOCALE_LABELS, useT } from '../lib/i18n'
@@ -58,8 +59,12 @@ function Row({ item, hot }: { item: MediaLink; hot: boolean }) {
 
       <span className="flex shrink-0 flex-col items-end gap-0.5 text-[11px] text-faint" title={heatTitle}>
         <span className="flex items-center gap-1">
-          {/* Flame only on the hottest few — the ordering carries the rest. */}
-          {hot && <span className="text-[10px]">🔥</span>}
+          {/* Marked only on the hottest few — the ordering carries the rest. */}
+          {hot && (
+            <span className="text-fg">
+              <HeatMark />
+            </span>
+          )}
           {item.duration && <span className="font-mono tabular-nums">{item.duration}</span>}
         </span>
         {/* Only worth flagging when it isn't the language you're reading in. */}
@@ -86,7 +91,7 @@ export function CreatorFeed({ category }: { category: Category }) {
   return (
     <div className="overflow-hidden rounded-lg border border-line bg-surface">
       <div className="flex items-center gap-2 border-b border-line px-3.5 py-2">
-        <svg viewBox="0 0 12 12" className="h-2.5 w-2.5 text-accent-fg" aria-hidden="true">
+        <svg viewBox="0 0 12 12" className="h-2.5 w-2.5 text-fg" aria-hidden="true">
           <path d="M3 1.8 10 6l-7 4.2Z" fill="currentColor" />
         </svg>
         <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-fg">{t('feedLabel')}</span>

@@ -1,11 +1,12 @@
 import { useT } from '../lib/i18n'
+import { Logo } from './Logo'
 
 export function VipBanner() {
   const { t } = useT()
   return (
-    <div className="relative overflow-hidden rounded-xl border border-accent/25 bg-gradient-to-br from-accent/10 via-surface to-surface p-6">
+    <div className="relative overflow-hidden rounded-xl border border-fg/20 bg-gradient-to-br from-fg/5 via-surface to-surface p-6">
       <div className="relative max-w-2xl">
-        <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-accent-fg">VIP</span>
+        <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-fg">VIP</span>
         <h3 className="mt-2 text-xl font-bold text-fg">{t('vipTitle')}</h3>
         <p className="mt-2 text-[13px] leading-relaxed text-muted">{t('vipBody')}</p>
         <button
@@ -15,7 +16,8 @@ export function VipBanner() {
           {t('vipCta')}
         </button>
       </div>
-      <span className="pointer-events-none absolute -right-6 -top-8 text-[140px] leading-none opacity-[0.07]">⚡️</span>
+      {/* The mark itself as a watermark — no borrowed emoji. */}
+      <Logo className="pointer-events-none absolute -right-10 -top-6 h-40 w-auto text-fg opacity-[0.06]" />
     </div>
   )
 }

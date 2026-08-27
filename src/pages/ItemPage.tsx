@@ -1,11 +1,12 @@
 import { Link, useParams } from 'react-router-dom'
 import { Countdown, CountdownLabel } from '../components/Countdown'
 import { FrictionBadge } from '../components/FrictionBadge'
+import { CheckMark, CrossMark } from '../components/icons'
 import { MediaLinks } from '../components/MediaLinks'
 import { VipBanner } from '../components/VipBanner'
 import { DROPS } from '../data/mock'
 import { useT } from '../lib/i18n'
-import { CATEGORY_KEY, MECHANIC_KEY, REGION_FLAG, REGION_KEY } from '../lib/labels'
+import { CATEGORY_KEY, MECHANIC_KEY, REGION_KEY } from '../lib/labels'
 import { convert, formatDateTime, formatPrice } from '../lib/format'
 import { useCurrency } from '../lib/prefs'
 import { bestOffer, dropState } from '../lib/schedule'
@@ -37,7 +38,7 @@ function ChannelRow({ channel, drop }: { channel: Channel; drop: Drop }) {
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm font-semibold text-fg">{channel.name}</span>
-          <span className="text-[11px] text-faint">{REGION_FLAG[channel.region]}</span>
+          <span className="font-mono text-[10px] uppercase tracking-wider text-faint">{channel.region}</span>
           <span
             className={`rounded border px-1.5 py-0.5 text-[10px] font-semibold ${
               resale ? 'border-medium/40 bg-medium/10 text-medium' : 'border-line bg-surface-2 text-muted'
@@ -65,12 +66,12 @@ function ChannelRow({ channel, drop }: { channel: Channel; drop: Drop }) {
         )}
 
         <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px]">
-          <span className={channel.shipsWorldwide ? 'text-easy' : 'text-medium'}>
-            {channel.shipsWorldwide ? '✓ ' : '✕ '}
+          <span className={`inline-flex items-center gap-1 ${channel.shipsWorldwide ? 'text-easy' : 'text-medium'}`}>
+            {channel.shipsWorldwide ? <CheckMark /> : <CrossMark />}
             {channel.shipsWorldwide ? t('detShipsWorldwide') : t('detShipsDomestic')}
           </span>
-          <span className={channel.acceptsForeignCard ? 'text-easy' : 'text-hard'}>
-            {channel.acceptsForeignCard ? '✓ ' : '✕ '}
+          <span className={`inline-flex items-center gap-1 ${channel.acceptsForeignCard ? 'text-easy' : 'text-hard'}`}>
+            {channel.acceptsForeignCard ? <CheckMark /> : <CrossMark />}
             {channel.acceptsForeignCard ? t('detForeignCard') : t('detNoForeignCard')}
           </span>
         </div>
@@ -112,7 +113,7 @@ export function ItemPage() {
     return (
       <div className="mx-auto max-w-6xl px-4 py-24 text-center">
         <p className="text-sm text-muted">Not found.</p>
-        <Link to={`/${locale}`} className="mt-4 inline-block text-sm text-accent-fg underline underline-offset-4">
+        <Link to={`/${locale}`} className="mt-4 inline-block text-sm text-fg underline underline-offset-4">
           {t('detBack')}
         </Link>
       </div>
@@ -131,12 +132,11 @@ export function ItemPage() {
         ← {t(CATEGORY_KEY[drop.category])}
       </Link>
 
+      {/* Product photography goes here; until then, just the gradient. */}
       <div
-        className="mt-4 flex h-52 items-center justify-center rounded-xl border border-line md:h-64"
+        className="mt-4 h-52 rounded-xl border border-line md:h-64"
         style={{ background: `radial-gradient(120% 120% at 30% 20%, ${drop.art.from} 0%, ${drop.art.to} 70%)` }}
-      >
-        <span className="text-7xl opacity-90">{drop.art.glyph}</span>
-      </div>
+      />
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_340px]">
         <div className="min-w-0">
@@ -145,9 +145,7 @@ export function ItemPage() {
             <span className="h-3 w-px bg-line" />
             <span>{t(CATEGORY_KEY[drop.category])}</span>
             <span className="h-3 w-px bg-line" />
-            <span>
-              {REGION_FLAG[drop.region]} {t(REGION_KEY[drop.region])}
-            </span>
+            <span>{t(REGION_KEY[drop.region])}</span>
           </div>
 
           <h1 className="mt-2 text-2xl font-extrabold leading-tight tracking-tight text-fg md:text-[32px]">
@@ -181,7 +179,7 @@ export function ItemPage() {
             <ul className="mt-3 space-y-2.5">
               {drop.frictionNotes.map((note, i) => (
                 <li key={i} className="flex gap-3 text-[13px] leading-relaxed text-muted">
-                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent-fg" />
+                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-faint" />
                   <span>{tl(note)}</span>
                 </li>
               ))}
@@ -261,7 +259,7 @@ export function ItemPage() {
               type="button"
               className="mt-4 w-full rounded-md bg-accent py-2.5 text-[13px] font-bold text-accent-ink transition hover:bg-accent-dim"
             >
-              🔔 {t('cardNotify')}
+              {t('cardNotify')}
             </button>
 
             <div className="mt-5 border-t border-line-soft pt-3">

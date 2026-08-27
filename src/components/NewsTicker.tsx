@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { NEWS } from '../data/news'
+import { HeatMark } from './icons'
 import { formatCount, rankFeed } from '../lib/feed'
 import { formatRelative } from '../lib/format'
 import { useT, type Key } from '../lib/i18n'
@@ -23,7 +24,7 @@ const HOT_ROWS = 3
 const KIND_STYLE: Record<NewsItem['kind'], string> = {
   confirmed: 'border-easy/40 text-easy',
   rumor: 'border-medium/40 text-medium',
-  restock: 'border-accent-fg/40 text-accent-fg',
+  restock: 'border-live-fg/40 text-live-fg',
   leak: 'border-hard/40 text-hard',
   result: 'border-line text-muted',
 }
@@ -46,10 +47,10 @@ function Row({ item, now, hot }: { item: NewsItem; now: number; hot: boolean }) 
       >
         {tl(item.text)}
       </span>
-      {/* Flame only on the hottest few — the ordering carries the rest. */}
+      {/* Marked only on the hottest few — the ordering carries the rest. */}
       {hot && (
-        <span className="shrink-0 text-[10px]" title={heatTitle}>
-          🔥
+        <span className="shrink-0 text-fg" title={heatTitle}>
+          <HeatMark />
         </span>
       )}
       <span className="shrink-0 font-mono text-[11px] text-faint tabular-nums" title={heatTitle}>

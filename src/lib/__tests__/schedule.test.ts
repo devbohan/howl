@@ -40,7 +40,7 @@ function drop(overrides: Partial<Drop> = {}): Drop {
     opensAt: at(3_600_000),
     channels: [],
     frictionNotes: [],
-    art: { from: '#000', to: '#111', glyph: '👟' },
+    art: { from: '#000', to: '#111' },
     ...overrides,
   }
 }

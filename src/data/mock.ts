@@ -32,7 +32,7 @@ export const DROPS: Drop[] = [
     closesAt: M(199),
     releaseAt: H(26),
     hot: true,
-    art: { from: '#4b5320', to: '#0d0f08', glyph: '👟' },
+    art: { from: '#4b5320', to: '#0d0f08' },
     tags: ['Jordan Brand', 'Cactus Jack'],
     channels: [
       { id: 'c1', name: 'Nike SNKRS JP', region: 'JP', url: 'https://www.nike.com/jp/launch', status: 'upcoming', shipsWorldwide: false, acceptsForeignCard: true, note: { en: 'Ships to JP addresses only — use a forwarder.', ja: '国内配送のみ。転送サービス必須。', 'zh-CN': '仅日本境内配送，需转运。', 'zh-TW': '僅日本境內配送，需轉運。' } },
@@ -75,7 +75,7 @@ export const DROPS: Drop[] = [
     closesAt: H(42),
     releaseAt: H(600),
     hot: true,
-    art: { from: '#c9302c', to: '#1a0a0a', glyph: '🃏' },
+    art: { from: '#c9302c', to: '#1a0a0a' },
     tags: ['PTCG', '事前抽選'],
     channels: [
       { id: 'c5', name: 'ポケモンセンターオンライン', region: 'JP', url: 'https://www.pokemoncenter-online.com', status: 'open', shipsWorldwide: false, acceptsForeignCard: false, note: { en: 'JP mobile number for SMS + JP-issued card required.', ja: '日本の携帯番号によるSMS認証と国内発行カードが必須。', 'zh-CN': '需日本手机号 SMS 验证 + 日本本土发行信用卡。', 'zh-TW': '需日本手機號 SMS 驗證 + 日本本土發行信用卡。' } },
@@ -114,7 +114,7 @@ export const DROPS: Drop[] = [
     currency: 'USD',
     opensAt: M(52),
     hot: true,
-    art: { from: '#1f4fd8', to: '#05070f', glyph: '🎮' },
+    art: { from: '#1f4fd8', to: '#05070f' },
     tags: ['Restock', 'Console'],
     channels: [
       { id: 'c8', name: 'PlayStation Direct US', region: 'US', url: 'https://direct.playstation.com', status: 'upcoming', shipsWorldwide: false, acceptsForeignCard: false, note: { en: 'Queue-it waiting room; US address required.', ja: 'Queue-itの待機列。米国住所必須。', 'zh-CN': 'Queue-it 排队系统，需美国地址。', 'zh-TW': 'Queue-it 排隊系統，需美國地址。' } },
@@ -151,7 +151,7 @@ export const DROPS: Drop[] = [
     currency: 'CNY',
     opensAt: H(2),
     closesAt: H(26),
-    art: { from: '#6b3fa0', to: '#120a1a', glyph: '🧸' },
+    art: { from: '#6b3fa0', to: '#120a1a' },
     tags: ['MEGA', '1000%'],
     channels: [
       { id: 'c11', name: '泡泡玛特小程序', region: 'CN', url: 'https://www.popmart.com', status: 'upcoming', shipsWorldwide: false, acceptsForeignCard: false, note: { en: 'Requires CN ID real-name verification + CN phone.', ja: '中国の実名認証と携帯番号が必要。', 'zh-CN': '需中国大陆实名认证 + 手机号。', 'zh-TW': '需中國大陸實名認證 + 手機號。' } },
@@ -188,7 +188,7 @@ export const DROPS: Drop[] = [
     opensAt: H(-320),
     closesAt: H(9),
     releaseAt: H(5000),
-    art: { from: '#1f9e8f', to: '#04120f', glyph: '🎎' },
+    art: { from: '#1f9e8f', to: '#04120f' },
     tags: ['WonHobby', '受注生産'],
     channels: [
       { id: 'c13', name: 'GOODSMILE ONLINE SHOP', region: 'JP', url: 'https://goodsmileshop.com', status: 'open', shipsWorldwide: false, acceptsForeignCard: true },
@@ -224,7 +224,7 @@ export const DROPS: Drop[] = [
     currency: 'JPY',
     opensAt: H(-30),
     closesAt: H(138),
-    art: { from: '#2f6fd0', to: '#050b16', glyph: '🎤' },
+    art: { from: '#2f6fd0', to: '#050b16' },
     tags: ['VTuber', '誕生日記念'],
     channels: [
       { id: 'c16', name: 'hololive Official Shop', region: 'JP', url: 'https://shop.hololivepro.com', status: 'open', shipsWorldwide: false, acceptsForeignCard: false, note: { en: 'JP-only checkout for voice items (licensing).', ja: 'ボイス商品はライセンス上、国内限定。', 'zh-CN': '语音商品因授权限制仅限日本境内。', 'zh-TW': '語音商品因授權限制僅限日本境內。' } },
@@ -260,7 +260,7 @@ export const DROPS: Drop[] = [
     currency: 'JPY',
     opensAt: H(26),
     closesAt: H(98),
-    art: { from: '#d99a2b', to: '#171004', glyph: '🐹' },
+    art: { from: '#d99a2b', to: '#171004' },
     tags: ['POP-UP', 'LivePocket'],
     channels: [
       { id: 'c18', name: 'LivePocket-Ticket', region: 'JP', url: 'https://t.livepocket.jp', status: 'upcoming', shipsWorldwide: false, acceptsForeignCard: false, note: { en: 'SMS-verified JP account; ticket is non-transferable.', ja: 'SMS認証済み日本アカウント必須。名義変更不可。', 'zh-CN': '需 SMS 认证的日本账号，票券不可转让。', 'zh-TW': '需 SMS 認證的日本帳號，票券不可轉讓。' } },
@@ -294,7 +294,7 @@ export const DROPS: Drop[] = [
     currency: 'JPY',
     opensAt: H(-100),
     closesAt: H(320),
-    art: { from: '#b3261e', to: '#140504', glyph: '🤖' },
+    art: { from: '#b3261e', to: '#140504' },
     tags: ['P-Bandai', 'METAL BUILD'],
     channels: [
       { id: 'c19', name: 'プレミアムバンダイ', region: 'JP', url: 'https://p-bandai.jp', status: 'open', shipsWorldwide: false, acceptsForeignCard: true },
@@ -328,7 +328,7 @@ export const DROPS: Drop[] = [
     opensAt: H(14),
     closesAt: H(62),
     hot: true,
-    art: { from: '#8a8f98', to: '#0c0d0f', glyph: '🐻' },
+    art: { from: '#8a8f98', to: '#0c0d0f' },
     tags: ['KAWS', '1000%'],
     channels: [
       { id: 'c22', name: 'MEDICOM TOY WEB', region: 'JP', url: 'https://www.medicomtoy.co.jp', status: 'upcoming', shipsWorldwide: false, acceptsForeignCard: false, note: { en: 'Membership requires a JP address on file for 30+ days.', ja: '会員登録には30日以上前の国内住所登録が必要。', 'zh-CN': '会员需提前 30 天以上登记日本地址。', 'zh-TW': '會員需提前 30 天以上登記日本地址。' } },
@@ -363,7 +363,7 @@ export const DROPS: Drop[] = [
     price: 18700,
     currency: 'JPY',
     opensAt: H(18),
-    art: { from: '#c1121f', to: '#100304', glyph: '🧢' },
+    art: { from: '#c1121f', to: '#100304' },
     tags: ['Weekly Drop'],
     channels: [
       { id: 'c24', name: 'Supreme JP', region: 'JP', url: 'https://www.supremenewyork.com/shop', status: 'upcoming', shipsWorldwide: true, acceptsForeignCard: true },
@@ -393,7 +393,7 @@ export const DROPS: Drop[] = [
     currency: 'EUR',
     opensAt: H(-20),
     closesAt: H(26),
-    art: { from: '#c8b89a', to: '#161208', glyph: '👟' },
+    art: { from: '#c8b89a', to: '#161208' },
     tags: ['adidas Originals'],
     channels: [
       { id: 'c26', name: 'END. Launches', region: 'EU', url: 'https://www.endclothing.com/launches', status: 'open', shipsWorldwide: true, acceptsForeignCard: true, affiliate: true },
@@ -424,7 +424,7 @@ export const DROPS: Drop[] = [
     currency: 'JPY',
     opensAt: H(72),
     closesAt: H(140),
-    art: { from: '#b8860b', to: '#150e02', glyph: '🏴‍☠️' },
+    art: { from: '#b8860b', to: '#150e02' },
     tags: ['OPTCG'],
     channels: [
       { id: 'c29', name: 'Yodobashi.com', region: 'JP', url: 'https://www.yodobashi.com', status: 'upcoming', shipsWorldwide: false, acceptsForeignCard: false },
@@ -459,7 +459,7 @@ export const DROPS: Drop[] = [
     price: 310,
     currency: 'EUR',
     opensAt: H(46),
-    art: { from: '#2c3e50', to: '#06090c', glyph: '⌚️' },
+    art: { from: '#2c3e50', to: '#06090c' },
     tags: ['Collab', 'In-store'],
     channels: [
       { id: 'c32', name: 'Swatch Store Ginza', region: 'JP', url: 'https://www.swatch.com/ja-jp', status: 'upcoming', shipsWorldwide: false, acceptsForeignCard: true },
@@ -493,7 +493,7 @@ export const DROPS: Drop[] = [
     currency: 'JPY',
     opensAt: H(-52),
     closesAt: H(-4),
-    art: { from: '#3d3d3d', to: '#0a0a0a', glyph: '🧥' },
+    art: { from: '#3d3d3d', to: '#0a0a0a' },
     tags: ['Weekly Drop'],
     channels: [
       { id: 'c34', name: 'Kith Tokyo', region: 'JP', url: 'https://kith.com', status: 'sold-out', shipsWorldwide: false, acceptsForeignCard: true, market: 'retail', stock: 'sold-out' },
@@ -523,7 +523,7 @@ export const DROPS: Drop[] = [
     currency: 'JPY',
     opensAt: H(-30000),
     closesAt: H(-29990),
-    art: { from: '#2b3a67', to: '#08090f', glyph: '👟' },
+    art: { from: '#2b3a67', to: '#08090f' },
     tags: ['Cactus Jack', 'Grail'],
     channels: [
       { id: 'c37', name: 'Nike SNKRS', region: 'GLOBAL', url: 'https://www.nike.com/launch', status: 'sold-out', shipsWorldwide: false, acceptsForeignCard: true, market: 'retail', stock: 'sold-out' },
@@ -562,7 +562,7 @@ export const DROPS: Drop[] = [
     currency: 'USD',
     opensAt: H(-26000),
     closesAt: H(-25900),
-    art: { from: '#8a6d1f', to: '#120e04', glyph: '🃏' },
+    art: { from: '#8a6d1f', to: '#120e04' },
     tags: ['PTCG', '25th Anniversary'],
     channels: [
       { id: 'c41', name: 'Pokémon Center US', region: 'US', url: 'https://www.pokemoncenter.com', status: 'sold-out', shipsWorldwide: false, acceptsForeignCard: false, market: 'retail', stock: 'sold-out' },
@@ -595,7 +595,7 @@ export const DROPS: Drop[] = [
     currency: 'JPY',
     opensAt: H(-12000),
     closesAt: H(-11900),
-    art: { from: '#5a1f3d', to: '#12060c', glyph: '🎎' },
+    art: { from: '#5a1f3d', to: '#12060c' },
     tags: ['SPY×FAMILY'],
     channels: [
       { id: 'c45', name: 'GOODSMILE ONLINE SHOP', region: 'JP', url: 'https://goodsmileshop.com', status: 'sold-out', shipsWorldwide: false, acceptsForeignCard: true, market: 'retail', stock: 'sold-out' },
@@ -631,7 +631,7 @@ export const DROPS: Drop[] = [
     currency: 'JPY',
     opensAt: H(-9000),
     closesAt: H(-8900),
-    art: { from: '#7a5230', to: '#100b06', glyph: '🐻' },
+    art: { from: '#7a5230', to: '#100b06' },
     tags: ['Andy Warhol', '400%'],
     channels: [
       { id: 'c48', name: 'MEDICOM TOY WEB', region: 'JP', url: 'https://www.medicomtoy.co.jp', status: 'sold-out', shipsWorldwide: false, acceptsForeignCard: false, market: 'retail', stock: 'sold-out' },
@@ -663,7 +663,7 @@ export const DROPS: Drop[] = [
     currency: 'CNY',
     opensAt: H(-4000),
     closesAt: H(-3900),
-    art: { from: '#2f6b4f', to: '#07100c', glyph: '🧸' },
+    art: { from: '#2f6b4f', to: '#07100c' },
     tags: ['MEGA', '400%'],
     channels: [
       { id: 'c51', name: 'POP MART Global', region: 'GLOBAL', url: 'https://www.popmart.com/us', status: 'open', shipsWorldwide: true, acceptsForeignCard: true, affiliate: true, market: 'retail', stock: 'in-stock', askPrice: 1099 },
@@ -695,7 +695,7 @@ export const DROPS: Drop[] = [
     currency: 'JPY',
     opensAt: H(-20000),
     closesAt: H(-19900),
-    art: { from: '#7a6a2e', to: '#100e05', glyph: '🎮' },
+    art: { from: '#7a6a2e', to: '#100e05' },
     tags: ['Zelda', 'Discontinued'],
     channels: [
       { id: 'c54', name: 'マイニンテンドーストア', region: 'JP', url: 'https://store.nintendo.co.jp', status: 'sold-out', shipsWorldwide: false, acceptsForeignCard: false, market: 'retail', stock: 'sold-out' },
@@ -728,7 +728,7 @@ export const DROPS: Drop[] = [
     currency: 'JPY',
     opensAt: H(-16000),
     closesAt: H(-15800),
-    art: { from: '#1f5f6b', to: '#050e10', glyph: '🎤' },
+    art: { from: '#1f5f6b', to: '#050e10' },
     tags: ['VTuber', 'hololive EN'],
     channels: [
       { id: 'c57', name: 'hololive Official Shop', region: 'JP', url: 'https://shop.hololivepro.com', status: 'sold-out', shipsWorldwide: false, acceptsForeignCard: false, market: 'retail', stock: 'sold-out' },

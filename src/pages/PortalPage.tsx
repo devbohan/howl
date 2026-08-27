@@ -62,9 +62,9 @@ function CategoryRow({ category, now }: { category: Category; now: number }) {
         <Stat value={items.length} className="text-muted" label={t('portalTracked')} name="tracked" />
         <span className="flex items-center gap-1.5">
           <span
-            className={`h-1.5 w-1.5 rounded-full ${live > 0 ? 'live-dot bg-accent-fg' : 'bg-line'}`}
+            className={`h-1.5 w-1.5 rounded-full ${live > 0 ? 'live-dot bg-live-fg' : 'bg-line'}`}
           />
-          <Stat value={live} className="text-accent-fg" label={t('heroLive')} name="live" />
+          <Stat value={live} className="text-live-fg" label={t('heroLive')} name="live" />
         </span>
         <span className="flex items-center gap-1.5">
           <span className={`h-1.5 w-1.5 rounded-full ${inStock > 0 ? 'bg-easy' : 'bg-line'}`} />
@@ -92,8 +92,8 @@ export function PortalPage() {
           <span className="font-mono tabular-nums">
             <span data-stat="tracked-total">{DROPS.length}</span> {t('portalTracked')}
           </span>
-          <span className="inline-flex items-center gap-1.5 text-accent-fg">
-            <span className="live-dot h-1.5 w-1.5 rounded-full bg-accent-fg" />
+          <span className="inline-flex items-center gap-1.5 text-live-fg">
+            <span className="live-dot h-1.5 w-1.5 rounded-full bg-live-fg" />
             <span className="font-mono tabular-nums" data-stat="live-total">
               {live}
             </span>{' '}

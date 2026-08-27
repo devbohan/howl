@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 84">
+  <!-- Silhouette only: the wordmark inside is unreadable at 16px, the banner
+       shape still is. Follows the browser/OS theme. -->
+  <style>
+    path { fill: none; stroke: #101317; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round }
+    @media (prefers-color-scheme: dark) { path { stroke: #f1f3f6 } }
+  </style>
+  <path d="M6 47 L42 8 Q72.5 37 117 6 L154 52 L111 77 Q76 54 28 75 Z" />
+</svg>

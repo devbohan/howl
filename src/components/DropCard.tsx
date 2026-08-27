@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { Countdown, CountdownLabel } from './Countdown'
 import { FrictionBadge } from './FrictionBadge'
 import { useT } from '../lib/i18n'
-import { CATEGORY_KEY, MECHANIC_KEY, REGION_FLAG, REGION_KEY } from '../lib/labels'
+import { CATEGORY_KEY, MECHANIC_KEY, REGION_KEY } from '../lib/labels'
 import { formatPrice } from '../lib/format'
 import { bestOffer, dropState } from '../lib/schedule'
 import { PremiumTag } from './Premium'
@@ -18,24 +18,23 @@ export function DropCard({ drop, now, currency }: { drop: Drop; now: number; cur
     <Link
       to={`/${locale}/drop/${drop.slug}`}
       className={`group relative flex flex-col overflow-hidden rounded-xl border border-line bg-surface transition
-        hover:border-line/0 hover:ring-1 hover:ring-accent/40 hover:-translate-y-0.5 ${dim ? 'opacity-55' : ''}`}
+        hover:border-line/0 hover:ring-1 hover:ring-accent/50 hover:-translate-y-0.5 ${dim ? 'opacity-55' : ''}`}
     >
+      {/* Product photography goes here; until then, just the gradient. */}
       <div
-        className="relative flex h-36 items-center justify-center overflow-hidden"
+        className="relative h-36 overflow-hidden"
         style={{ background: `radial-gradient(120% 120% at 30% 20%, ${drop.art.from} 0%, ${drop.art.to} 70%)` }}
       >
-        <span className="text-5xl opacity-90 transition-transform duration-500 group-hover:scale-110">{drop.art.glyph}</span>
-
         <div className="absolute left-3 top-3 flex items-center gap-1.5">
           {(state.phase === 'open' || state.phase === 'in-stock') && !dim && (
             <span
               className={`inline-flex items-center gap-1.5 rounded-full bg-black/65 px-2 py-1 text-[10px] font-bold uppercase tracking-wider backdrop-blur ${
-                state.phase === 'open' ? 'text-accent' : 'text-easy'
+                state.phase === 'open' ? 'text-live' : 'text-easy'
               }`}
             >
               <span
                 className={`h-1.5 w-1.5 rounded-full ${
-                  state.phase === 'open' ? 'live-dot bg-accent' : 'bg-easy'
+                  state.phase === 'open' ? 'live-dot bg-live' : 'bg-easy'
                 }`}
               />
               {state.phase === 'open' ? t('cdLive') : t('cdInStock')}
@@ -49,7 +48,7 @@ export function DropCard({ drop, now, currency }: { drop: Drop; now: number; cur
         </div>
 
         <span className="absolute right-3 top-3 rounded-full bg-black/65 px-2 py-1 text-[10px] font-semibold tracking-wide text-white backdrop-blur">
-          {REGION_FLAG[drop.region]} {t(REGION_KEY[drop.region])}
+          {t(REGION_KEY[drop.region])}
         </span>
       </div>
 

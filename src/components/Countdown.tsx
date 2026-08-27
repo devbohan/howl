@@ -37,7 +37,7 @@ export function Countdown({ state, size = 'md' }: { state: DropState; size?: 'sm
     )
   }
 
-  const tone = state.urgent ? 'text-hard' : state.phase === 'open' ? 'text-accent-fg' : 'text-fg'
+  const tone = state.urgent ? 'text-hard' : state.phase === 'open' ? 'text-live-fg' : 'text-fg'
 
   return (
     <span data-testid="countdown" className={`inline-flex items-baseline gap-2 font-bold ${sizes[size]} ${tone}`}>

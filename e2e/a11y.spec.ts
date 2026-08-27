@@ -51,3 +51,41 @@ test('the page has exactly one h1 and a sensible heading order', async ({ page }
     expect(levels[0]).toBe(1)
   }
 })
+
+test('the interface carries no emoji', async ({ page }) => {
+  // Emoji render differently on every platform and never match the wordmark;
+  // every mark in the UI is an inline SVG in currentColor instead.
+  const EMOJI = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/u
+  for (const [name, url] of PAGES) {
+    await page.goto(url)
+    const text = await page.locator('body').innerText()
+    const found = [...text].filter((ch) => EMOJI.test(ch))
+    expect(found, `emoji on the ${name} page: ${found.join(' ')}`).toEqual([])
+  }
+})
+
+test('the brand accent is monochrome, and only status carries colour', async ({ page }) => {
+  await page.goto('/en/c/sneakers')
+  const { accent, accentFg, live } = await page.evaluate(() => {
+    const probe = (cls: string) => {
+      const el = document.createElement('span')
+      el.className = cls
+      document.body.append(el)
+      const value = getComputedStyle(el).color
+      el.remove()
+      return value
+    }
+    return { accent: probe('text-accent'), accentFg: probe('text-accent-fg'), live: probe('text-live-fg') }
+  })
+
+  // The neutrals are a faintly blue black/white, so allow a small spread —
+  // wide enough for #101317, nowhere near wide enough for the old lime.
+  const isGrey = (rgb: string) => {
+    const [r, g, b] = rgb.match(/\d+/g)!.map(Number)
+    return Math.max(r, g, b) - Math.min(r, g, b) <= 12
+  }
+  expect(isGrey(accent), `accent is not neutral: ${accent}`).toBe(true)
+  expect(isGrey(accentFg), `accent-fg is not neutral: ${accentFg}`).toBe(true)
+  // Live is the one status that kept its colour.
+  expect(isGrey(live), `live lost its colour: ${live}`).toBe(false)
+})

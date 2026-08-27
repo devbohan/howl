@@ -44,29 +44,6 @@ export const FRICTION_DESC_KEY: Record<Friction, Key> = {
   hard: 'fricHardDesc',
 }
 
-export const FRICTION_DOT: Record<Friction, string> = {
-  easy: '🟢',
-  medium: '🟡',
-  hard: '🔴',
-}
-
-export const CATEGORY_ICON: Record<Category, string> = {
-  sneakers: '👟',
-  tcg: '🃏',
-  figure: '🎎',
-  arttoy: '🧸',
-  goods: '🎤',
-  hardware: '🎮',
-}
-
-export const REGION_FLAG: Record<Region, string> = {
-  JP: '🇯🇵',
-  US: '🇺🇸',
-  EU: '🇪🇺',
-  CN: '🇨🇳',
-  GLOBAL: '🌐',
-}
-
 export const CATEGORY_ART: Record<Category, { from: string; to: string }> = {
   sneakers: { from: '#3f4a1f', to: '#0b0d07' },
   tcg: { from: '#5c1f1f', to: '#0d0606' },

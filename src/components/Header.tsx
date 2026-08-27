@@ -2,6 +2,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { LOCALE_LABELS, useT } from '../lib/i18n'
 import { useTheme } from '../lib/theme'
 import { CURRENCIES } from '../lib/format'
+import { Logo } from './Logo'
+import { MoonMark, SunMark } from './icons'
 import { LOCALES, type Currency, type Locale } from '../lib/types'
 
 export function Header({
@@ -23,27 +25,13 @@ export function Header({
 
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-ink/85 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-6xl items-center gap-4 px-4">
-        {/* The wordmark is hidden below sm, so the link needs its own name. */}
-        <Link to={`/${locale}`} aria-label="HOWL" className="flex items-center gap-2.5">
-          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-accent text-accent-ink">
-            {/* A signal going out — the howl that reaches you first. */}
-            <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
-              <circle cx="7" cy="12" r="2.4" fill="currentColor" />
-              <path
-                d="M11.5 7.5a6 6 0 0 1 0 9M15.5 4a10.5 10.5 0 0 1 0 16"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.1"
-                strokeLinecap="round"
-              />
-            </svg>
-          </span>
-          <span className="hidden flex-col leading-none sm:flex">
-            <span className="text-sm font-extrabold tracking-[0.16em] text-fg">
-              HOWL
-            </span>
-            <span className="mt-0.5 text-[10px] text-faint">{t('tagline')}</span>
+      <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:gap-4">
+        {/* The tagline is hidden below sm, so the link carries its own name. */}
+        <Link to={`/${locale}`} aria-label="HOWL" className="flex items-center gap-3">
+          {/* Steps down on narrow phones — at h-9 the mark alone eats the row. */}
+          <Logo className="h-7 w-auto shrink-0 text-fg sm:h-9" />
+          <span className="hidden max-w-[13rem] text-[10px] leading-tight text-faint lg:block">
+            {t('tagline')}
           </span>
         </Link>
 
@@ -98,9 +86,9 @@ export function Header({
             type="button"
             onClick={toggle}
             aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-            className="rounded-md border border-line bg-surface px-2 py-1.5 text-[13px] leading-none text-muted transition hover:text-fg"
+            className="flex items-center rounded-md border border-line bg-surface px-2 py-1.5 text-muted transition hover:text-fg"
           >
-            {theme === 'dark' ? '☀️' : '🌙'}
+            {theme === 'dark' ? <SunMark /> : <MoonMark />}
           </button>
 
           <button

@@ -42,9 +42,10 @@ describe('Countdown', () => {
     expect(container.firstElementChild?.className).toContain('text-hard')
   })
 
-  it('uses the accent colour while open but not urgent', () => {
+  it('uses the live colour while open but not urgent', () => {
+    // Live is the one status that kept the lime; the brand accent is monochrome.
     const { container } = renderApp(<Countdown state={state({ phase: 'open', msLeft: 7_200_000 })} />)
-    expect(container.firstElementChild?.className).toContain('text-accent-fg')
+    expect(container.firstElementChild?.className).toContain('text-live-fg')
   })
 
   it('honours the size prop', () => {

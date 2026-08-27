@@ -5,9 +5,12 @@
  * properties, so every Tailwind utility (bg-surface, text-muted, …) follows
  * the theme without any dark: variants in the markup.
  *
- * accent      — brand fill (button/chip backgrounds)
+ * accent      — brand fill (button/chip backgrounds). Monochrome on purpose:
+ *               near-black on light, near-white on dark. Colour in this product
+ *               means status, so the brand itself does not spend any.
  * accent-ink  — text drawn ON an accent fill
  * accent-fg   — accent used AS text or a dot on a page background
+ * live / live-fg — the one status that keeps the old lime: entry is open now.
  */
 @theme {
   --color-ink: #f6f7f9;
@@ -22,10 +25,13 @@
   --color-muted: #59616e;
   --color-faint: #666e7b;
 
-  --color-accent: #bdeb00;
-  --color-accent-dim: #a8d200;
-  --color-accent-ink: #0b0d06;
-  --color-accent-fg: #5a7500;
+  --color-accent: #101317;
+  --color-accent-dim: #2b3038;
+  --color-accent-ink: #ffffff;
+  --color-accent-fg: #101317;
+
+  --color-live: #bdeb00;
+  --color-live-fg: #5a7500;
 
   --color-easy: #0b7c45;
   --color-medium: #9d5e00;
@@ -60,10 +66,13 @@
   --color-muted: #8b929d;
   --color-faint: #7b8490;
 
-  --color-accent: #ccff33;
-  --color-accent-dim: #9dc41f;
+  --color-accent: #f1f3f6;
+  --color-accent-dim: #cfd4dc;
   --color-accent-ink: #08090a;
-  --color-accent-fg: #ccff33;
+  --color-accent-fg: #f1f3f6;
+
+  --color-live: #ccff33;
+  --color-live-fg: #ccff33;
 
   --color-easy: #3ddc84;
   --color-medium: #ffb020;

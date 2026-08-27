@@ -81,7 +81,6 @@ describe('drops', () => {
     for (const d of DROPS) {
       expect(d.art.from).toMatch(/^#[0-9a-f]{3,8}$/i)
       expect(d.art.to).toMatch(/^#[0-9a-f]{3,8}$/i)
-      expect(d.art.glyph).toBeTruthy()
     }
   })
 })

@@ -37,7 +37,7 @@ export function makeDrop(overrides: Partial<Drop> = {}): Drop {
     closesAt: at(9 * 3_600_000),
     channels: [makeChannel()],
     frictionNotes: [{ en: 'Ships to JP addresses only — use a forwarder.' }],
-    art: { from: '#4b5320', to: '#0d0f08', glyph: '👟' },
+    art: { from: '#4b5320', to: '#0d0f08' },
     ...overrides,
   }
 }

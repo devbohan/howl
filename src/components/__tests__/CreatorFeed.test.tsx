@@ -33,9 +33,9 @@ describe('CreatorFeed', () => {
     expect(text).toContain('1.2M')
   })
 
-  it('flames the top two rows only', () => {
+  it('marks the top two rows as hot only', () => {
     const { container } = renderApp(<CreatorFeed category="sneakers" />)
-    const flamed = rows(container).map((r) => (r.textContent ?? '').includes('🔥'))
+    const flamed = rows(container).map((r) => r.querySelector('svg[aria-hidden] path[d^="M1 9.5"]') !== null)
     expect(flamed.slice(0, 2)).toEqual([true, true])
     expect(flamed.slice(2).every((f) => !f)).toBe(true)
   })

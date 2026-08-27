@@ -39,9 +39,9 @@ describe('NewsTicker', () => {
     expect(hottest.slice(0, 3).some((n) => first.includes(n.text.en))).toBe(true)
   })
 
-  it('flames exactly the top three rows', () => {
+  it('marks exactly the top three rows as hot', () => {
     const { container } = renderApp(<NewsTicker category="sneakers" />)
-    const flamed = rows(container).map((r) => (r.textContent ?? '').includes('🔥'))
+    const flamed = rows(container).map((r) => r.querySelector('svg[aria-hidden] path[d^="M1 9.5"]') !== null)
     expect(flamed.slice(0, 3)).toEqual([true, true, true])
     expect(flamed.slice(3).every((f) => !f)).toBe(true)
   })

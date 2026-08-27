@@ -37,11 +37,11 @@ function MediaRow({ item }: { item: MediaLink }) {
 
       <div className="min-w-0 flex-1">
         <div className="flex items-start gap-2">
-          <p className="min-w-0 flex-1 text-[13px] font-semibold leading-snug text-fg transition group-hover:text-accent-fg">
+          <p className="min-w-0 flex-1 text-[13px] font-semibold leading-snug text-fg underline-offset-4 group-hover:underline">
             {tl(item.title)}
           </p>
           {item.featured && (
-            <span className="mt-px shrink-0 rounded border border-accent-fg/40 px-1.5 py-0.5 text-[10px] font-semibold text-accent-fg">
+            <span className="mt-px shrink-0 rounded border border-fg/35 px-1.5 py-0.5 text-[10px] font-semibold text-fg">
               {t('mediaPick')}
             </span>
           )}

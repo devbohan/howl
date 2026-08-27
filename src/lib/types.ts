@@ -146,7 +146,7 @@ export interface Drop {
   tags?: string[]
   /** Unboxings, reviews and press coverage from outside HOWL. */
   media?: MediaLink[]
-  /** Decorative art for the card — no remote images in the prototype. */
-  art: { from: string; to: string; glyph: string }
+  /** Placeholder gradient standing in for product photography. */
+  art: { from: string; to: string }
   hot?: boolean
 }
