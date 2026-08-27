@@ -13,13 +13,14 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:all": "npm run typecheck && npm run test:coverage && npm run test:e2e",
+    "test:all": "npm run typecheck && npm run test:coverage && npm run test:e2e && npm run check:launch",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prerender": "node scripts/prerender.mjs",
     "build:static": "npm run build && npm run prerender",
     "ingest": "node scripts/ingest.mjs",
-    "build:bookmarklet": "node scripts/build-bookmarklet.mjs"
+    "build:bookmarklet": "node scripts/build-bookmarklet.mjs",
+    "check:launch": "node scripts/check-launch.mjs"
   },
   "dependencies": {
     "react": "^19.1.0",

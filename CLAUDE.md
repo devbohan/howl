@@ -91,39 +91,20 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 
 > ⚠️ 原型里这个周期只是**接口就位**：mock 数据在模块加载时生成，刷新不会真的产生新内容。真实版本在这里发 CMS 请求。
 
-## ⚠️ 占位数据说明
+## ⚠️ 数据现状：全部为空，等待录入
 
-以下三处是**占位内容，不能当真**，真实版本必须逐条人工采集或接 API：
+四份数据集**全部清空**了，这是上线前的正确状态：
 
-| 文件 | 内容 | 占位方式 |
+| 文件 | 曾经是什么 | 为什么必须清 |
 | :--- | :--- | :--- |
-| [mock.ts](src/data/mock.ts) 的 `media` | 21 件商品中 12 件的开箱链接 | 创作者 handle 是编的，URL 指向平台搜索页 |
-| [news.ts](src/data/news.ts) | 22 条品类快讯 | 事件虚构（机制真实：SNKRS DAN 15 分钟、LivePocket SMS 限制等） |
-| [creators.ts](src/data/creators.ts) | 25 条品类级传媒人 | 同上，另外 `heat` 数值也是生成的 |
+| [mock.ts](src/data/mock.ts) | 21 件虚构商品 | 每页都带 `Product` 结构化数据，等于向 Google 提交虚假数据；倒计时上一个错日期比没有条目更糟 |
+| [news.ts](src/data/news.ts) | 22 条虚构快讯，**署名真实公司**（GOODSMILE / POP MART / END. / Kith Tokyo…） | **这不是占位数据，是以别人的名义编造声明。** 用户照着去店头会白跑；被预渲染并被答案引擎引用之后，错误就不再是你能纠正的了 |
+| [creators.ts](src/data/creators.ts) | 25 条虚构 handle、虚构播放量、虚构标题 | 是伪造的媒体覆盖，源码里标了 placeholder 也不改变这一点 |
+| [wants.ts](src/data/wants.ts) | 10 条带**虚构票数**的求复刻 | 「412 人想要」是**伪造社会证明**，和刷好评同类。当初的理由是"空板子显得没人用"——那个理由把人引向了不该去的地方 |
 
-**不要用真实 KOL 的名字去配虚构的视频标题**——那等于替真人捏造内容。占位一律用明显虚构的 handle。
+**教训写成了一道闸**：[check-launch.mjs](scripts/check-launch.mjs)（`npm run check:launch`，已并入 `test:all`）会在数据集里还留着占位标记时**直接失败**。因为源码里的 placeholder 注释保护不了任何人——**注释不是访客和爬虫看到的东西**。
 
-## 品牌与视觉语言
-
-**字标**：[Logo.tsx](src/components/Logo.tsx) —— 手绘横幅（左右出尖、上下两条长边内凹）里手写 `howl`。整个标记是 `currentColor` 描边的内联 SVG，所以**跟着文字颜色走、自动适配黑白天**，没有双色资源也没有远程文件。刻意保留了原稿的不对称（左尖比右尖高、上边下沉幅度大于下边上凸）—— 修正成几何对称就变成剪贴画了。
-
-- 头部 `h-4.5`，`sm` 以上 `h-6`（18 / 24px）。再往下走 `howl` 就读不出来了，只剩横幅轮廓
-- VIP 横幅右上角用同一个标记做 6% 透明度的水印，不再借用 ⚡️
-- [favicon.svg](public/favicon.svg) 只用外框剪影 + 加粗描边：16px 下里面的字写不清，轮廓还认得出；内嵌 `prefers-color-scheme` 查询跟随浏览器主题
-
-**颜色只表达状态，品牌本身不花颜色**：
-
-| 令牌 | 浅色 / 深色 | 用途 |
-| :--- | :--- | :--- |
-| `accent` / `accent-fg` | `#101317` / `#f1f3f6` | 品牌填充与强调，**黑白** |
-| `live` / `live-fg` | `#bdeb00` / `#ccff33` | **唯一保留荧光绿的状态**：正在抽选中 |
-| `easy` / `medium` / `hard` | 绿 / 琥珀 / 红 | 海淘难度与库存状态 |
-
-原来那套荧光绿被当成品牌色用在按钮、筛选芯片、悬停边框、VIP CTA 上，现在全部换成黑白；绿色只留给「进行中」，以及难度/库存这些本来就是状态的地方。
-
-**界面里不出现 emoji**。品类图标、地区旗帜、难度圆点、🔥、🔔、☀️/🌙、卡片上的大 emoji 占位图全部移除，改成 [icons.tsx](src/components/icons.tsx) 里同一套单线 SVG（统一描边宽度、圆端点、只用 `currentColor`）。理由：emoji 在每个平台渲染都不一样，而且永远和手绘字标对不上。**[a11y.spec.ts](e2e/a11y.spec.ts) 有一条测试会在任何页面出现 emoji 时失败**，[i18n.test.ts](src/lib/__tests__/i18n.test.ts) 也会拦住混进文案里的 emoji。
-
-商品卡与详情页的图片位现在是**纯渐变块**（`art: { from, to }`），emoji 占位已删，`glyph` 字段一并从类型和数据里移除。
+空面板会自己隐藏（快讯/视频流），空求复刻页显示邀请文案而不是空列表 —— **标着「NEWS」的空面板读起来是"坏了"，不是"新站"**。
 
 ## 约定
 
@@ -260,7 +241,7 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 | 命令 | 内容 |
 | :--- | :--- |
 | `npm run typecheck` | 应用/测试/工具三套 tsconfig 分别检查 |
-| `npm test` | Vitest 369 个单元与组件测试 |
+| `npm test` | Vitest 371 个单元与组件测试 |
 | `npm run test:coverage` | 同上 + 覆盖率，阈值 80%（当前 97% 语句 / 91% 分支） |
 | `npm run test:e2e` | Playwright 154 个用例，chromium + Pixel 5 两套（含关掉 JS 的爬虫视角） |
 | `npm run test:e2e:ui` | Playwright UI 模式，调试用 |

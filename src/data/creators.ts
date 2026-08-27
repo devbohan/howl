@@ -2,46 +2,18 @@ import type { Category, MediaLink } from '../lib/types'
 
 /**
  * Category-level coverage: the creators and outlets worth following for a whole
- * genre, not a single drop. PLACEHOLDER content — handles are invented and the
- * URLs point at platform search pages. A real build curates this in the CMS and
- * refreshes the top rows from each creator's latest upload.
+ * genre. Emptied before launch — it held invented handles, invented view counts
+ * and invented video titles, which is fabricated coverage however clearly the
+ * file said so.
+ *
+ * Real entries are collected by hand and, ideally, refreshed from each
+ * platform's own API once there are enough to be worth automating.
  */
 export const CATEGORY_MEDIA: Record<Category, MediaLink[]> = {
-  sneakers: [
-    { id: 'f01', heat: { site: 2980, external: 827000 }, kind: 'video', platform: 'youtube', source: '@kicksdaily', lang: 'en', audience: '1.2M', duration: '11:48', featured: true, url: 'https://www.youtube.com/results?search_query=sneaker+raffle+guide', title: { en: 'How raffles really allocate — six years of entry data', ja: '抽選の当選ロジックを6年分のデータで検証', 'zh-CN': '用六年抽选数据反推中签逻辑', 'zh-TW': '用六年抽選數據反推中籤邏輯' } },
-    { id: 'f02', heat: { site: 2450, external: 407000 }, kind: 'video', platform: 'youtube', source: '@atmos_tokyo_ch', lang: 'ja', audience: '38.4万', duration: '14:20', url: 'https://www.youtube.com/results?search_query=atmos+スニーカー+開封', title: { en: 'This week in Tokyo: every release worth queueing for', ja: '今週の東京：並ぶ価値のあるリリース総まとめ', 'zh-CN': '本周东京：值得排队的发售一次看完', 'zh-TW': '本週東京：值得排隊的發售一次看完' } },
-    { id: 'f03', heat: { site: 950, external: 375000 }, kind: 'video', platform: 'bilibili', source: '球鞋鉴定所', lang: 'zh-CN', audience: '203万', duration: '11:03', url: 'https://search.bilibili.com/all?keyword=球鞋+鉴定', title: { en: 'Authentication basics before you buy resale', ja: '二次流通で買う前の鑑定の基本', 'zh-CN': '买二级市场之前必须会的辨伪基础', 'zh-TW': '買二級市場之前必須會的辨偽基礎' } },
-    { id: 'f04', heat: { site: 860, external: 379000 }, kind: 'article', platform: 'web', source: 'Hypebeast', lang: 'en', url: 'https://hypebeast.com/footwear', title: { en: 'Weekly release calendar with confirmed stockists', ja: '週間リリースカレンダーと取扱店舗', 'zh-CN': '每周发售日历与已确认渠道', 'zh-TW': '每週發售日曆與已確認渠道' } },
-    { id: 'f05', heat: { site: 2810, external: 1454000 }, kind: 'social', platform: 'x', source: '@snkr_alerts', lang: 'en', audience: '412K', url: 'https://x.com/search?q=sneaker%20raffle%20live', title: { en: 'Raffle links posted the minute they go live', ja: '抽選リンクを公開と同時に投稿', 'zh-CN': '抽选一开就发链接', 'zh-TW': '抽選一開就發連結' } },
-  ],
-  tcg: [
-    { id: 'f06', heat: { site: 440, external: 1504000 }, kind: 'video', platform: 'youtube', source: '@ptcg_kaitai', lang: 'ja', audience: '52.1万', duration: '19:30', featured: true, url: 'https://www.youtube.com/results?search_query=ポケモンカード+開封', title: { en: 'Box-opening series: pull rates across every recent set', ja: '開封シリーズ：最近の全弾の封入率まとめ', 'zh-CN': '开箱系列：近期各弹出货率横评', 'zh-TW': '開箱系列：近期各彈出貨率橫評' } },
-    { id: 'f07', heat: { site: 680, external: 1715000 }, kind: 'video', platform: 'bilibili', source: '卡牌老张', lang: 'zh-CN', audience: '84.3万', duration: '16:44', url: 'https://search.bilibili.com/all?keyword=宝可梦卡牌+代购', title: { en: 'Buying JP-exclusive card products from overseas', ja: '海外から日本限定カード製品を買う方法', 'zh-CN': '海外买日限卡牌产品的完整路径', 'zh-TW': '海外買日限卡牌產品的完整路徑' } },
-    { id: 'f08', heat: { site: 2950, external: 618000 }, kind: 'article', platform: 'note', source: 'ポケカ投資メモ', lang: 'ja', url: 'https://note.com/hashtag/ポケモンカード', title: { en: 'Why JP raffles reject overseas accounts', ja: '日本の抽選が海外アカウントを弾く理由', 'zh-CN': '日本抽选为何拒绝海外账号', 'zh-TW': '日本抽選為何拒絕海外帳號' } },
-    { id: 'f09', heat: { site: 3030, external: 1958000 }, kind: 'social', platform: 'x', source: '@opcg_market', lang: 'ja', audience: '96K', url: 'https://x.com/search?q=カード%20相場', title: { en: 'Daily singles pricing across JP shops', ja: '国内ショップのシングル相場を日次更新', 'zh-CN': '日本各店单卡行情每日更新', 'zh-TW': '日本各店單卡行情每日更新' } },
-  ],
-  figure: [
-    { id: 'f10', heat: { site: 110, external: 950000 }, kind: 'video', platform: 'youtube', source: '@figure_no_heya', lang: 'ja', audience: '17.8万', duration: '12:14', featured: true, url: 'https://www.youtube.com/results?search_query=フィギュア+開封+レビュー', title: { en: 'Paint and QC check on every new release', ja: '新作フィギュアの塗装・品質チェック', 'zh-CN': '新品手办涂装与做工逐件检查', 'zh-TW': '新品手辦塗裝與做工逐件檢查' } },
-    { id: 'f11', heat: { site: 1980, external: 1840000 }, kind: 'video', platform: 'youtube', source: '@nendo_shelf', lang: 'en', audience: '158K', duration: '9:44', url: 'https://www.youtube.com/results?search_query=nendoroid+review', title: { en: 'Nendoroid reviews: face plates, stands, common defects', ja: 'ねんどろいどレビュー：顔パーツ・スタンド・不良の傾向', 'zh-CN': '黏土人评测：脸模、支架与常见瑕疵', 'zh-TW': '黏土人評測：臉模、支架與常見瑕疵' } },
-    { id: 'f12', heat: { site: 3010, external: 2096000 }, kind: 'article', platform: 'web', source: 'Tokyo Otaku Mode', lang: 'en', url: 'https://otakumode.com', title: { en: 'Made-to-order windows explained — miss it and it is gone', ja: '受注生産の仕組み：逃せば二度と買えない理由', 'zh-CN': '限时受注机制：错过就真的绝版', 'zh-TW': '限時受注機制：錯過就真的絕版' } },
-    { id: 'f13', heat: { site: 2660, external: 266000 }, kind: 'social', platform: 'x', source: '@wf_watch', lang: 'ja', audience: '73K', url: 'https://x.com/search?q=ワンフェス%20限定', title: { en: 'Wonder Festival exclusives, tracked in real time', ja: 'ワンフェス限定品をリアルタイムで追跡', 'zh-CN': 'WF 限定品实时追踪', 'zh-TW': 'WF 限定品即時追蹤' } },
-  ],
-  arttoy: [
-    { id: 'f14', heat: { site: 180, external: 1108000 }, kind: 'video', platform: 'bilibili', source: '潮玩日报', lang: 'zh-CN', audience: '126万', duration: '10:41', featured: true, url: 'https://search.bilibili.com/all?keyword=潮玩+开箱', title: { en: 'MEGA and 1000% openings, paint quality up close', ja: 'MEGA・1000%開封：塗装を接写で確認', 'zh-CN': 'MEGA 与 1000% 开箱：喷漆微距实拍', 'zh-TW': 'MEGA 與 1000% 開箱：噴漆微距實拍' } },
-    { id: 'f15', heat: { site: 750, external: 2033000 }, kind: 'video', platform: 'youtube', source: '@toystudio_hk', lang: 'en', audience: '385K', duration: '13:52', url: 'https://www.youtube.com/results?search_query=bearbrick+unboxing', title: { en: 'Spotting a fake BE@RBRICK in 60 seconds', ja: '60秒で偽ベアブリックを見抜く', 'zh-CN': '60 秒辨别 BE@RBRICK 真假', 'zh-TW': '60 秒辨別 BE@RBRICK 真假' } },
-    { id: 'f16', heat: { site: 2070, external: 1574000 }, kind: 'social', platform: 'xiaohongshu', source: '@泡泡收藏笔记', lang: 'zh-CN', audience: '31.2万', url: 'https://www.xiaohongshu.com/search_result?keyword=泡泡玛特%20抽选', title: { en: 'Mini-program raffle walkthroughs and verification traps', ja: 'ミニプログラム抽選の手順と認証の落とし穴', 'zh-CN': '小程序抽选流程与实名认证避坑', 'zh-TW': '小程式抽選流程與實名認證避坑' } },
-    { id: 'f17', heat: { site: 1880, external: 1454000 }, kind: 'social', platform: 'instagram', source: '@bearbrick_archive', lang: 'en', audience: '198K', url: 'https://www.instagram.com/explore/tags/bearbrick/', title: { en: 'Every 1000% colourway with its original retail price', ja: '歴代1000%カラーと当時の定価', 'zh-CN': '历代 1000% 配色与当年定价', 'zh-TW': '歷代 1000% 配色與當年定價' } },
-  ],
-  goods: [
-    { id: 'f18', heat: { site: 1310, external: 1072000 }, kind: 'video', platform: 'youtube', source: '@holo_goods_review', lang: 'ja', audience: '9.4万', duration: '15:37', featured: true, url: 'https://www.youtube.com/results?search_query=VTuber+グッズ+開封', title: { en: 'Birthday and anniversary sets, print quality compared', ja: '誕生日・周年グッズの印刷品質を比較', 'zh-CN': '生日与周年套组印刷质量横比', 'zh-TW': '生日與週年套組印刷品質橫比' } },
-    { id: 'f19', heat: { site: 410, external: 1465000 }, kind: 'video', platform: 'youtube', source: '@popup_hunter_jp', lang: 'ja', audience: '22.6万', duration: '9:19', url: 'https://www.youtube.com/results?search_query=ポップアップストア+限定+レポ', title: { en: 'Pop-up reports: what sells out in the first hour', ja: 'ポップアップ実地レポ：最初の1時間で消えるもの', 'zh-CN': '快闪店实录：开场一小时售罄清单', 'zh-TW': '快閃店實錄：開場一小時售罄清單' } },
-    { id: 'f20', heat: { site: 1100, external: 1792000 }, kind: 'social', platform: 'x', source: '@vt_goods_intl', lang: 'en', audience: '64K', url: 'https://x.com/search?q=vtuber%20goods%20international%20shipping', title: { en: 'Which official shops actually ship outside Japan', ja: '海外発送に対応している公式ショップ一覧', 'zh-CN': '哪些官方店真的发海外', 'zh-TW': '哪些官方店真的發海外' } },
-    { id: 'f21', heat: { site: 2560, external: 355000 }, kind: 'article', platform: 'web', source: 'Dexerto', lang: 'en', url: 'https://www.dexerto.com', title: { en: 'Why VTuber voice merch is region-locked', ja: 'VTuberのボイス商品が地域限定な理由', 'zh-CN': 'VTuber 语音周边为何锁区', 'zh-TW': 'VTuber 語音週邊為何鎖區' } },
-  ],
-  hardware: [
-    { id: 'f22', heat: { site: 2850, external: 709000 }, kind: 'video', platform: 'youtube', source: '@consolecollector', lang: 'en', audience: '640K', duration: '16:05', featured: true, url: 'https://www.youtube.com/results?search_query=limited+edition+console+unboxing', title: { en: 'Limited-edition console unboxings, every piece in the box', ja: '限定版ハード開封：同梱物をすべて確認', 'zh-CN': '限定版主机开箱：盒内每件都过一遍', 'zh-TW': '限定版主機開箱：盒內每件都過一遍' } },
-    { id: 'f23', heat: { site: 1310, external: 180000 }, kind: 'video', platform: 'youtube', source: '@watchdesk', lang: 'en', audience: '512K', duration: '10:12', url: 'https://www.youtube.com/results?search_query=moonswatch+review', title: { en: 'Collab watches: which queues are actually worth it', ja: 'コラボ時計：並ぶ価値のある行列はどれか', 'zh-CN': '联名腕表：哪些队值得排', 'zh-TW': '聯名腕錶：哪些隊值得排' } },
-    { id: 'f24', heat: { site: 2280, external: 1385000 }, kind: 'article', platform: 'web', source: 'Famitsu', lang: 'ja', url: 'https://www.famitsu.com', title: { en: 'Restock schedules and how JP retailer queues work', ja: '再販スケジュールと国内販売店の待機列の仕組み', 'zh-CN': '补货排期与日本渠道排队机制', 'zh-TW': '補貨排期與日本渠道排隊機制' } },
-    { id: 'f25', heat: { site: 1560, external: 1410000 }, kind: 'social', platform: 'x', source: '@restock_jp', lang: 'ja', audience: '128K', url: 'https://x.com/search?q=再販%20速報', title: { en: 'Restock alerts across Japanese retailers', ja: '国内販売店の再販速報', 'zh-CN': '日本各渠道补货速报', 'zh-TW': '日本各渠道補貨速報' } },
-  ],
+  sneakers: [],
+  tcg: [],
+  figure: [],
+  arttoy: [],
+  goods: [],
+  hardware: [],
 }

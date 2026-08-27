@@ -1,7 +1,38 @@
-import { describe, expect, it } from 'vitest'
-import { CreatorFeed } from '../CreatorFeed'
-import { CATEGORY_MEDIA } from '../../data/creators'
-import { renderApp } from '../../test/render'
+import { describe, expect, it, vi } from 'vitest'
+import type { Category, MediaLink } from '../../lib/types'
+
+const media = (over: Partial<MediaLink>): MediaLink => ({
+  id: 'm',
+  kind: 'video',
+  platform: 'youtube',
+  source: '@fixture',
+  title: { en: 'A fixture video', 'zh-CN': '一个夹具视频' },
+  url: 'https://example.test/v',
+  lang: 'en',
+  ...over,
+})
+
+/** Fixtures: the live feed is legitimately empty before launch. */
+const CATEGORY_MEDIA: Record<Category, MediaLink[]> = {
+  sneakers: [
+    media({ id: 's1', source: '@kicksdaily', audience: '1.2M', duration: '11:48', featured: true, title: { en: 'How raffles really allocate', 'zh-CN': '用六年抽选数据反推中签逻辑' }, heat: { site: 2980, external: 827_000 } }),
+    media({ id: 's2', source: '@atmos_tokyo_ch', lang: 'ja', audience: '38.4万', duration: '14:20', heat: { site: 900, external: 300_000 } }),
+    media({ id: 's3', kind: 'article', platform: 'web', source: 'Fixture Press', heat: { site: 200, external: 50_000 } }),
+  ],
+  tcg: [media({ id: 't1', source: '@ptcg', heat: { site: 500, external: 100_000 } })],
+  figure: [media({ id: 'g1', source: '@figures', heat: { site: 100, external: 20_000 } })],
+  arttoy: [
+    media({ id: 'a1', source: '@toys', heat: { site: 300, external: 60_000 } }),
+    media({ id: 'a2', source: '@toys2', heat: { site: 100, external: 10_000 } }),
+  ],
+  goods: [media({ id: 'o1', source: '@goods', heat: { site: 90, external: 9_000 } })],
+  hardware: [media({ id: 'h1', source: '@hw', heat: { site: 80, external: 8_000 } })],
+}
+
+vi.mock('../../data/creators', () => ({ CATEGORY_MEDIA }))
+
+const { CreatorFeed } = await import('../CreatorFeed')
+const { renderApp } = await import('../../test/render')
 
 function rows(container: HTMLElement) {
   const viewport = container.querySelector('.ticker-viewport')!

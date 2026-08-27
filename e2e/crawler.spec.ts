@@ -158,20 +158,23 @@ test('share cards exist for the site and for each drop', async ({ request, page 
   expect((await request.get(new URL(image!).pathname)).status()).toBe(200)
 })
 
-test('the reissue wantlist is prerendered with its counts', async ({ page }) => {
+test('the reissue wantlist is prerendered, with its counts when it has any', async ({ page }) => {
   await page.goto('/en/wants')
   await expect(page.locator('h1')).toBeVisible()
 
+  // The invitation and the form are the substance while the board is empty —
+  // a crawler must still get a real page, not a shell it has to run JS to fill.
   const text = await page.locator('body').innerText()
   expect(text.length).toBeGreaterThan(400)
-  // The counts are the substance — an answer engine quoting this page should
-  // see "412 people want this", not an empty shell it has to run JS to fill.
-  expect(text).toMatch(/\d{2,}/)
+  await expect(page.getByRole('button', { name: /Add my request/ })).toBeVisible()
 
   const raw = await page.locator('script[type="application/ld+json"]').innerText()
   const nodes = JSON.parse(raw)
   const collection = nodes.find((n: any) => n['@type'] === 'CollectionPage')
-  expect(collection.mainEntity.itemListElement.length).toBeGreaterThan(5)
+  expect(collection).toBeTruthy()
+
+  const items = collection.mainEntity.itemListElement.length
+  if (items > 0) expect(text).toMatch(/\d{2,}/)
 })
 
 test('the wantlist is in the sitemap in every language', async ({ request }) => {

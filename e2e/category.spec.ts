@@ -1,5 +1,12 @@
 import { expect, test } from '@playwright/test'
-import { CATEGORIES, coveragePanel, dropCards, hasHorizontalOverflow, newsPanel } from './helpers'
+import {
+  CATEGORIES,
+  coveragePanel,
+  dropCards,
+  hasHorizontalOverflow,
+  newsPanel,
+  skipWithoutTicker,
+} from './helpers'
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/en/c/sneakers')
@@ -20,13 +27,19 @@ test('shows only drops from this category', async ({ page }) => {
   }
 })
 
-test('mounts both scrolling panels above the filters', async ({ page }) => {
+test('mounts a scrolling panel only when it has something to show', async ({ page }) => {
+  const panels = await page.locator('.ticker-viewport').count()
+  if (panels === 0) {
+    // An empty panel labelled NEWS reads as broken, not as new.
+    await expect(page.getByText('NEWS')).toHaveCount(0)
+    return
+  }
   await expect(page.getByText('NEWS')).toBeVisible()
-  await expect(page.getByText('Coverage')).toBeVisible()
   await expect(page.locator('.ticker-viewport')).toHaveCount(2)
 })
 
 test('the news panel scrolls on its own', async ({ page }) => {
+  await skipWithoutTicker(test, page)
   const panel = newsPanel(page)
   const start = await panel.evaluate((el) => el.scrollTop)
   await page.waitForTimeout(1200)
@@ -35,6 +48,7 @@ test('the news panel scrolls on its own', async ({ page }) => {
 })
 
 test('the panel is a real scroll container with room to scroll', async ({ page }) => {
+  await skipWithoutTicker(test, page)
   const metrics = await newsPanel(page).evaluate((el) => ({
     overflow: getComputedStyle(el).overflowY,
     scrollable: el.scrollHeight > el.clientHeight,
@@ -44,6 +58,7 @@ test('the panel is a real scroll container with room to scroll', async ({ page }
 })
 
 test('hovering pauses the scroll, and leaving resumes it', async ({ page }) => {
+  await skipWithoutTicker(test, page)
   const panel = newsPanel(page)
   await panel.hover()
   await page.waitForTimeout(400)
@@ -57,6 +72,7 @@ test('hovering pauses the scroll, and leaving resumes it', async ({ page }) => {
 })
 
 test('the reader can scroll the panel by hand while it is paused', async ({ page }) => {
+  await skipWithoutTicker(test, page)
   const panel = newsPanel(page)
   await panel.hover()
   await panel.evaluate((el) => {
@@ -66,6 +82,7 @@ test('the reader can scroll the panel by hand while it is paused', async ({ page
 })
 
 test('coverage rows open externally and safely', async ({ page }) => {
+  await skipWithoutTicker(test, page)
   const links = coveragePanel(page).locator('a')
   const attrs = await links.evaluateAll((els) =>
     els.map((e) => ({ target: e.getAttribute('target'), rel: e.getAttribute('rel'), href: e.getAttribute('href') })),

@@ -1,8 +1,24 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { within } from '@testing-library/react'
-import { NewsTicker } from '../NewsTicker'
-import { NEWS } from '../../data/news'
-import { renderApp } from '../../test/render'
+import type { NewsItem } from '../../lib/types'
+
+/** Fixtures: the live ticker is legitimately empty before launch. */
+const ago = (minutes: number) => new Date(Date.now() - minutes * 60_000).toISOString()
+
+const NEWS: NewsItem[] = [
+  { id: 'f1', category: 'sneakers', kind: 'confirmed', at: ago(4), urgent: true, source: 'Fixture', url: 'https://example.test/1', text: { en: 'Entry window confirmed for the Olive AJ1' }, heat: { site: 960, external: 11_400 } },
+  { id: 'f2', category: 'sneakers', kind: 'restock', at: ago(23), dropSlug: 'fixture-drop', text: { en: 'Sizes quietly reopened' }, heat: { site: 700, external: 9_000 } },
+  { id: 'f3', category: 'sneakers', kind: 'rumor', at: ago(96), source: 'Fixture', url: 'https://example.test/3', text: { en: 'Week 12 list said to have leaked' }, heat: { site: 400, external: 5_000 } },
+  { id: 'f4', category: 'sneakers', kind: 'result', at: ago(310), text: { en: 'Draw results have gone out' }, heat: { site: 120, external: 900 } },
+  { id: 'f5', category: 'sneakers', kind: 'confirmed', at: ago(540), text: { en: 'An in-store draw was added' }, heat: { site: 60, external: 400 } },
+  { id: 'f6', category: 'tcg', kind: 'confirmed', at: ago(11), text: { en: 'Entry closes in under 48h', ja: '申込は48時間以内に締切' }, heat: { site: 900, external: 20_000 } },
+  { id: 'f7', category: 'hardware', kind: 'restock', at: ago(9), text: { en: 'Queue is open now' }, heat: { site: 500, external: 3_000 } },
+]
+
+vi.mock('../../data/news', () => ({ NEWS }))
+
+const { NewsTicker } = await import('../NewsTicker')
+const { renderApp } = await import('../../test/render')
 
 /** The visible copy — the marquee clone is aria-hidden. */
 function rows(container: HTMLElement) {

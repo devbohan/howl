@@ -104,7 +104,15 @@ describe('news', () => {
     expect(duplicates(NEWS.map((n) => n.id))).toEqual([])
   })
 
-  it('covers every category so no ticker is ever empty', () => {
+  it('never puts words in a real company’s mouth without a source link', () => {
+    // An item that names a source but cannot be checked is an unverifiable
+    // claim attributed to someone else — the exact failure this dataset had.
+    const unsourced = NEWS.filter((n) => n.source && !n.url && !n.dropSlug).map((n) => n.id)
+    expect(unsourced).toEqual([])
+  })
+
+  it('covers every category once there is any news at all', () => {
+    if (NEWS.length === 0) return
     for (const c of CATEGORIES) {
       expect(NEWS.filter((n) => n.category === c).length).toBeGreaterThan(0)
     }
@@ -142,7 +150,9 @@ describe('media links', () => {
     expect(duplicates(ALL_MEDIA.map((m) => m.id))).toEqual([])
   })
 
-  it('covers every category in the creator feed', () => {
+  it('covers every category in the creator feed, once it has any', () => {
+    const total = CATEGORIES.reduce((n, c) => n + CATEGORY_MEDIA[c].length, 0)
+    if (total === 0) return
     for (const c of CATEGORIES) expect(CATEGORY_MEDIA[c].length).toBeGreaterThan(0)
   })
 

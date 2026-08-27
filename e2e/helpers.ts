@@ -50,3 +50,16 @@ export async function anyDropSlug(request: APIRequestContext): Promise<string | 
 export function skipWithoutDrops(test: { skip: (condition: boolean, reason: string) => void }, slug: string | null) {
   test.skip(slug === null, '站上还没有商品数据 —— 录入后这些测试会自动恢复')
 }
+
+/**
+ * Skips when the ticker panels are not on the page. Both feeds are empty before
+ * launch and the panels correctly hide themselves, so these specs have nothing
+ * to assert against — but they say so rather than passing vacuously.
+ */
+export async function skipWithoutTicker(
+  test: { skip: (condition: boolean, reason: string) => void },
+  page: Page,
+) {
+  const count = await page.locator('.ticker-viewport').count()
+  test.skip(count === 0, '快讯与视频流还没有内容 —— 录入后这些测试会自动恢复')
+}

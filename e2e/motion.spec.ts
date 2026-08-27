@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { newsPanel } from './helpers'
+import { newsPanel, skipWithoutTicker } from './helpers'
 
 test.describe('with prefers-reduced-motion', () => {
   test.beforeEach(async ({ page }) => {
@@ -12,6 +12,7 @@ test.describe('with prefers-reduced-motion', () => {
   })
 
   test('the ticker does not scroll itself', async ({ page }) => {
+    await skipWithoutTicker(test, page)
     const panel = newsPanel(page)
     // No settle window on purpose: under reduced motion it must never move,
     // not even for the frame between mount and an effect switching it off.
@@ -21,6 +22,7 @@ test.describe('with prefers-reduced-motion', () => {
   })
 
   test('the reader can still scroll it by hand', async ({ page }) => {
+    await skipWithoutTicker(test, page)
     const panel = newsPanel(page)
     await panel.evaluate((el) => {
       el.scrollTop = 40
@@ -29,6 +31,7 @@ test.describe('with prefers-reduced-motion', () => {
   })
 
   test('no row is duplicated, since the loop clone is dropped', async ({ page }) => {
+    await skipWithoutTicker(test, page)
     const copies = await newsPanel(page).evaluate((el) => el.children.length)
     expect(copies).toBe(1)
 
@@ -56,8 +59,10 @@ test.describe('with prefers-reduced-motion', () => {
   })
 
   test('the live dot stops pulsing', async ({ page }) => {
-    // The dot animation is CSS-driven; reduced motion should not leave it running
-    // at full speed. This asserts the page still renders it, not that it moves.
+    // The dot animation is CSS-driven; reduced motion should not leave it
+    // running at full speed. Live dots only exist where something is live.
+    const dots = await page.locator('.live-dot').count()
+    test.skip(dots === 0, '现在没有进行中的商品 —— 有数据后会自动恢复')
     await expect(page.locator('.live-dot').first()).toBeVisible()
   })
 })

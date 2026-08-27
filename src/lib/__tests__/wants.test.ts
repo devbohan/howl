@@ -85,7 +85,15 @@ describe('validateWant', () => {
   })
 })
 
-describe('seeded wantlist', () => {
+describe('the live wantlist', () => {
+  it('starts empty rather than with invented vote counts', () => {
+    // Seeded counts are manufactured social proof. Real entries arrive through
+    // /api/wants and are baked in on the next build.
+    if (WANTS.length > 0) {
+      for (const w of WANTS) expect(w.count).toBeGreaterThan(0)
+    }
+  })
+
   it('has unique ids', () => {
     const ids = WANTS.map((w) => w.id)
     expect(new Set(ids).size).toBe(ids.length)
@@ -96,11 +104,8 @@ describe('seeded wantlist', () => {
     expect(new Set(keys).size).toBe(keys.length)
   })
 
-  it('only uses declared categories, and covers every one', () => {
+  it('only uses declared categories', () => {
     for (const w of WANTS) expect(CATEGORIES).toContain(w.category)
-    for (const c of CATEGORIES) {
-      expect(WANTS.some((w) => w.category === c), `no seed request for ${c}`).toBe(true)
-    }
   })
 
   it('is dated in the past, with the last ask no earlier than the first', () => {

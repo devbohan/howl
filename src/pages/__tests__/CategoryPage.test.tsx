@@ -27,11 +27,12 @@ describe('CategoryPage', () => {
     expect(container.querySelector('a')).toHaveAttribute('href', '/en')
   })
 
-  it('mounts both scrolling panels above the filters', () => {
+  it('leaves out a scrolling panel that has nothing to show', () => {
+    // Both feeds are empty before launch. An empty panel labelled NEWS is worse
+    // than no panel: it says the site is broken rather than new.
     const { container } = show('sneakers')
-    expect(container.textContent).toContain('NEWS')
-    expect(container.textContent).toContain('Coverage')
-    expect(container.querySelectorAll('.ticker-viewport')).toHaveLength(2)
+    expect(container.querySelectorAll('.ticker-viewport')).toHaveLength(0)
+    expect(container.textContent).not.toContain('NEWS')
   })
 
   it('groups results by phase with a count on each heading', () => {
