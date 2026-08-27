@@ -28,8 +28,7 @@ export function Header({
       <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:gap-4">
         {/* The tagline is hidden below sm, so the link carries its own name. */}
         <Link to={`/${locale}`} aria-label="HOWL" className="flex items-center gap-3">
-          {/* Steps down on narrow phones — at h-9 the mark alone eats the row. */}
-          <Logo className="h-7 w-auto shrink-0 text-fg sm:h-9" />
+          <Logo className="h-4.5 w-auto shrink-0 text-fg sm:h-6" />
           <span className="hidden max-w-[13rem] text-[10px] leading-tight text-faint lg:block">
             {t('tagline')}
           </span>

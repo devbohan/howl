@@ -8,7 +8,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Strokes in currentColor, so the mark inherits its colour from whatever it sits in and flips with the theme by itself. Below roughly 28px tall the lettering stops reading — use the favicon silhouette instead.',
+          'Strokes in currentColor, so the mark inherits its colour from whatever it sits in and flips with the theme by itself. The header runs it at 18–24px, about the floor for the lettering inside staying legible. Below that only the banner outline survives — use the favicon silhouette there.',
       },
     },
   },
@@ -23,7 +23,7 @@ export const Default: Story = {}
 export const SizeRamp: Story = {
   render: () => (
     <div className="flex items-end gap-8 text-fg">
-      {['h-24', 'h-12', 'h-9', 'h-7'].map((h) => (
+      {['h-24', 'h-12', 'h-9', 'h-6', 'h-4.5'].map((h) => (
         <Logo key={h} className={`${h} w-auto`} />
       ))}
     </div>
