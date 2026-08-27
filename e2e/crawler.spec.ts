@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { CATEGORIES, LOCALES } from './helpers'
+import { CATEGORIES, LOCALES, anyDropSlug, skipWithoutDrops } from './helpers'
 
 /**
  * Most answer-engine crawlers do not execute JavaScript. Everything in this
@@ -12,7 +12,6 @@ test.use({ javaScriptEnabled: false })
 const PAGES = [
   ['portal', '/en'],
   ['category', '/en/c/sneakers'],
-  ['drop', '/en/drop/travis-scott-aj1-low-olive'],
 ] as const
 
 for (const [name, url] of PAGES) {
@@ -48,8 +47,10 @@ test('every page has a unique title, description and canonical', async ({ page }
   }
 })
 
-test('a drop page declares every language version reciprocally', async ({ page }) => {
-  await page.goto('/ja/drop/pokemon-center-151-premium')
+test('a drop page declares every language version reciprocally', async ({ page, request }) => {
+  const slug = await anyDropSlug(request)
+  skipWithoutDrops(test, slug)
+  await page.goto(`/ja/drop/${slug}`)
   const tags = await page
     .locator('link[rel="alternate"][hreflang]')
     .evaluateAll((els) => els.map((e) => e.getAttribute('hreflang')))
@@ -57,14 +58,16 @@ test('a drop page declares every language version reciprocally', async ({ page }
   expect(tags).toContain('x-default')
 })
 
-test('a drop page carries Product structured data an engine can parse', async ({ page }) => {
-  await page.goto('/en/drop/travis-scott-aj1-low-olive')
+test('a drop page carries Product structured data an engine can parse', async ({ page, request }) => {
+  const slug = await anyDropSlug(request)
+  skipWithoutDrops(test, slug)
+  await page.goto(`/en/drop/${slug}`)
   const raw = await page.locator('script[type="application/ld+json"]').innerText()
   const nodes = JSON.parse(raw)
 
   const product = nodes.find((n: any) => n['@type'] === 'Product')
   expect(product).toBeTruthy()
-  expect(product.name).toContain('Travis Scott')
+  expect(product.name).not.toBe('')
   expect(product.offers.length).toBeGreaterThan(0)
   expect(nodes.some((n: any) => n['@type'] === 'BreadcrumbList')).toBe(true)
 })
@@ -111,11 +114,15 @@ test('the sitemap indexes every page in every language, with alternates', async 
     const xml = await (await request.get(child)).text()
     const urls = [...xml.matchAll(/<loc>/g)].length
     total += urls
-    expect(xml).toContain('<lastmod>')
-    expect(xml).toContain('hreflang="x-default"')
+    // A drop sitemap is legitimately empty before launch; a page sitemap is not.
+    if (urls > 0) {
+      expect(xml).toContain('<lastmod>')
+      expect(xml).toContain('hreflang="x-default"')
+    }
   }
-  // 4 locales × (portal + wantlist + 6 categories + 21 drops)
-  expect(total).toBe(4 * 29)
+  // 4 locales × (portal + wantlist + 6 categories + however many drops exist)
+  const drops = [...(await (await request.get('/sitemap-drops.xml')).text()).matchAll(/<loc>/g)].length
+  expect(total).toBe(4 * 8 + drops)
 })
 
 test('llms.txt describes the site for answer engines', async ({ request }) => {
@@ -130,18 +137,24 @@ test('each language has its own feed', async ({ request }) => {
     const body = await (await request.get(`/${locale}/feed.xml`)).text()
     expect(body).toContain('<rss')
     expect(body).toContain(`<language>${locale}</language>`)
-    expect([...body.matchAll(/<item>/g)].length).toBeGreaterThan(10)
+    expect(body).toContain('rel="self"')
+    // Item count tracks the catalogue, which may still be empty.
+    const items = [...body.matchAll(/<item>/g)].length
+    const drops = [...(await (await request.get('/sitemap-drops.xml')).text()).matchAll(/<loc>/g)].length
+    expect(items).toBe(Math.min(50, drops / LOCALES.length))
   }
 })
 
 test('share cards exist for the site and for each drop', async ({ request, page }) => {
   expect((await request.get('/og.png')).status()).toBe(200)
 
-  await page.goto('/ja/drop/pokemon-center-151-premium')
+  const slug = await anyDropSlug(request)
+  skipWithoutDrops(test, slug)
+  await page.goto(`/ja/drop/${slug}`)
   const image = await page
     .locator('meta[property="og:image"]')
     .getAttribute('content')
-  expect(image).toMatch(/\/og\/drop\/pokemon-center-151-premium-ja\.png$/)
+  expect(image).toMatch(new RegExp(`/og/drop/${slug}-ja\\.png$`))
   expect((await request.get(new URL(image!).pathname)).status()).toBe(200)
 })
 

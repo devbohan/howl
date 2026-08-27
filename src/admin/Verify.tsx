@@ -122,6 +122,7 @@ function DraftEditor({
   onChange: (next: DropDraft) => void
 }) {
   const r = readiness(draft)
+  const lead = state.leads.find((l) => l.id === draft.leadId)
   const attached = state.channels.filter((c) => draft.channelIds.includes(c.id))
   const { friction, why } = frictionOf(attached)
 
@@ -198,6 +199,30 @@ function DraftEditor({
           ))}
         </div>
       </section>
+
+      {lead?.raw && (
+        <section className="rounded-lg border border-medium/40 bg-medium/5 p-4">
+          <h3 className="text-[12px] font-bold text-fg">原文（只作参考）</h3>
+          <p className="mt-1 text-[11px] leading-relaxed text-muted">
+            日期、价格、商品名这些<strong className="text-fg">事实</strong>可以照抄——事实不受版权保护。
+            但<strong className="text-fg">别照抄它的句子和图片</strong>：那是对方的著作权，而且重复内容在
+            搜索里排不上去，等于白做。用自己的话写，再链回来源。
+          </p>
+          <pre className="mt-3 max-h-48 overflow-auto whitespace-pre-wrap rounded border border-line bg-surface p-3 text-[11px] leading-relaxed text-muted">
+{lead.raw}
+          </pre>
+          {lead.url && (
+            <a
+              href={lead.url}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-2 inline-block text-[11px] text-fg underline underline-offset-4"
+            >
+              打开原帖 ↗
+            </a>
+          )}
+        </section>
+      )}
 
       <section className="rounded-lg border border-line bg-surface px-4">
         <FactField

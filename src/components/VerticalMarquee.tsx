@@ -10,10 +10,13 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
  */
 export function VerticalMarquee({
   children,
+  label,
   speed = 14,
   className,
 }: {
   children: ReactNode
+  /** Names the scrollable region for screen readers. */
+  label: string
   /** Pixels per second. Constant across panels so they read at the same pace. */
   speed?: number
   className?: string
@@ -77,8 +80,17 @@ export function VerticalMarquee({
 
   return (
     <div className="relative">
+      {/*
+        tabIndex on a scrollable region: without it a keyboard user cannot
+        scroll the panel at all when its rows happen to contain no links, and
+        the rows are only sometimes links. Focusing it also pauses the scroll,
+        which is what someone reading it wants anyway.
+      */}
       <div
         ref={ref}
+        tabIndex={0}
+        role="region"
+        aria-label={label}
         className={`ticker-viewport overflow-y-auto ${className ?? ''}`}
         onPointerEnter={hold}
         onPointerLeave={release}

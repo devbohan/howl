@@ -110,7 +110,7 @@ export function NewsTicker({ category }: { category: Category }) {
       </div>
 
       {/* Four 36px rows in view; the rest arrive as it scrolls. */}
-      <VerticalMarquee className="h-36">
+      <VerticalMarquee label={t('newsLabel')} className="h-36">
         {ranked.map(({ item }, i) => (
           <Row key={item.id} item={item} now={now} hot={i < HOT_ROWS} />
         ))}

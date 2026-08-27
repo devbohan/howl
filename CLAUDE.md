@@ -231,9 +231,9 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 | 命令 | 内容 |
 | :--- | :--- |
 | `npm run typecheck` | 应用/测试/工具三套 tsconfig 分别检查 |
-| `npm test` | Vitest 284 个单元与组件测试 |
+| `npm test` | Vitest 288 个单元与组件测试 |
 | `npm run test:coverage` | 同上 + 覆盖率，阈值 80%（当前 97% 语句 / 91% 分支） |
-| `npm run test:e2e` | Playwright 156 个用例，chromium + Pixel 5 两套（含关掉 JS 的爬虫视角） |
+| `npm run test:e2e` | Playwright 154 个用例，chromium + Pixel 5 两套（含关掉 JS 的爬虫视角） |
 | `npm run test:e2e:ui` | Playwright UI 模式，调试用 |
 | `npm run storybook` | Storybook 9，组件工作台 |
 
@@ -244,6 +244,8 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 - **E2E 跑的是完整静态产物**（`npm run build:static && vite preview`），不是 dev server —— 只在构建产物或预渲染里才出现的问题必须被拦住。
 - `vite preview` 默认只绑 IPv6，配置里显式加了 `--host 127.0.0.1`。
 - **Playwright 1.62 的 `reducedMotion` fixture 不生效**（`test.use({ reducedMotion })` 和 project 级都试过，页面里 `matchMedia` 仍是 false）。[motion.spec.ts](e2e/motion.spec.ts) 改用 `page.emulateMedia()`，并在 `beforeEach` 里断言这个偏好确实生效——否则测试会因为"根本没开启"而假绿。
+- **单元测试不依赖真实目录**：页面与 SEO 的测试跑在夹具上（`vi.mock` 掉数据模块），因为它们验的是行为，不是"站上现在有什么"。真实目录由 E2E 负责。
+- **E2E 从 sitemap 里发现商品 slug**，不硬编码。没有商品时相关用例**明确跳过并打印原因**——空目录是合法的上线前状态，但静默变绿不是。
 - **单元测试不碰 `mock.ts` 的时间**：那份数据在模块加载时用 `Date.now()` 生成，逻辑测试一律自己造 fixture（[src/test/fixtures.ts](src/test/fixtures.ts)）。
 - jsdom 没有 `matchMedia`、`scrollTo`、`requestAnimationFrame` 的可用实现，统一在 [src/test/setup.ts](src/test/setup.ts) 里打桩；`preferReducedMotion()` / `preferDarkScheme()` 供单测按需切换。
 - 组件测试统一走 [src/test/render.tsx](src/test/render.tsx) 的 `renderApp()`，它挂的是和 App 一样的 provider 栈。

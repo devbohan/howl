@@ -31,7 +31,8 @@ describe('PortalPage', () => {
     renderApp(<PortalPage />)
     for (const [i, category] of CATEGORIES.entries()) {
       const expected = DROPS.filter((d) => d.category === category).length
-      expect(within(rows()[i]).getByText(String(expected))).toBeInTheDocument()
+      // getAllBy: with an empty catalogue every column in the row reads zero.
+      expect(within(rows()[i]).getAllByText(String(expected)).length).toBeGreaterThan(0)
     }
   })
 

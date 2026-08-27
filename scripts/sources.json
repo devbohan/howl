@@ -1,9 +1,20 @@
 {
-  "_comment": "只列主动把内容交给机器的源。加新源前先跑 `npm run ingest -- --check <url>`。返回 403、连不上、或页面写着「アクセス制限」的站不要加——那是拒绝，不是待解决的技术问题。",
+  "_comment": "只列主动把内容交给机器的源。加新源前先跑 `npm run ingest -- --check <url>`。返回 403、连不上、或页面写着「アクセス制限」的站不要加——那是拒绝，不是待解决的技术问题。 PR TIMES 是新闻稿分发平台——企业发布本就是给媒体转载的，robots.txt 是 Allow: /，命中率靠 match 关键词过滤。",
   "_removed": {
-    "p-bandai": "sitemap 是开放的，但商品页连续请求几次后返回「アクセス制限」。robots.txt 允许 ≠ 欢迎程序连续抓取，所以移除。它的限定受注信息改从官方 X 与新闻稿人工获取。"
+    "p-bandai": "sitemap 是开放的，但商品页连续请求几次后返回「アクセス制限」。robots.txt 允许 ≠ 欢迎程序连续抓取，所以移除。它的限定受注信息改从官方 X 与新闻稿人工获取。",
+    "facebook / x": "两家的 robots.txt 都是 User-agent: * → Disallow: /（全站禁止爬虫），Facebook 还有登录墙。同样的信息从 PR TIMES 和新闻媒体的 RSS 拿——那些平台的存在目的就是被转载。"
   },
   "sources": [
+    {
+      "id": "prtimes",
+      "name": "PR TIMES（企业新闻稿）",
+      "kind": "web",
+      "type": "rss",
+      "url": "https://prtimes.jp/index.rdf",
+      "match": "(フィギュア|プラモデル|ガンプラ|ねんどろいど|ソフビ|ぬいぐるみ|アクリルスタンド|アクスタ|トレーディングカード|トレカ|カードゲーム|スニーカー|BE@RBRICK|ベアブリック|一番くじ|プライズ|スケールフィギュア|模型)",
+      "withinDays": 3,
+      "limit": 25
+    },
     {
       "id": "hypebeast-footwear",
       "name": "Hypebeast Footwear",

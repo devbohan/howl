@@ -1,7 +1,31 @@
 import { describe, expect, it } from 'vitest'
 import { CATEGORIES } from '../labels'
-import { DROPS } from '../../data/mock'
-import { LOCALES, type Locale } from '../types'
+import { DROPS as REAL_DROPS } from '../../data/mock'
+import { makeChannel, makeDrop } from '../../test/fixtures'
+import { LOCALES, type Drop, type Locale } from '../types'
+
+/**
+ * Metadata generation must hold for any drop, so it is exercised on fixtures.
+ * The live catalogue is checked separately below, and is allowed to be empty
+ * before launch.
+ */
+const DROPS: Drop[] = [
+  makeDrop({
+    slug: 'fixture-short',
+    title: { en: 'Short Name', ja: '短い名前', 'zh-CN': '短名字', 'zh-TW': '短名字' },
+    channels: [makeChannel({ id: 'f1' }), makeChannel({ id: 'f2', market: 'resale', stock: 'in-stock', askPrice: 90_000 })],
+  }),
+  makeDrop({
+    slug: 'fixture-very-long-name',
+    brand: 'A Brand With A Long Name Co.',
+    title: {
+      en: 'An Extremely Long Product Name That Would Otherwise Push The Brand Out Of The Visible Title',
+      ja: '可視領域からブランド名を押し出してしまうほど非常に長い商品名',
+      'zh-CN': '一个长到会把品牌名挤出可见区域的商品名称',
+      'zh-TW': '一個長到會把品牌名擠出可見區域的商品名稱',
+    },
+  }),
+]
 import {
   DESCRIPTION_BUDGET,
   SITE_URL,
@@ -107,7 +131,7 @@ describe('structured data', () => {
   })
 
   it('reports in-stock only when a channel really has stock', () => {
-    for (const drop of DROPS) {
+    for (const drop of [...DROPS, ...REAL_DROPS]) {
       const [product] = dropHead('en', drop).jsonLd as any[]
       const claimed = product.offers[0].availability
       const stocked = drop.channels.some((c) => c.stock === 'in-stock' || c.stock === 'low')
@@ -139,6 +163,20 @@ describe('structured data', () => {
           expect(node['@context']).toBe('https://schema.org')
           expect(node['@type']).toBeTruthy()
         }
+      }
+    }
+  })
+})
+
+
+describe('the live catalogue', () => {
+  it('may be empty before launch, but everything in it must produce valid metadata', () => {
+    for (const locale of LOCALES) {
+      for (const drop of REAL_DROPS) {
+        const head = dropHead(locale, drop)
+        expect(head.title.trim(), drop.slug).not.toBe('')
+        expect(head.path).toBe(`/drop/${drop.slug}`)
+        expect(head.jsonLd.length).toBeGreaterThan(0)
       }
     }
   })

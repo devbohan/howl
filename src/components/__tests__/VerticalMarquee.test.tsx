@@ -6,7 +6,7 @@ import { preferReducedMotion } from '../../test/setup'
 describe('VerticalMarquee', () => {
   it('renders the content twice so the loop has no seam', () => {
     render(
-      <VerticalMarquee>
+      <VerticalMarquee label="test">
         <span>row</span>
       </VerticalMarquee>,
     )
@@ -15,7 +15,7 @@ describe('VerticalMarquee', () => {
 
   it('hides the duplicate from assistive tech', () => {
     const { container } = render(
-      <VerticalMarquee>
+      <VerticalMarquee label="test">
         <span>row</span>
       </VerticalMarquee>,
     )
@@ -27,7 +27,7 @@ describe('VerticalMarquee', () => {
   it('renders a single copy when the user prefers reduced motion', () => {
     preferReducedMotion()
     render(
-      <VerticalMarquee>
+      <VerticalMarquee label="test">
         <span>row</span>
       </VerticalMarquee>,
     )
@@ -36,7 +36,7 @@ describe('VerticalMarquee', () => {
 
   it('is a real scroll container so the scrollbar works', () => {
     const { container } = render(
-      <VerticalMarquee className="h-36">
+      <VerticalMarquee label="test" className="h-36">
         <span>row</span>
       </VerticalMarquee>,
     )
@@ -47,7 +47,7 @@ describe('VerticalMarquee', () => {
 
   it('puts the edge fades outside the scroll area and clear of the scrollbar', () => {
     const { container } = render(
-      <VerticalMarquee>
+      <VerticalMarquee label="test">
         <span>row</span>
       </VerticalMarquee>,
     )
@@ -77,7 +77,7 @@ describe('VerticalMarquee scrolling', () => {
 
   function mount(speed = 100) {
     const { container } = render(
-      <VerticalMarquee speed={speed}>
+      <VerticalMarquee label="test" speed={speed}>
         <span>row</span>
       </VerticalMarquee>,
     )
@@ -169,5 +169,20 @@ describe('VerticalMarquee scrolling', () => {
     } finally {
       restore()
     }
+  })
+})
+
+
+describe('VerticalMarquee keyboard access', () => {
+  it('is focusable, so a keyboard user can scroll a panel with no links in it', () => {
+    const { container } = render(
+      <VerticalMarquee label="快讯">
+        <span>row</span>
+      </VerticalMarquee>,
+    )
+    const viewport = container.querySelector('.ticker-viewport')!
+    expect(viewport).toHaveAttribute('tabindex', '0')
+    expect(viewport).toHaveAttribute('role', 'region')
+    expect(viewport).toHaveAttribute('aria-label', '快讯')
   })
 })

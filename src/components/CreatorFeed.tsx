@@ -103,7 +103,7 @@ export function CreatorFeed({ category }: { category: Category }) {
       </div>
 
       {/* Rows are 52px, so just under three are in view at a time. */}
-      <VerticalMarquee className="h-36">
+      <VerticalMarquee label={t('feedLabel')} className="h-36">
         {ranked.map(({ item }, i) => (
           <Row key={item.id} item={item} hot={i < HOT_ROWS} />
         ))}

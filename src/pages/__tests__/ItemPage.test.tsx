@@ -1,11 +1,48 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { screen } from '@testing-library/react'
-import { ItemPage } from '../ItemPage'
-import { DROPS } from '../../data/mock'
-import { renderApp } from '../../test/render'
+import { makeChannel, makeDrop, at } from '../../test/fixtures'
+import type { Drop } from '../../lib/types'
 
-const WITH_MEDIA = DROPS.find((d) => d.media && d.media.length > 0)!
-const HARD = DROPS.find((d) => d.friction === 'hard')!
+/**
+ * Fixtures rather than the live dataset. These assert how the page behaves,
+ * which must hold whether the site is tracking zero drops or a thousand — the
+ * real catalogue is E2E's job, not this file's.
+ */
+const WITH_MEDIA: Drop = makeDrop({
+  slug: 'fixture-with-media',
+  title: { en: 'Fixture Drop With Coverage', ja: 'カバレッジ付きのドロップ' },
+  media: [
+    {
+      id: 'fm1',
+      kind: 'video',
+      platform: 'youtube',
+      source: '@fixture',
+      title: { en: 'A hands-on look' },
+      url: 'https://example.test/video',
+      lang: 'en',
+      duration: '10:00',
+    },
+  ],
+})
+
+const HARD: Drop = makeDrop({
+  slug: 'fixture-hard',
+  title: { en: 'Fixture Hard Drop', ja: '難易度の高いドロップ' },
+  friction: 'hard',
+  channels: [
+    makeChannel({ id: 'fh1', name: 'Local Only Store', shipsWorldwide: false, acceptsForeignCard: false }),
+    makeChannel({ id: 'fh2', name: 'Proxy Service', affiliate: true }),
+  ],
+  frictionNotes: [{ en: 'Needs a local phone number verified by SMS.' }],
+  closesAt: at(9 * 3_600_000),
+})
+
+const WITHOUT_MEDIA: Drop = makeDrop({ slug: 'fixture-plain', title: { en: 'Fixture Plain Drop' } })
+
+vi.mock('../../data/mock', () => ({ DROPS: [WITH_MEDIA, HARD, WITHOUT_MEDIA] }))
+
+const { ItemPage } = await import('../ItemPage')
+const { renderApp } = await import('../../test/render')
 
 const show = (slug: string, locale: 'en' | 'ja' | 'zh-CN' | 'zh-TW' = 'en') =>
   renderApp(<ItemPage />, { route: `/${locale}/drop/${slug}`, path: '/:locale/drop/:slug', locale })
@@ -57,8 +94,7 @@ describe('ItemPage', () => {
   })
 
   it('omits the coverage section entirely when there is none', () => {
-    const without = DROPS.find((d) => !d.media)!
-    show(without.slug)
+    show(WITHOUT_MEDIA.slug)
     expect(screen.queryByText('Unboxings & coverage')).not.toBeInTheDocument()
   })
 

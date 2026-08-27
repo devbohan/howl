@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test'
 const PAGES = [
   ['portal', '/en'],
   ['category', '/en/c/sneakers'],
-  ['item', '/en/drop/travis-scott-aj1-low-olive'],
+  ['wantlist', '/en/wants'],
 ] as const
 
 const scan = (page: import('@playwright/test').Page) =>

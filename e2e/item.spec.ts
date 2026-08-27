@@ -1,14 +1,17 @@
 import { expect, test } from '@playwright/test'
-import { hasHorizontalOverflow } from './helpers'
+import { anyDropSlug, hasHorizontalOverflow, skipWithoutDrops } from './helpers'
 
-const SLUG = 'travis-scott-aj1-low-olive'
+let SLUG = ''
 
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({ page, request }) => {
+  const slug = await anyDropSlug(request)
+  skipWithoutDrops(test, slug)
+  SLUG = slug!
   await page.goto(`/en/drop/${SLUG}`)
 })
 
 test('renders the drop with its channels, friction and coverage', async ({ page }) => {
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Travis Scott')
+  await expect(page.getByRole('heading', { level: 1 })).not.toBeEmpty()
   await expect(page.getByRole('heading', { name: 'Where to buy' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Friction Index' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Unboxings & coverage' })).toBeVisible()
@@ -44,8 +47,10 @@ test('every outbound link is safe, and store links are marked sponsored', async 
 })
 
 test('back goes to the category, not the portal', async ({ page }) => {
-  await page.getByRole('link', { name: /Sneakers/ }).first().click()
-  await expect(page).toHaveURL('/en/c/sneakers')
+  const back = page.locator('main a[href*="/c/"]').first()
+  const href = await back.getAttribute('href')
+  await back.click()
+  await expect(page).toHaveURL(href!)
 })
 
 test('prices follow the currency picker', async ({ page }) => {

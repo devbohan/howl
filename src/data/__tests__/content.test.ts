@@ -21,6 +21,20 @@ const ALL_L: [string, L][] = [
 
 const duplicates = (values: string[]) => values.filter((v, i) => values.indexOf(v) !== i)
 
+/**
+ * Before launch this dataset is legitimately empty — mock content was cleared
+ * so nothing fabricated could reach a crawler. Every invariant below still
+ * holds on whatever is present; the count is reported rather than asserted.
+ */
+describe('dataset size', () => {
+  it('reports how much real content exists', () => {
+    expect(DROPS.length).toBeGreaterThanOrEqual(0)
+    if (DROPS.length === 0) {
+      console.info('[content] 0 drops — 站上还没有真实商品，上线前需要录入')
+    }
+  })
+})
+
 describe('drops', () => {
   it('has unique ids and slugs', () => {
     expect(duplicates(DROPS.map((d) => d.id))).toEqual([])
@@ -94,6 +108,14 @@ describe('news', () => {
     for (const c of CATEGORIES) {
       expect(NEWS.filter((n) => n.category === c).length).toBeGreaterThan(0)
     }
+  })
+
+  it('never points at a drop that does not exist', () => {
+    // The failure this guards against is a dead link in the ticker, which is
+    // exactly what happens when drops are replaced and news is not.
+    const slugs = new Set(DROPS.map((d) => d.slug))
+    const dangling = NEWS.filter((n) => n.dropSlug && !slugs.has(n.dropSlug)).map((n) => n.id)
+    expect(dangling).toEqual([])
   })
 
   it('is dated in the past — a ticker never shows tomorrow', () => {

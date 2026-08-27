@@ -25,7 +25,7 @@ const meta = {
       </div>
     ),
   ],
-  args: { children: rows, className: 'h-36', speed: 14 },
+  args: { children: rows, label: '快讯', className: 'h-36', speed: 14 },
 } satisfies Meta<typeof VerticalMarquee>
 
 export default meta

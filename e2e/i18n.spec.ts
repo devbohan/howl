@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { LOCALES, portalRows, switchLocale } from './helpers'
+import { LOCALES, anyDropSlug, portalRows, skipWithoutDrops, switchLocale } from './helpers'
 
 const LABEL: Record<string, string> = { en: 'EN', ja: '日本語', 'zh-CN': '简体', 'zh-TW': '繁體' }
 const DEFAULT_CURRENCY: Record<string, string> = { en: 'USD', ja: 'JPY', 'zh-CN': 'CNY', 'zh-TW': 'USD' }
@@ -25,11 +25,13 @@ test('switching language keeps you on the same page', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1 })).toContainText('トレーディングカード')
 })
 
-test('switching language on a drop page keeps the drop', async ({ page }) => {
-  await page.goto('/en/drop/pokemon-center-151-premium')
+test('switching language on a drop page keeps the drop', async ({ page, request }) => {
+  const slug = await anyDropSlug(request)
+  skipWithoutDrops(test, slug)
+  await page.goto(`/en/drop/${slug}`)
   await switchLocale(page, LABEL['zh-CN'], 'zh-CN')
-  await expect(page).toHaveURL('/zh-CN/drop/pokemon-center-151-premium')
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('宝可梦')
+  await expect(page).toHaveURL(`/zh-CN/drop/${slug}`)
+  await expect(page.getByRole('heading', { level: 1 })).not.toBeEmpty()
 })
 
 test('a manual currency choice survives a language switch', async ({ page }) => {
