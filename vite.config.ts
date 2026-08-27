@@ -132,6 +132,7 @@ ${items}
         source: `# HOWL — global drop and raffle calendar
 User-agent: *
 Allow: /
+Disallow: /admin.html
 
 # Answer engines are allowed on purpose: being cited in an AI answer is close
 # to free reach for a site whose whole value is closing an information gap.
@@ -208,4 +209,11 @@ ${LOCALES.map((l) => `- ${SITE_URL}/${l}`).join('\n')}
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), seoAssets()],
+  build: {
+    rollupOptions: {
+      // WolfGrandma is a second entry, not a route: it must never appear in the
+      // sitemap, never be prerendered, and never be crawled.
+      input: { main: 'index.html', admin: 'admin.html' },
+    },
+  },
 })
