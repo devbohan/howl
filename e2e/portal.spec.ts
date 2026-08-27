@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { CATEGORIES, hasHorizontalOverflow, portalRows } from './helpers'
+import { CATEGORIES, LOCALES, hasHorizontalOverflow, portalRows } from './helpers'
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/en')
@@ -51,5 +51,20 @@ test('never scrolls sideways, at any width', async ({ page }) => {
   for (const width of [320, 375, 768, 1280, 1920]) {
     await page.setViewportSize({ width, height: 900 })
     expect(await hasHorizontalOverflow(page), `overflow at ${width}px`).toBe(false)
+  }
+})
+
+test('the headline stays on one line in every language, at every width', async ({ page }) => {
+  for (const width of [320, 375, 414, 768, 1280]) {
+    await page.setViewportSize({ width, height: 900 })
+    for (const locale of LOCALES) {
+      await page.goto(`/${locale}`)
+      const fits = await page.locator('h1').evaluate((h) => {
+        const range = document.createRange()
+        range.selectNodeContents(h)
+        return { text: Math.ceil(range.getBoundingClientRect().width), box: h.clientWidth }
+      })
+      expect(fits.text, `${locale} headline wraps at ${width}px`).toBeLessThanOrEqual(fits.box)
+    }
   }
 })

@@ -8,7 +8,7 @@ const en = {
   navWatchlist: 'Watchlist',
   navVip: 'Go VIP',
 
-  heroTitle: 'Every limited drop on Earth, one countdown.',
+  heroTitle: 'Every limited drop, in one place',
   heroSub: 'Raffles, made-to-order windows and surprise restocks from Japan, the US, Europe and China — with the import friction spelled out before you commit.',
   heroLive: 'live now',
   heroToday: 'opening today',
@@ -143,7 +143,7 @@ const ja: Record<Key, string> = {
   navWatchlist: 'ウォッチリスト',
   navVip: 'VIPに登録',
 
-  heroTitle: '世界中の限定を、ひとつのカウントダウンに。',
+  heroTitle: '世界中の限定を、ひとつに',
   heroSub: '日本・米国・欧州・中国の抽選、受注生産、そして突然の再販を横断収集。海外購入のハードルまで事前に明示します。',
   heroLive: '受付中',
   heroToday: '本日開始',
@@ -276,7 +276,7 @@ const zhCN: Record<Key, string> = {
   navWatchlist: '我的关注',
   navVip: '开通 VIP',
 
-  heroTitle: '全世界的限定发售，一个倒计时看完。',
+  heroTitle: '全世界的限定，一处看全',
   heroSub: '横跨日本、美国、欧洲、中国的抽选、限时受注与突袭补货，并在你下手之前把海淘门槛讲清楚。',
   heroLive: '进行中',
   heroToday: '今日开始',
@@ -410,7 +410,7 @@ const zhTW: Record<Key, string> = {
   navWatchlist: '我的關注',
   navVip: '開通 VIP',
 
-  heroTitle: '全世界的限定發售，一個倒數計時看完。',
+  heroTitle: '全世界的限定，一處看全',
   heroSub: '橫跨日本、美國、歐洲、中國的抽選、限時受注與突襲補貨，並在你下手之前把海外購買門檻講清楚。',
   heroLive: '進行中',
   heroToday: '今日開始',

@@ -87,7 +87,12 @@ export function PortalPage() {
   return (
     <div className="mx-auto max-w-3xl px-4">
       <section className="pt-12 pb-7 md:pt-16 md:pb-9">
-        <h1 className="max-w-xl text-[26px] font-extrabold leading-[1.2] tracking-tight text-fg md:text-[34px]">
+        {/*
+          Never wraps, in any language. The size is viewport-derived rather than
+          stepped, because the four headlines have very different widths and a
+          fixed size that fits English on one line leaves Japanese tiny.
+        */}
+        <h1 className="whitespace-nowrap text-[clamp(1rem,4.2vw,1.75rem)] font-extrabold leading-[1.2] tracking-tight text-fg">
           {t('heroTitle')}
         </h1>
         {/* Doubles as the legend for the per-category columns below. */}
