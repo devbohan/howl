@@ -3,10 +3,13 @@ import { CATEGORY_KEY, FRICTION_DESC_KEY, MECHANIC_KEY } from './labels'
 import { LOCALES, type Category, type Drop, type L, type Locale } from './types'
 
 /**
- * Absolute origin used for canonical URLs, hreflang and the sitemap.
- * Override at build time with VITE_SITE_URL once the domain is registered.
+ * Absolute origin for canonical URLs, hreflang, the sitemap and share cards.
+ * The same default is repeated in vite.config.ts and scripts/prerender.mjs,
+ * because each runs in a different stage and cannot import this module; a
+ * mismatch would put two different origins in the same build, so change all
+ * three together. Override per build with VITE_SITE_URL.
  */
-export const SITE_URL = (import.meta.env.VITE_SITE_URL ?? 'https://howl.app').replace(/\/$/, '')
+export const SITE_URL = (import.meta.env.VITE_SITE_URL ?? 'https://howl.tokyo').replace(/\/$/, '')
 
 export const SITE_NAME = 'HOWL'
 

@@ -17,7 +17,7 @@ const DIST = resolve('dist')
 const PORT = Number(process.env.PRERENDER_PORT ?? 4180)
 const CONCURRENCY = 8
 
-const SITE_URL = (process.env.VITE_SITE_URL ?? 'https://howl.app').replace(/\/$/, '')
+const SITE_URL = (process.env.VITE_SITE_URL ?? 'https://howl.tokyo').replace(/\/$/, '')
 
 /** Routes come from the sitemap so the two can never disagree. */
 const locs = (xml) => [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])

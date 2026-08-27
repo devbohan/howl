@@ -6,7 +6,7 @@ import { DICT } from './src/lib/i18n'
 import { CATEGORIES, CATEGORY_KEY } from './src/lib/labels'
 import { LOCALES, type Drop, type Locale } from './src/lib/types'
 
-const SITE_URL = (process.env.VITE_SITE_URL ?? 'https://howl.app').replace(/\/$/, '')
+const SITE_URL = (process.env.VITE_SITE_URL ?? 'https://howl.tokyo').replace(/\/$/, '')
 
 /** Every indexable path, locale-relative. Order matters only for readability. */
 const PATHS = ['', ...CATEGORIES.map((c) => `/c/${c}`), ...DROPS.map((d) => `/drop/${d.slug}`)]

@@ -167,7 +167,7 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 - **标题按视觉宽度截断，不是字符数**。搜索结果是按像素裁的，一个 CJK 字宽约等于两个拉丁字母，所以 `visualWidth()` 把 CJK 记 2 列。商品名过长时**截的是商品名，不是模板**，保证品牌和站名不会被挤出可见区。
 - JSON-LD：商品页 `Product` + 每个渠道一个 `Offer`（含 `availability`、`priceValidUntil`）+ `BreadcrumbList`；品类页 `CollectionPage` + `ItemList`；门户 `WebSite`。
 - `availability` 必须与渠道实际库存一致，有测试逐条校验——对结构化数据撒谎会被 Google 降权。
-- 域名未定：`SITE_URL` 默认 `https://howl.app`，构建时用 `VITE_SITE_URL` 覆盖。
+- **域名已定：`howl.tokyo`**。`SITE_URL` 默认值同时写在 [seo.ts](src/lib/seo.ts)、[vite.config.ts](vite.config.ts)、[prerender.mjs](scripts/prerender.mjs) 三处——三个阶段互相无法 import，改要一起改，否则同一次构建里会出现两个 origin。预览/staging 部署用 `VITE_SITE_URL` 覆盖，别让它们对爬虫宣称生产域名。
 
 ### 测试
 
@@ -245,7 +245,7 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
   | `howl.xyz` | ❌ 已注册（2020-05-25），NS 指向 `afternic.com` → 挂牌待售 |
   | `howls.xyz` | ❌ 已注册，停放在 Atom |
   | `gethowl.com` / `howlhq.com` | ❌ 已注册（域名投资商停放） |
-  | **`howl.tokyo`** | ✅ **可注册**（RDAP 404） |
+  | **`howl.tokyo`** | ✅ **可注册（RDAP 404）— 已选定为正式域名** |
   | `howl.day` / `howldrops.com` / `howlraffle.com` / `gohowl.xyz` / `howldrop.xyz` | ✅ 可注册 |
 
   四字母域名在主流后缀基本全被占，能拿的只有新 gTLD 或加词。`howl.tokyo` 是其中唯一「整个域名都在表意」的选项，但它把品牌锚定在日本，和「外对日」那半边业务略有出入。
@@ -254,7 +254,7 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 - E2E 目前只跑 chromium 与 Pixel 5；firefox / webkit 需要 `npx playwright install` 后在 [playwright.config.ts](playwright.config.ts) 里加 project
 - 视觉回归（截图对比）尚未接入
 - **门户页可索引文字太少**（约 500 字符 vs 竞品三万），是目前最大的 SEO 短板
-- 域名未定，`SITE_URL` 仍是占位的 `https://howl.app`；注册后要用 `VITE_SITE_URL` 覆盖并重新构建
+- **`howl.tokyo` 尚未实际注册** —— 代码已全面切过去，域名本身还得去买（RDAP 查过可注册）
 - Google Search Console / Bing 站长验证、GA4 埋点尚未接入
 - 品类横幅与商品卡的渐变仍是彩色（品类各一套色）——它们是实拍图的占位，等真图上线就会被替换；若希望在那之前整站彻底黑白，把 `CATEGORY_ART` 改成中性灰阶即可
 - 未定：卡片信息密度是否加码、要不要真正的月历网格视图、首页要不要加"未来 48 小时横向时间轴"
