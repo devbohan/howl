@@ -10,6 +10,8 @@ import { useT } from '../lib/i18n'
 import { CATEGORIES, CATEGORY_ART, CATEGORY_KEY } from '../lib/labels'
 import { useCurrency } from '../lib/prefs'
 import { dropState, isAvailableNow, sortWeight, type Phase } from '../lib/schedule'
+import { useHead } from '../lib/useHead'
+import { categoryHead } from '../lib/seo'
 import { useNow } from '../lib/useNow'
 import type { Category } from '../lib/types'
 
@@ -41,9 +43,13 @@ export function CategoryPage() {
       .sort((a, b) => sortWeight(a.state) - sortWeight(b.state))
   }, [category, valid, filters, now])
 
+  // Resolved before the redirect so the head hook stays unconditional; on an
+  // unknown category `visible` is empty and the head is discarded anyway.
+  const cat = (valid ? category : CATEGORIES[0]) as Category
+  useHead(locale, categoryHead(locale, cat, visible.map((v) => v.drop)))
+
   if (!valid) return <Navigate to={`/${localeParam}`} replace />
 
-  const cat = category as Category
   const art = CATEGORY_ART[cat]
   const liveCount = visible.filter((v) => v.state.phase === 'open').length
 

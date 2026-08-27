@@ -10,6 +10,8 @@ import { CATEGORY_KEY, MECHANIC_KEY, REGION_KEY } from '../lib/labels'
 import { convert, formatDateTime, formatPrice } from '../lib/format'
 import { useCurrency } from '../lib/prefs'
 import { bestOffer, dropState } from '../lib/schedule'
+import { useHead } from '../lib/useHead'
+import { dropHead, portalHead } from '../lib/seo'
 import { useNow } from '../lib/useNow'
 import { PremiumTag } from '../components/Premium'
 import type { Channel, Drop } from '../lib/types'
@@ -109,6 +111,9 @@ export function ItemPage() {
   const now = useNow()
 
   const drop = DROPS.find((d) => d.slug === slug)
+  // Unknown slugs are a soft 404: point the canonical at the portal.
+  useHead(locale, drop ? dropHead(locale, drop) : portalHead(locale, DROPS))
+
   if (!drop) {
     return (
       <div className="mx-auto max-w-6xl px-4 py-24 text-center">

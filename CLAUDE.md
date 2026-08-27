@@ -135,6 +135,61 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 - 外部内容的标题是**多语字段**：`en` 存英文释义、`ja` 存原标题。视频原标题不翻译，但跨境用户需要看懂讲的是什么。
 - 内容语言标签**只在与当前站点语言不同时才显示**，否则每行都挂一个标签是纯噪音。
 
+## SEO / GEO
+
+**产品前提**：这个站 80% 的流量来自 `travis scott raffle date` 这类长尾搜索，而且**页面只在截止前有价值**——所以内容必须在爬虫第一次抓取时就是完整的，不能等渲染队列。
+
+### 预渲染（不是 SSR）
+
+`npm run build:static` = `vite build` + [scripts/prerender.mjs](scripts/prerender.mjs)：用 Playwright 把 sitemap 里的**每一条 URL 渲染成静态 HTML**（113 页）+ 85 张分享卡。
+
+- **为什么不是 SSR**：应用是纯客户端的，数据在模块加载时用 `Date.now()` 生成，hydrate 必然 mismatch。所以用 `createRoot` 让 React 在快照上重新渲染一遍——标记一样，用户看不出来，但爬虫拿到的是完整 HTML。等 CMS 和 D1 落地再按 P0 计划迁 SSR。
+- **输出扁平 `<route>.html` 而不是 `<route>/index.html`**：静态主机和 `vite preview` 都能把无扩展名 URL 解析到 `.html`，而目录形式只在带尾斜杠时才解析。这个坑是 E2E 抓到的。
+- 快照会**剥掉 `data-theme`**：那是首屏脚本按渲染机器的偏好写的，留着会把每个静态页面钉死在一个主题上。
+- 路由列表来自构建产物里的 sitemap，所以两者不可能对不上。
+
+### 爬虫面
+
+| 文件 | 生成方式 |
+| :--- | :--- |
+| `sitemap.xml` | 索引式，拆成 `sitemap-pages.xml` / `sitemap-drops.xml`——商品页每小时变，品类页几乎不动，爬虫按 sitemap 分配预算 |
+| `robots.txt` | **显式 Allow GPTBot / ClaudeBot / PerplexityBot / Google-Extended 等**，见下 |
+| `llms.txt` | 用 markdown 告诉答案引擎这个站是什么、每类页面有什么 |
+| `{locale}/feed.xml` | 四个语种各一个 RSS —— 阅读器和聚合器比爬虫更早拿到新条目 |
+| `og.png` + `og/drop/{slug}-{locale}.png` | 每个商品每个语种一张分享卡，用字标绘制 |
+
+`<lastmod>` 按商品状态给：已结束的钉在截止时间，进行中的用构建时间——否则每次重建都会让爬虫重抓整个归档。
+
+### 每页元数据
+
+[seo.ts](src/lib/seo.ts) 生成 title / description / canonical / hreflang / JSON-LD，[useHead.ts](src/lib/useHead.ts) 负责写进 DOM（没有引 helmet 类库——只有三种页面，几十行 `setAttribute` 就够，而且预渲染读的就是 DOM）。
+
+- **标题按视觉宽度截断，不是字符数**。搜索结果是按像素裁的，一个 CJK 字宽约等于两个拉丁字母，所以 `visualWidth()` 把 CJK 记 2 列。商品名过长时**截的是商品名，不是模板**，保证品牌和站名不会被挤出可见区。
+- JSON-LD：商品页 `Product` + 每个渠道一个 `Offer`（含 `availability`、`priceValidUntil`）+ `BreadcrumbList`；品类页 `CollectionPage` + `ItemList`；门户 `WebSite`。
+- `availability` 必须与渠道实际库存一致，有测试逐条校验——对结构化数据撒谎会被 Google 降权。
+- 域名未定：`SITE_URL` 默认 `https://howl.app`，构建时用 `VITE_SITE_URL` 覆盖。
+
+### 测试
+
+[crawler.spec.ts](e2e/crawler.spec.ts) **整个文件在 `javaScriptEnabled: false` 下运行**，断言的就是不执行 JS 的答案引擎实际收到的东西。预渲染一旦坏掉，这些测试会失败，而不是站点悄悄消失。
+
+### 对标 uptodate.tokyo（2026-08-27 实测）
+
+| | uptodate.tokyo | HOWL |
+| :--- | :--- | :--- |
+| 完整 HTML | ✅ WordPress SSR | ✅ 预渲染 |
+| canonical | ❌ **没有** | ✅ |
+| hreflang | ❌ 单语 | ✅ 4 语互指 + x-default |
+| JSON-LD | ❌ **0 块** | ✅ Product / Offer / CollectionPage / BreadcrumbList |
+| llms.txt | ❌ 404 | ✅ |
+| AI 爬虫策略 | ❌ 未声明 | ✅ 显式 Allow |
+| sitemap | ✅ 索引式 + lastmod | ✅ 索引式 + lastmod + hreflang |
+| RSS | ✅ | ✅ 四语种各一 |
+| 分享卡 | 站点级一张 | 每商品每语种一张 |
+| **首页可见文字量** | **34,511 字符** | **约 500 字符** ⚠️ |
+
+技术层面已经全面领先，但**最后一行是真实差距且不是技术问题**：他们首页有三万多字可索引文本，我们门户页按要求做得极简。品类页和商品页文字量正常，门户页要不要加内容是产品决定。
+
 ## 测试
 
 四层，全部可在本地跑：`npm run test:all`（typecheck → 单元 + 覆盖率 → E2E）。
@@ -142,9 +197,9 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 | 命令 | 内容 |
 | :--- | :--- |
 | `npm run typecheck` | 应用/测试/工具三套 tsconfig 分别检查 |
-| `npm test` | Vitest 213 个单元与组件测试 |
+| `npm test` | Vitest 235 个单元与组件测试 |
 | `npm run test:coverage` | 同上 + 覆盖率，阈值 80%（当前 97% 语句 / 91% 分支） |
-| `npm run test:e2e` | Playwright 110 个用例，chromium + Pixel 5 两套 |
+| `npm run test:e2e` | Playwright 142 个用例，chromium + Pixel 5 两套（含关掉 JS 的爬虫视角） |
 | `npm run test:e2e:ui` | Playwright UI 模式，调试用 |
 | `npm run storybook` | Storybook 9，组件工作台 |
 
@@ -152,7 +207,7 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 
 ### 关键约定
 
-- **E2E 跑的是生产构建**（`npm run build && vite preview`），不是 dev server —— 只在构建产物里才出现的问题必须被拦住。
+- **E2E 跑的是完整静态产物**（`npm run build:static && vite preview`），不是 dev server —— 只在构建产物或预渲染里才出现的问题必须被拦住。
 - `vite preview` 默认只绑 IPv6，配置里显式加了 `--host 127.0.0.1`。
 - **Playwright 1.62 的 `reducedMotion` fixture 不生效**（`test.use({ reducedMotion })` 和 project 级都试过，页面里 `matchMedia` 仍是 false）。[motion.spec.ts](e2e/motion.spec.ts) 改用 `page.emulateMedia()`，并在 `beforeEach` 里断言这个偏好确实生效——否则测试会因为"根本没开启"而假绿。
 - **单元测试不碰 `mock.ts` 的时间**：那份数据在模块加载时用 `Date.now()` 生成，逻辑测试一律自己造 fixture（[src/test/fixtures.ts](src/test/fixtures.ts)）。
@@ -185,5 +240,8 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 - 三处占位数据（见上表）需要真实来源；快讯与视频流理想状态是接各平台 API 自动刷新
 - E2E 目前只跑 chromium 与 Pixel 5；firefox / webkit 需要 `npx playwright install` 后在 [playwright.config.ts](playwright.config.ts) 里加 project
 - 视觉回归（截图对比）尚未接入
+- **门户页可索引文字太少**（约 500 字符 vs 竞品三万），是目前最大的 SEO 短板
+- 域名未定，`SITE_URL` 仍是占位的 `https://howl.app`；注册后要用 `VITE_SITE_URL` 覆盖并重新构建
+- Google Search Console / Bing 站长验证、GA4 埋点尚未接入
 - 品类横幅与商品卡的渐变仍是彩色（品类各一套色）——它们是实拍图的占位，等真图上线就会被替换；若希望在那之前整站彻底黑白，把 `CATEGORY_ART` 改成中性灰阶即可
 - 未定：卡片信息密度是否加码、要不要真正的月历网格视图、首页要不要加"未来 48 小时横向时间轴"

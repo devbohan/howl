@@ -15,7 +15,9 @@
     "test:e2e:ui": "playwright test --ui",
     "test:all": "npm run typecheck && npm run test:coverage && npm run test:e2e",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "prerender": "node scripts/prerender.mjs",
+    "build:static": "npm run build && npm run prerender"
   },
   "dependencies": {
     "react": "^19.1.0",
@@ -39,6 +41,7 @@
     "@vitejs/plugin-react": "^4.4.0",
     "@vitest/coverage-v8": "^3.2.7",
     "jsdom": "^29.1.1",
+    "sirv": "^3.0.2",
     "storybook": "^9.1.20",
     "tailwindcss": "^4.1.7",
     "typescript": "^5.8.3",

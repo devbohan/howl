@@ -29,7 +29,7 @@ export default defineConfig({
   // Tests run against the production bundle, so build-only breakage is caught.
   webServer: {
     // --host is explicit: vite preview otherwise binds IPv6-only, which 127.0.0.1 cannot reach.
-    command: `npm run build && npx vite preview --port ${PORT} --strictPort --host 127.0.0.1`,
+    command: `npm run build:static && npx vite preview --port ${PORT} --strictPort --host 127.0.0.1`,
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

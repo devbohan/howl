@@ -3,6 +3,8 @@ import { DROPS } from '../data/mock'
 import { useT } from '../lib/i18n'
 import { CATEGORIES, CATEGORY_KEY } from '../lib/labels'
 import { dropState, isAvailableNow } from '../lib/schedule'
+import { useHead } from '../lib/useHead'
+import { portalHead } from '../lib/seo'
 import { useNow } from '../lib/useNow'
 import type { Category } from '../lib/types'
 
@@ -76,8 +78,9 @@ function CategoryRow({ category, now }: { category: Category; now: number }) {
 }
 
 export function PortalPage() {
-  const { t } = useT()
+  const { t, locale } = useT()
   const now = useNow(30_000)
+  useHead(locale, portalHead(locale, DROPS))
   const live = DROPS.filter((d) => dropState(d, now).phase === 'open').length
   const inStock = DROPS.filter(isAvailableNow).length
 

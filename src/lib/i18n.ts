@@ -119,6 +119,14 @@ const en = {
   mediaPick: 'Start here',
   mediaEmpty: 'No coverage tracked yet.',
 
+  seoPortalTitle: 'HOWL — every limited drop and raffle, one countdown',
+  seoPortalDesc: 'Track limited drops and raffles from Japan, the US, Europe and China. Live countdowns in your own timezone, with the import friction — local SMS, local cards, forwarders, duty — spelled out before you commit.',
+  seoCategoryTitle: '{category} drops and raffles — HOWL',
+  seoCategoryDesc: '{count} {category} releases tracked: raffle windows, surprise restocks and made-to-order deadlines, each rated for how hard it is to buy from abroad.',
+  seoDropTitle: '{title} — {brand} | HOWL',
+  seoDropDesc: '{title} from {brand}. {mechanic}, {friction}. {channels} places to buy compared, with duty estimates and forwarder routes for overseas buyers.',
+  seoBreadcrumbHome: 'All categories',
+
   vipTitle: 'Get told 24 hours earlier.',
   vipBody: 'Free accounts get a browser push 1 hour before entry opens. VIP gets Discord and Telegram alerts the moment a drop is confirmed, plus the full import playbook for every red-tier drop.',
   vipCta: 'See VIP plans',
@@ -246,6 +254,14 @@ const ja: Record<Key, string> = {
   mediaPick: 'まずこれ',
   mediaEmpty: '関連コンテンツはまだありません。',
 
+  seoPortalTitle: 'HOWL — 世界の限定・抽選をひとつのカウントダウンに',
+  seoPortalDesc: '日本・米国・欧州・中国の限定発売と抽選を横断追跡。カウントダウンはあなたのタイムゾーンで表示し、SMS認証・国内カード・転送サービス・関税といった海外購入のハードルを事前に明示します。',
+  seoCategoryTitle: '{category}の限定発売・抽選 — HOWL',
+  seoCategoryDesc: '{category}を{count}件追跡中。抽選期間、突然の再販、受注生産の締切を、海外から買う難易度つきでまとめています。',
+  seoDropTitle: '{title}｜{brand} | HOWL',
+  seoDropDesc: '{brand}の{title}。{mechanic}、{friction}。{channels}件の購入先を比較し、関税の目安と転送ルートも掲載。',
+  seoBreadcrumbHome: 'すべてのカテゴリ',
+
   vipTitle: '24時間早く、知る。',
   vipBody: '無料プランは受付開始1時間前のブラウザ通知。VIPは情報確定と同時にDiscord・Telegramへ即時通知、さらに難易度「赤」の全商品に完全攻略ガイドが付きます。',
   vipCta: 'VIPプランを見る',
@@ -371,6 +387,14 @@ const zhCN: Record<Key, string> = {
   mediaPick: '先看这个',
   mediaEmpty: '暂无相关内容。',
 
+  seoPortalTitle: 'HOWL — 全球限定发售与抽选，一个倒计时看完',
+  seoPortalDesc: '追踪日本、美国、欧洲、中国的限定发售与抽选。倒计时按你所在时区显示，并在你出手之前讲清海淘门槛：SMS 验证、本土信用卡、转运路线、关税。',
+  seoCategoryTitle: '{category}限定发售与抽选 — HOWL',
+  seoCategoryDesc: '正在追踪 {count} 件{category}：抽选窗口、突袭补货、限时受注截止，每一件都标注了海外购买难度。',
+  seoDropTitle: '{title}｜{brand} | HOWL',
+  seoDropDesc: '{brand} 的{title}。{mechanic}，{friction}。对比 {channels} 个购买渠道，含关税预估与转运路线。',
+  seoBreadcrumbHome: '全部品类',
+
   vipTitle: '比别人早 24 小时知道。',
   vipBody: '免费用户在登记开始前 1 小时收到浏览器推送。VIP 在情报确认的瞬间就能收到 Discord / Telegram 秒推，并解锁全部红色难度商品的完整海淘攻略。',
   vipCta: '查看 VIP 权益',
@@ -490,6 +514,14 @@ const zhTW: Record<Key, string> = {
   mediaSocial: '貼文',
   mediaPick: '先看這個',
   mediaEmpty: '暫無相關內容。',
+
+  seoPortalTitle: 'HOWL — 全球限定發售與抽選，一個倒數看完',
+  seoPortalDesc: '追蹤日本、美國、歐洲、中國的限定發售與抽選。倒數按你所在時區顯示，並在你出手之前講清海淘門檻：SMS 驗證、本土信用卡、轉運路線、關稅。',
+  seoCategoryTitle: '{category}限定發售與抽選 — HOWL',
+  seoCategoryDesc: '正在追蹤 {count} 件{category}：抽選視窗、突襲補貨、限時受注截止，每一件都標註了海外購買難度。',
+  seoDropTitle: '{title}｜{brand} | HOWL',
+  seoDropDesc: '{brand} 的{title}。{mechanic}，{friction}。比較 {channels} 個購買渠道，含關稅預估與轉運路線。',
+  seoBreadcrumbHome: '全部品類',
 
   vipTitle: '比別人早 24 小時知道。',
   vipBody: '免費用戶在登記開始前 1 小時收到瀏覽器推播。VIP 在情報確認的瞬間就能收到 Discord / Telegram 即時通知，並解鎖全部紅色難度商品的完整攻略。',
