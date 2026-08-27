@@ -73,6 +73,34 @@ Cloudflare Web Analytics：免费、无 cookie、不需要 GDPR 弹窗。Pages �
 
 ---
 
+### [ ] 用真实商品替换 mock 数据
+
+**现在站上 21 件商品全是编的，一件真的都没有，也没有任何抓取在跑。**
+
+⚠️ **虚构数据绝不能上线**：每个商品页都带 `Product` + `Offer` 结构化数据，把编造的价格和日期提交给 Google 是提交虚假结构化数据；而在一个倒计时站上，错的日期会让用户错过抽选然后再也不回来。**上线前先清空 [mock.ts](src/data/mock.ts)。**
+
+最低限度：**10–20 条真实商品**，用 [/admin.html](admin.html) 录。渠道档案先建 5–8 个（难度挂在渠道上，一次搞定终身继承）。
+
+#### 数据源分级（2026-08-28 实测 robots.txt 与实际响应）
+
+| 源 | 实测 | 能不能自动 |
+| :--- | :--- | :--- |
+| **p-bandai.jp** | robots 允许，`sitemap.xml` 6.3MB HTTP 200 | 🟢 **可以** —— sitemap 本就是给机器读的 |
+| **suruga-ya.jp** | `User-agent: * Allow: /`，sitemap 200 | 🟢 **可以**（注意：它明确屏蔽了 ClaudeBot/CCBot 等 AI 爬虫） |
+| **hypebeast.com** | `/feed` RSS 200 | 🟢 **可以** —— RSS 是公开发布给机器消费的 |
+| **联盟 API**（AmiAmi / Rakuten / Yahoo!ショッピング / StockX） | — | 🟢 **最优** —— 合法、稳定、自带 affiliate 参数 |
+| amiami.com 网页 | robots.txt 就 **403** | 🔴 别抓，走它的联盟 API |
+| atmos-tokyo.com | **403** | 🔴 别抓 |
+| pokemoncenter-online.com | 连不上（**000**） | 🔴 别抓 |
+| endclothing.com | robots 限制多，实际有防护 | 🔴 别抓 |
+
+**规则很简单：**
+
+- 🟢 **官方结构化源**（RSS / sitemap / 联盟 API）—— 它们存在的目的就是被机器读，抓它们零风险
+- 🟡 **普通网页** —— 先读 robots.txt，遵守它；限速（每几秒一次）；UA 里带真实联系方式
+- 🔴 **有机器人防护的**（403 / 连不上）—— **不要绕**。绕过机器人识别属于「规避访问控制」，和当初砍掉自动填单避开的是同一类风险。这些站的信息从它们的官方公告和社交账号拿
+- ⚫ **抓不到的** —— Instagram Story、LINE 推送、Discord 公告、店头张贴，以及 **Friction Index 本身**和**日期的最终确认**。这部分永远是人工，也正是护城河
+
 ## 🏃 先到先得
 
 ### [ ] 注册 `howl.tokyo`
