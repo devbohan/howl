@@ -242,9 +242,11 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
   | :--- | :--- |
   | `howl.net` | ❌ 已注册（1998-06-22），GoDaddy，停放在 Domains.com 待售 |
   | `howl.com` / `howl.app` / `howl.gg` / `howl.ink` / `howl.wtf` / `howl.fyi` | ❌ 均已注册 |
+  | `howl.xyz` | ❌ 已注册（2020-05-25），NS 指向 `afternic.com` → 挂牌待售 |
+  | `howls.xyz` | ❌ 已注册，停放在 Atom |
   | `gethowl.com` / `howlhq.com` | ❌ 已注册（域名投资商停放） |
   | **`howl.tokyo`** | ✅ **可注册**（RDAP 404） |
-  | `howl.day` / `howldrops.com` / `howlraffle.com` | ✅ 可注册 |
+  | `howl.day` / `howldrops.com` / `howlraffle.com` / `gohowl.xyz` / `howldrop.xyz` | ✅ 可注册 |
 
   四字母域名在主流后缀基本全被占，能拿的只有新 gTLD 或加词。`howl.tokyo` 是其中唯一「整个域名都在表意」的选项，但它把品牌锚定在日本，和「外对日」那半边业务略有出入。
 - Discord / X / Instagram 的 `howl` handle 未占（Discord 自定义邀请链接先到先得且不可赎回）
