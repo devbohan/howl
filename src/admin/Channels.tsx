@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import { openQuestions } from './logic'
+import { FIELD_QUESTION, policyUrls, scanPolicy, type Finding } from './policy'
 import { emptyChannel, replaceById } from './store'
 import { FactField, textInput } from './FactField'
 import { FRICTION_FIELDS, type AdminState, type ChannelProfile } from './types'
@@ -97,6 +99,22 @@ function ChannelEditor({
   const set = <K extends keyof ChannelProfile>(key: K, value: ChannelProfile[K]) =>
     onChange({ ...channel, [key]: value })
 
+  /**
+   * A scanner finding is only ever `reported`. It found a sentence; it did not
+   * verify that the sentence is current, applies to your country, or is not
+   * contradicted three pages later. Marking it confirmed stays your call.
+   */
+  const applyFinding = (finding: Finding) =>
+    onChange({
+      ...channel,
+      [finding.field]: {
+        value: finding.value,
+        confidence: 'reported',
+        source: finding.evidence,
+      },
+      updatedAt: new Date().toISOString(),
+    })
+
   return (
     <div className="flex flex-col gap-4">
       <section className="rounded-lg border border-line bg-surface p-4">
@@ -133,8 +151,9 @@ function ChannelEditor({
       {questions.length > 0 && (
         <section className="rounded-lg border border-medium/40 bg-medium/5 p-4">
           <h3 className="text-[12px] font-bold text-fg">还没答的问题</h3>
-          <p className="mt-1 text-[11px] text-muted">
-            这些答案不印在商品页上。渠道来源：注册页 / 结算页试一次、FAQ、代购商的说明页、或问买过的人。
+          <p className="mt-1 text-[11px] leading-relaxed text-muted">
+            商品页上通常没有，但<strong className="text-fg">店铺的政策页上经常有</strong>——
+            配送・送料、お支払い方法、会員登録、FAQ。下面帮你把这几页找出来。
           </p>
           <ul className="mt-2 flex flex-col gap-1">
             {questions.map((q) => (
@@ -145,6 +164,8 @@ function ChannelEditor({
           </ul>
         </section>
       )}
+
+      <PolicyScanner channel={channel} onApply={applyFinding} />
 
       <section className="rounded-lg border border-line bg-surface px-4">
         {FRICTION_FIELDS.map(([key, label]) => (
@@ -191,5 +212,108 @@ function ChannelEditor({
         </div>
       </section>
     </div>
+  )
+}
+
+/**
+ * Finds the shop's policy pages and highlights the sentences that answer each
+ * friction question. You open the page (in your browser, as a visitor), paste
+ * it back, and the scanner points at the relevant line — it never decides.
+ */
+function PolicyScanner({
+  channel,
+  onApply,
+}: {
+  channel: ChannelProfile
+  onApply: (finding: Finding) => void
+}) {
+  const [text, setText] = useState('')
+  const [findings, setFindings] = useState<Finding[] | null>(null)
+  const candidates = policyUrls(channel.url)
+
+  return (
+    <section className="rounded-lg border border-line bg-surface p-4">
+      <h3 className="text-[12px] font-bold text-fg">从政策页找答案</h3>
+
+      {candidates.length === 0 ? (
+        <p className="mt-1 text-[11px] text-faint">先填上这个渠道的 URL。</p>
+      ) : (
+        <>
+          <p className="mt-1 text-[11px] text-faint">
+            常见路径，未必都存在——打开看一眼，把相关那页的文字粘回来。
+          </p>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {candidates.slice(0, 10).map((c) => (
+              <a
+                key={c.url}
+                href={c.url}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded border border-line px-2 py-1 text-[10px] text-muted transition hover:border-accent hover:text-fg"
+              >
+                {c.label}
+                <span className="ml-1 font-mono text-faint">{new URL(c.url).pathname}</span>
+              </a>
+            ))}
+          </div>
+        </>
+      )}
+
+      <textarea
+        value={text}
+        onChange={(e) => {
+          setText(e.target.value)
+          setFindings(null)
+        }}
+        rows={4}
+        placeholder="把政策页的文字整段粘到这里…"
+        className="mt-3 w-full rounded border border-line bg-surface-2 px-3 py-2 text-[12px] leading-relaxed text-fg outline-none placeholder:text-faint focus:border-faint"
+      />
+      <button
+        type="button"
+        disabled={!text.trim()}
+        onClick={() => setFindings(scanPolicy(text))}
+        className="mt-2 rounded bg-accent px-4 py-1.5 text-[12px] font-bold text-accent-ink transition hover:bg-accent-dim disabled:opacity-40"
+      >
+        扫描
+      </button>
+
+      {findings && findings.length === 0 && (
+        <p className="mt-2 text-[12px] text-medium">
+          这段文字里没找到相关表述。换一页试试，或者这家店确实没写——那就只能试或者问。
+        </p>
+      )}
+
+      {findings && findings.length > 0 && (
+        <ul className="mt-3 flex flex-col gap-2">
+          {findings.map((f) => (
+            <li key={f.field} className="rounded border border-line bg-surface-2 p-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[12px] font-semibold text-fg">{FIELD_QUESTION[f.field]}</span>
+                <span className={`text-[12px] font-bold ${f.value ? 'text-easy' : 'text-hard'}`}>
+                  {f.value ? '是' : '否'}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => onApply(f)}
+                  className="ml-auto rounded border border-line px-2.5 py-1 text-[10px] text-fg transition hover:border-accent"
+                >
+                  记为「有说法」
+                </button>
+              </div>
+              <p className="mt-1.5 border-l-2 border-line pl-2 text-[11px] leading-relaxed text-muted">
+                {f.evidence}
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <p className="mt-3 text-[11px] leading-relaxed text-faint">
+        扫描结果一律记为<strong className="text-fg">「有说法」而不是「已确认」</strong>——
+        它只是找到了一句话，没验证这句话是不是最新的、适不适用于你的国家、
+        或者三页之后有没有被推翻。
+      </p>
+    </section>
   )
 }
