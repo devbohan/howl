@@ -1,4 +1,5 @@
 import { LOCALE_LABELS, useT } from '../lib/i18n'
+import { OutboundLink } from './OutboundLink'
 import { MEDIA_KIND_KEY, PLATFORM_LABEL } from '../lib/labels'
 import type { MediaLink } from '../lib/types'
 
@@ -19,10 +20,10 @@ function MediaRow({ item }: { item: MediaLink }) {
   const foreign = item.lang !== locale
 
   return (
-    <a
+    <OutboundLink
       href={item.url}
-      target="_blank"
-      rel="noopener noreferrer nofollow"
+      kind="coverage"
+      context={item.id}
       className="group flex items-start gap-3 border-b border-line-soft py-3 last:border-b-0"
     >
       <span
@@ -71,7 +72,7 @@ function MediaRow({ item }: { item: MediaLink }) {
           )}
         </div>
       </div>
-    </a>
+    </OutboundLink>
   )
 }
 

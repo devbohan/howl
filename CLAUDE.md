@@ -194,6 +194,15 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 - **渠道** — **Friction 挂在渠道不挂商品**。「PCO 需要日本手机号」是零售商属性，确认一次，所有走该渠道的商品继承。几十个渠道 vs 几百件商品。一条可行路线就能把整件商品救回 easy
 - **代拍** 作为待验证假设记录，界面里写明代拍（Yahoo/Mercari，合法生意）与代抽（违反 ToS）的区别，以及它会把产品从资讯服务变成交易一方
 
+## 出站点击追踪
+
+**零售商不在乎你有多少 PV，只在乎你给他们送了多少人 —— 而这个数字无法追溯补测。** 所以它必须在流量之前就存在。
+
+- [outbound.ts](src/lib/outbound.ts) — 用 `navigator.sendBeacon` 而不是 `fetch`：浏览器正在离开页面，beacon 是唯一能保证送达的传输方式。发不出去就排队，下次加载重试；队列上限 200 条，永远离线的设备不会把存储撑爆
+- [OutboundLink.tsx](src/components/OutboundLink.tsx) — 包住所有外链，**追踪失败绝不阻断跳转**，并按 `kind` 打标（`store` / `coverage` / `news`），这样卖家关心的商店点击和别的点击不会混在一起
+- [functions/api/clicks.ts](functions/api/clicks.ts) — **按天预聚合**，所以表永远很小：一年重度使用是几千行而不是几百万行。`GET /api/clicks?days=30` 直接产出按渠道分组的报表，那就是你拿去跟零售商谈的那张纸
+- **不存任何能识别到人的东西**：目标站的 host、渠道 id、语种、日期。够做报表，仅此而已
+
 ## 测试
 
 [crawler.spec.ts](e2e/crawler.spec.ts) **整个文件在 `javaScriptEnabled: false` 下运行**，断言的就是不执行 JS 的答案引擎实际收到的东西。预渲染一旦坏掉，这些测试会失败，而不是站点悄悄消失。
@@ -222,9 +231,9 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 | 命令 | 内容 |
 | :--- | :--- |
 | `npm run typecheck` | 应用/测试/工具三套 tsconfig 分别检查 |
-| `npm test` | Vitest 273 个单元与组件测试 |
+| `npm test` | Vitest 284 个单元与组件测试 |
 | `npm run test:coverage` | 同上 + 覆盖率，阈值 80%（当前 97% 语句 / 91% 分支） |
-| `npm run test:e2e` | Playwright 150 个用例，chromium + Pixel 5 两套（含关掉 JS 的爬虫视角） |
+| `npm run test:e2e` | Playwright 156 个用例，chromium + Pixel 5 两套（含关掉 JS 的爬虫视角） |
 | `npm run test:e2e:ui` | Playwright UI 模式，调试用 |
 | `npm run storybook` | Storybook 9，组件工作台 |
 

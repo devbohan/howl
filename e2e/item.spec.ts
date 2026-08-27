@@ -68,3 +68,49 @@ test('holds together on a phone', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   expect(await hasHorizontalOverflow(page)).toBe(false)
 })
+
+test('every store link reports the click before the browser leaves', async ({ page }) => {
+  await page.addInitScript(() => {
+    // Beacons never leave the page in a test, so capture them at the source.
+    ;(window as any).__beacons = []
+    navigator.sendBeacon = (url: string, body?: BodyInit) => {
+      ;(window as any).__beacons.push({ url, body })
+      return true
+    }
+  })
+  await page.goto(`/en/drop/${SLUG}`)
+
+  const store = page.locator('a[data-outbound="store"]').first()
+  await expect(store).toBeVisible()
+  // target=_blank would open a tab; the click still fires the handler first.
+  await store.click({ modifiers: ['Alt'] }).catch(() => store.dispatchEvent('click'))
+
+  const sent = await page.evaluate(() => (window as any).__beacons.length)
+  expect(sent, 'no beacon fired for a store click').toBeGreaterThan(0)
+
+  const url = await page.evaluate(() => (window as any).__beacons[0].url)
+  expect(url).toBe('/api/clicks')
+})
+
+test('outbound links are tagged by kind, so store clicks stay separable', async ({ page }) => {
+  await page.goto(`/en/drop/${SLUG}`)
+  const kinds = await page
+    .locator('a[data-outbound]')
+    .evaluateAll((els) => [...new Set(els.map((e) => e.getAttribute('data-outbound')))])
+  expect(kinds).toContain('store')
+  expect(kinds).toContain('coverage')
+})
+
+test('a store click never carries the visitor to a broken link if tracking fails', async ({ page }) => {
+  await page.addInitScript(() => {
+    navigator.sendBeacon = () => {
+      throw new Error('blocked')
+    }
+  })
+  await page.goto(`/en/drop/${SLUG}`)
+  const store = page.locator('a[data-outbound="store"]').first()
+  await expect(store).toHaveAttribute('href', /^https:\/\//)
+  await store.dispatchEvent('click')
+  // The page must still be usable — a thrown beacon cannot break navigation.
+  await expect(page.locator('h1')).toBeVisible()
+})

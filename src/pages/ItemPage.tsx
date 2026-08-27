@@ -3,6 +3,7 @@ import { Countdown, CountdownLabel } from '../components/Countdown'
 import { FrictionBadge } from '../components/FrictionBadge'
 import { CheckMark, CrossMark } from '../components/icons'
 import { MediaLinks } from '../components/MediaLinks'
+import { OutboundLink } from '../components/OutboundLink'
 import { VipBanner } from '../components/VipBanner'
 import { DROPS } from '../data/mock'
 import { useT } from '../lib/i18n'
@@ -81,14 +82,17 @@ function ChannelRow({ channel, drop }: { channel: Channel; drop: Drop }) {
         {channel.note && <p className="mt-1.5 text-[12px] leading-relaxed text-muted">{tl(channel.note)}</p>}
       </div>
 
-      <a
+      <OutboundLink
         href={channel.url}
-        target="_blank"
-        rel="noopener noreferrer nofollow sponsored"
+        kind="store"
+        context={drop.slug}
+        channelId={channel.id}
+        affiliate={channel.affiliate}
+        sponsored
         className="shrink-0 rounded-md border border-line bg-surface-2 px-3.5 py-2 text-[12px] font-semibold text-fg transition hover:border-accent hover:bg-accent hover:text-accent-ink"
       >
         {t('detGoToStore')} ↗
-      </a>
+      </OutboundLink>
     </div>
   )
 }

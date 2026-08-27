@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { NEWS } from '../data/news'
 import { HeatMark } from './icons'
+import { OutboundLink } from './OutboundLink'
 import { formatCount, rankFeed } from '../lib/feed'
 import { formatRelative } from '../lib/format'
 import { useT, type Key } from '../lib/i18n'
@@ -70,14 +71,14 @@ function Row({ item, now, hot }: { item: NewsItem; now: number; hot: boolean }) 
   }
   if (item.url) {
     return (
-      <a
+      <OutboundLink
         href={item.url}
-        target="_blank"
-        rel="noopener noreferrer nofollow"
+        kind="news"
+        context={item.id}
         className={`${className} transition hover:bg-surface-2`}
       >
         {body}
-      </a>
+      </OutboundLink>
     )
   }
   return <span className={className}>{body}</span>

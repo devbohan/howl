@@ -4,6 +4,7 @@ import { HeatMark } from './icons'
 import { formatCount, rankFeed } from '../lib/feed'
 import { formatRelative } from '../lib/format'
 import { LOCALE_LABELS, useT } from '../lib/i18n'
+import { OutboundLink } from './OutboundLink'
 import { PLATFORM_LABEL } from '../lib/labels'
 import { useNow } from '../lib/useNow'
 import { useRefresh } from '../lib/useRefresh'
@@ -20,10 +21,10 @@ function Row({ item, hot }: { item: MediaLink; hot: boolean }) {
     : undefined
 
   return (
-    <a
+    <OutboundLink
       href={item.url}
-      target="_blank"
-      rel="noopener noreferrer nofollow"
+      kind="coverage"
+      context={item.id}
       className="group flex h-[52px] shrink-0 items-center gap-2.5 px-3.5 transition hover:bg-surface-2"
     >
       <span
@@ -72,7 +73,7 @@ function Row({ item, hot }: { item: MediaLink; hot: boolean }) {
           <span className="rounded border border-line px-1 py-px text-[10px]">{LOCALE_LABELS[item.lang]}</span>
         )}
       </span>
-    </a>
+    </OutboundLink>
   )
 }
 

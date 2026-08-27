@@ -9,6 +9,7 @@ import { WantsPage } from './pages/WantsPage'
 import { LocaleContext } from './lib/i18n'
 import { CurrencyContext } from './lib/prefs'
 import { ThemeContext, applyTheme, readTheme, type Theme } from './lib/theme'
+import { flushOutbound } from './lib/outbound'
 import { LOCALES, type Currency, type Locale } from './lib/types'
 
 const DEFAULT_CURRENCY: Record<Locale, Currency> = {
@@ -48,6 +49,11 @@ function LocaleShell() {
   useEffect(() => {
     if (valid) document.documentElement.lang = locale as string
   }, [locale, valid])
+
+  // Clicks that could not be sent while the browser was navigating away.
+  useEffect(() => {
+    void flushOutbound()
+  }, [])
 
   useEffect(() => {
     if (valid && !touchedCurrency) setCurrency(DEFAULT_CURRENCY[locale as Locale])
