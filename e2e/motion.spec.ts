@@ -39,6 +39,22 @@ test.describe('with prefers-reduced-motion', () => {
     expect(new Set(rows).size).toBe(rows.length)
   })
 
+  test('the headline is fully painted, with no shimmer left running', async ({ page }) => {
+    await page.goto('/en')
+    const headline = await page.locator('h1').evaluate((h) => {
+      const style = getComputedStyle(h)
+      return {
+        animation: style.animationName,
+        fill: style.webkitTextFillColor,
+        image: style.backgroundImage,
+      }
+    })
+    expect(headline.animation).toBe('none')
+    expect(headline.image).toBe('none')
+    // A transparent fill with no gradient behind it would be invisible text.
+    expect(headline.fill).not.toMatch(/rgba\(0, 0, 0, 0\)|transparent/)
+  })
+
   test('the live dot stops pulsing', async ({ page }) => {
     // The dot animation is CSS-driven; reduced motion should not leave it running
     // at full speed. This asserts the page still renders it, not that it moves.

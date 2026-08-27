@@ -86,17 +86,19 @@ export function PortalPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4">
-      <section className="pt-12 pb-7 md:pt-16 md:pb-9">
+      <section className="pt-10 pb-6 md:pt-12 md:pb-7">
         {/*
-          Never wraps, in any language. The size is viewport-derived rather than
-          stepped, because the four headlines have very different widths and a
-          fixed size that fits English on one line leaves Japanese tiny.
+          Deliberately the same size as the rest of the page. The headline gets
+          its weight from the shimmer travelling across it, not from scale —
+          which also means it never wraps in any of the four languages.
         */}
-        <h1 className="whitespace-nowrap text-[clamp(1rem,4.2vw,1.75rem)] font-extrabold leading-[1.2] tracking-tight text-fg">
+        {/* w-fit so the gradient box matches the text, not the column — otherwise
+            the streak spends most of its travel over empty space. */}
+        <h1 className="shimmer w-fit whitespace-nowrap text-[12px] font-bold tracking-tight text-fg">
           {t('heroTitle')}
         </h1>
         {/* Doubles as the legend for the per-category columns below. */}
-        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] text-muted">
+        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] text-muted">
           <span className="font-mono tabular-nums">
             <span data-stat="tracked-total">{DROPS.length}</span> {t('portalTracked')}
           </span>

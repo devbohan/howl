@@ -62,7 +62,12 @@ test('the headline stays on one line in every language, at every width', async (
       const fits = await page.locator('h1').evaluate((h) => {
         const range = document.createRange()
         range.selectNodeContents(h)
-        return { text: Math.ceil(range.getBoundingClientRect().width), box: h.clientWidth }
+        // Against the parent: the h1 is w-fit, so its own box is the text box
+        // and comparing the two would always pass.
+        return {
+          text: Math.ceil(range.getBoundingClientRect().width),
+          box: (h.parentElement as HTMLElement).clientWidth,
+        }
       })
       expect(fits.text, `${locale} headline wraps at ${width}px`).toBeLessThanOrEqual(fits.box)
     }

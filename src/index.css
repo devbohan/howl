@@ -137,3 +137,52 @@ body {
 .ticker-viewport:hover::-webkit-scrollbar-thumb {
   background: var(--color-faint);
 }
+
+/*
+ * Headline shimmer. The title sits at body size now, so it earns attention with
+ * a slow band travelling across it rather than with scale — the same visual
+ * vocabulary as the live dot, applied as a sweep instead of a blink.
+ *
+ * The band dims rather than brightens, which reads the same way in both themes;
+ * a "brighter" glint is invisible on an already near-white foreground.
+ */
+@keyframes shimmer-sweep {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0% 0;
+  }
+}
+
+.shimmer {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-fg) 48%,
+    color-mix(in oklab, var(--color-fg) 32%, transparent) 50%,
+    var(--color-fg) 52%
+  );
+  /* Wider than the element, so percentage positioning slides it across while
+   * it still covers the text at both ends of the travel. A narrower image
+   * would leave the glyphs unpainted — and unpainted means invisible here.
+   * Six times over is also what makes this read as a pulse: the streak is only
+   * on the text for about a fifth of the cycle, and rests off-screen between. */
+  background-size: 600% 100%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  /* text-fill-color rather than `color: transparent`, so the computed colour
+   * stays the real foreground and contrast tooling can still measure it. */
+  -webkit-text-fill-color: transparent;
+  /* Both ends of the gradient are solid, so the loop point is invisible and the
+   * streak reads as one pass every few seconds rather than constant motion. */
+  animation: shimmer-sweep 6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer {
+    animation: none;
+    background-image: none;
+    -webkit-text-fill-color: var(--color-fg);
+  }
+}
