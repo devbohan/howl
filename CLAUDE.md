@@ -236,7 +236,18 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 
 ## 待办
 
-- 域名与 handle 未占：`howl.app` / `gethowl.com` / `howldrops.com` / `howl.gg`，以及 Discord / X / Instagram 的 `howl`（Discord 自定义邀请链接先到先得且不可赎回）
+- **域名（2026-08-27 用 RDAP 实测，早期会话里「howl.net 没被占有」的说法是错的）**：
+
+  | 域名 | 状态 |
+  | :--- | :--- |
+  | `howl.net` | ❌ 已注册（1998-06-22），GoDaddy，停放在 Domains.com 待售 |
+  | `howl.com` / `howl.app` / `howl.gg` / `howl.ink` / `howl.wtf` / `howl.fyi` | ❌ 均已注册 |
+  | `gethowl.com` / `howlhq.com` | ❌ 已注册（域名投资商停放） |
+  | **`howl.tokyo`** | ✅ **可注册**（RDAP 404） |
+  | `howl.day` / `howldrops.com` / `howlraffle.com` | ✅ 可注册 |
+
+  四字母域名在主流后缀基本全被占，能拿的只有新 gTLD 或加词。`howl.tokyo` 是其中唯一「整个域名都在表意」的选项，但它把品牌锚定在日本，和「外对日」那半边业务略有出入。
+- Discord / X / Instagram 的 `howl` handle 未占（Discord 自定义邀请链接先到先得且不可赎回）
 - 三处占位数据（见上表）需要真实来源；快讯与视频流理想状态是接各平台 API 自动刷新
 - E2E 目前只跑 chromium 与 Pixel 5；firefox / webkit 需要 `npx playwright install` 后在 [playwright.config.ts](playwright.config.ts) 里加 project
 - 视觉回归（截图对比）尚未接入
