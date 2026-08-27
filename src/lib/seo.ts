@@ -106,6 +106,45 @@ export function portalHead(locale: Locale, drops: Drop[]): HeadData {
   }
 }
 
+/**
+ * The wantlist is a real SEO surface: "<product> 复刻" is a query people type
+ * and nobody has a good page for. The ItemList carries the counts, which is
+ * also what an answer engine would quote.
+ */
+export function wantsHead(locale: Locale, wants: { name: string; count: number }[]): HeadData {
+  const path = '/wants'
+  const top = [...wants].sort((a, b) => b.count - a.count).slice(0, 20)
+  return {
+    title: clamp(`${t(locale, 'wantsTitle')} — ${SITE_NAME}`, TITLE_BUDGET),
+    description: clamp(t(locale, 'wantsLead'), DESCRIPTION_BUDGET),
+    path,
+    jsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: t(locale, 'wantsTitle'),
+        description: t(locale, 'wantsLead'),
+        url: absolute(locale, path),
+        inLanguage: locale,
+        mainEntity: {
+          '@type': 'ItemList',
+          numberOfItems: wants.length,
+          itemListElement: top.map((want, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: want.name,
+            description: `${want.count} ${t(locale, 'wantsCount')}`,
+          })),
+        },
+      },
+      breadcrumbs(locale, [
+        { name: t(locale, 'seoBreadcrumbHome'), path: '' },
+        { name: t(locale, 'wantsTitle'), path },
+      ]),
+    ],
+  }
+}
+
 export function categoryHead(locale: Locale, category: Category, drops: Drop[]): HeadData {
   const name = t(locale, CATEGORY_KEY[category])
   const path = `/c/${category}`

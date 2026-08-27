@@ -114,8 +114,8 @@ test('the sitemap indexes every page in every language, with alternates', async 
     expect(xml).toContain('<lastmod>')
     expect(xml).toContain('hreflang="x-default"')
   }
-  // 4 locales × (portal + 6 categories + 21 drops)
-  expect(total).toBe(4 * 28)
+  // 4 locales × (portal + wantlist + 6 categories + 21 drops)
+  expect(total).toBe(4 * 29)
 })
 
 test('llms.txt describes the site for answer engines', async ({ request }) => {
@@ -143,4 +143,27 @@ test('share cards exist for the site and for each drop', async ({ request, page 
     .getAttribute('content')
   expect(image).toMatch(/\/og\/drop\/pokemon-center-151-premium-ja\.png$/)
   expect((await request.get(new URL(image!).pathname)).status()).toBe(200)
+})
+
+test('the reissue wantlist is prerendered with its counts', async ({ page }) => {
+  await page.goto('/en/wants')
+  await expect(page.locator('h1')).toBeVisible()
+
+  const text = await page.locator('body').innerText()
+  expect(text.length).toBeGreaterThan(400)
+  // The counts are the substance — an answer engine quoting this page should
+  // see "412 people want this", not an empty shell it has to run JS to fill.
+  expect(text).toMatch(/\d{2,}/)
+
+  const raw = await page.locator('script[type="application/ld+json"]').innerText()
+  const nodes = JSON.parse(raw)
+  const collection = nodes.find((n: any) => n['@type'] === 'CollectionPage')
+  expect(collection.mainEntity.itemListElement.length).toBeGreaterThan(5)
+})
+
+test('the wantlist is in the sitemap in every language', async ({ request }) => {
+  const xml = await (await request.get('/sitemap-pages.xml')).text()
+  for (const locale of LOCALES) {
+    expect(xml).toContain(`/${locale}/wants</loc>`)
+  }
 })

@@ -5,6 +5,7 @@ import { Header } from './components/Header'
 import { CategoryPage } from './pages/CategoryPage'
 import { ItemPage } from './pages/ItemPage'
 import { PortalPage } from './pages/PortalPage'
+import { WantsPage } from './pages/WantsPage'
 import { LocaleContext } from './lib/i18n'
 import { CurrencyContext } from './lib/prefs'
 import { ThemeContext, applyTheme, readTheme, type Theme } from './lib/theme'
@@ -71,6 +72,7 @@ function LocaleShell() {
               <Route index element={<PortalPage />} />
               <Route path="c/:category" element={<CategoryPage />} />
               <Route path="drop/:slug" element={<ItemPage />} />
+              <Route path="wants" element={<WantsPage />} />
               <Route path="*" element={<Navigate to={`/${locale}`} replace />} />
             </Routes>
           </main>

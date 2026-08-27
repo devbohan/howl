@@ -9,7 +9,7 @@ import { LOCALES, type Drop, type Locale } from './src/lib/types'
 const SITE_URL = (process.env.VITE_SITE_URL ?? 'https://howl.tokyo').replace(/\/$/, '')
 
 /** Every indexable path, locale-relative. Order matters only for readability. */
-const PATHS = ['', ...CATEGORIES.map((c) => `/c/${c}`), ...DROPS.map((d) => `/drop/${d.slug}`)]
+const PATHS = ['', '/wants', ...CATEGORIES.map((c) => `/c/${c}`), ...DROPS.map((d) => `/drop/${d.slug}`)]
 
 const BUILT_AT = new Date().toISOString()
 const xml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -58,15 +58,15 @@ ${alternates}
         : BUILT_AT
     }</lastmod>
     <changefreq>${path.startsWith('/drop/') ? 'hourly' : 'daily'}</changefreq>
-    <priority>${path === '' ? '1.0' : path.startsWith('/c/') ? '0.8' : '0.7'}</priority>
+    <priority>${path === '' ? '1.0' : path === '/wants' ? '0.9' : path.startsWith('/c/') ? '0.8' : '0.7'}</priority>
   </url>`,
         ).join('\n')
       })
 
       // Split by page type: a drop sitemap churns hourly while the category and
       // portal pages barely move, and crawlers budget per sitemap.
-      const pageUrls = urls.slice(0, 1 + CATEGORIES.length).join('\n')
-      const dropUrls = urls.slice(1 + CATEGORIES.length).join('\n')
+      const pageUrls = urls.slice(0, 2 + CATEGORIES.length).join('\n')
+      const dropUrls = urls.slice(2 + CATEGORIES.length).join('\n')
 
       this.emitFile({ type: 'asset', fileName: 'sitemap-pages.xml', source: urlset(pageUrls) })
       this.emitFile({ type: 'asset', fileName: 'sitemap-drops.xml', source: urlset(dropUrls) })

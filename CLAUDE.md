@@ -170,7 +170,31 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 - `availability` 必须与渠道实际库存一致，有测试逐条校验——对结构化数据撒谎会被 Google 降权。
 - **域名已定：`howl.tokyo`**。`SITE_URL` 默认值同时写在 [seo.ts](src/lib/seo.ts)、[vite.config.ts](vite.config.ts)、[prerender.mjs](scripts/prerender.mjs) 三处——三个阶段互相无法 import，改要一起改，否则同一次构建里会出现两个 origin。预览/staging 部署用 `VITE_SITE_URL` 覆盖，别让它们对爬虫宣称生产域名。
 
-### 测试
+### 需求侧：求复刻（/:locale/wants）
+
+**用户登记想要什么复刻，票数本身就是拿去跟卖家谈的筹码。**
+
+为什么值得做：一份积累的需求名单是竞争对手**抄不走**的（日历一个周末就能抄，名单不行）；「有 1,240 人在等这个复刻」对厂商和二手店的说服力远超「我们月访问 5 万」；而且 `<商品> 复刻` 是有搜索量但没有好页面的词，所以这页**本身就是 SEO 资产**，已进 sitemap 并被预渲染。
+
+- [wants.ts](src/lib/wants.ts) — 模型、排序、**重名折叠**（大小写/空格/全半角/标点归一，所以「151 UPC」和「151upc 复刻」算同一条）
+- [wantsClient.ts](src/lib/wantsClient.ts) — 投票走 `/api/wants`；发不出去就**存在本机排队重试**，不静默丢弃。一票丢了就找不回来了
+- [functions/api/wants.ts](functions/api/wants.ts) — Cloudflare Pages Function + D1。身份是 `IP + UA` 的哈希，够挡随手重复投票，又不存任何能识别到人的东西。**表结构写在文件头部的注释里**
+- [wants.ts](src/data/wants.ts) — 构建期快照，预渲染读它。**已用真实存在的热门复刻需求做种**——空板子会直接告诉访客「没人用这个站」
+
+⚠️ **计数需要后端**。页面本身零成本，但票数必须存在某处：要建一个 D1 库并在 Pages 里绑成 `WANTS_DB`。没绑之前页面照常显示种子数据，投票排队等重试。
+
+**卖家自助上架时，难度评级必须留在自己手里** —— 卖家永远不会写「我们要日本手机号，海外基本买不到」。一旦交出去，这个站就变成新闻稿板，和零售商官网没区别。WolfGrandma 的置信度分层就是为此准备的：卖家自报是「有说法」，不是「已确认」。
+
+## WolfGrandma：录入后台（/admin.html）
+
+专攻自动化做不了的三件事。独立入口，noindex + robots 屏蔽 + 不进 sitemap + 不被预渲染，数据在 localStorage 并可导出 JSON。
+
+- **收件箱** — 爬虫拿不到的源（Story 24 小时过期、LINE 推送不公开、Discord 要入群），捕获**不设必填项**，先接住再整理。巡回清单按逾期排序，并记下每个源**为什么不能自动化**
+- **核对** — 每个字段是 `Fact<T>`，默认 `unknown`，**值和置信度分开设**。抽取器能填框，只有人能确认；「有说法」不算数，那正是抽取器产出的状态
+- **渠道** — **Friction 挂在渠道不挂商品**。「PCO 需要日本手机号」是零售商属性，确认一次，所有走该渠道的商品继承。几十个渠道 vs 几百件商品。一条可行路线就能把整件商品救回 easy
+- **代拍** 作为待验证假设记录，界面里写明代拍（Yahoo/Mercari，合法生意）与代抽（违反 ToS）的区别，以及它会把产品从资讯服务变成交易一方
+
+## 测试
 
 [crawler.spec.ts](e2e/crawler.spec.ts) **整个文件在 `javaScriptEnabled: false` 下运行**，断言的就是不执行 JS 的答案引擎实际收到的东西。预渲染一旦坏掉，这些测试会失败，而不是站点悄悄消失。
 
@@ -198,9 +222,9 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 | 命令 | 内容 |
 | :--- | :--- |
 | `npm run typecheck` | 应用/测试/工具三套 tsconfig 分别检查 |
-| `npm test` | Vitest 235 个单元与组件测试 |
+| `npm test` | Vitest 273 个单元与组件测试 |
 | `npm run test:coverage` | 同上 + 覆盖率，阈值 80%（当前 97% 语句 / 91% 分支） |
-| `npm run test:e2e` | Playwright 142 个用例，chromium + Pixel 5 两套（含关掉 JS 的爬虫视角） |
+| `npm run test:e2e` | Playwright 150 个用例，chromium + Pixel 5 两套（含关掉 JS 的爬虫视角） |
 | `npm run test:e2e:ui` | Playwright UI 模式，调试用 |
 | `npm run storybook` | Storybook 9，组件工作台 |
 

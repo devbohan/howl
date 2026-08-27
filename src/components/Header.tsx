@@ -34,6 +34,14 @@ export function Header({
           </span>
         </Link>
 
+        {/* Hidden on the narrowest phones — the row is already full there. */}
+        <Link
+          to={`/${locale}/wants`}
+          className="hidden text-[11px] font-medium text-muted transition hover:text-fg sm:block"
+        >
+          {t('wantsNav')}
+        </Link>
+
         <div className="ml-auto flex items-center gap-2">
           <select
             value={currency}
