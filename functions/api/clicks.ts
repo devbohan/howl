@@ -23,7 +23,7 @@ interface Env {
   CLICKS_DB: D1Database
 }
 
-const KINDS = ['store', 'coverage', 'news']
+const KINDS = ['store', 'coverage', 'news', 'proxy']
 const MAX_BATCH = 50
 
 interface Incoming {

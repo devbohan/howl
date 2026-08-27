@@ -203,6 +203,25 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 - [functions/api/clicks.ts](functions/api/clicks.ts) — **按天预聚合**，所以表永远很小：一年重度使用是几千行而不是几百万行。`GET /api/clicks?days=30` 直接产出按渠道分组的报表，那就是你拿去跟零售商谈的那张纸
 - **不存任何能识别到人的东西**：目标站的 host、渠道 id、语种、日期。够做报表，仅此而已
 
+## 代购引流：难度墙就是转化时刻
+
+[proxies.ts](src/lib/proxies.ts) + [ProxyRoute.tsx](src/components/ProxyRoute.tsx)
+
+**只在真的买不到时才出现。** 能直接下单的商品上摆代购链接是噪音，而且看起来像广告。
+
+**核心判断是把服务类型对上真实障碍**——多数聚合站在这里做错：
+
+| 障碍 | 转运（借你日本地址） | 代购（用他们账号和卡买） |
+| :--- | :--- | :--- |
+| 不发海外 | ✅ 够了，而且更便宜 | ✅ 但没必要 |
+| 不收海外卡 / 要日本手机号 | ❌ **完全没用** | ✅ 唯一的路 |
+
+所以一旦支付被卡，`proxiesFor()` **不再推荐任何转运**——给一个被卡在付款上的人推荐转运，会让他白花钱还错过抽选。
+
+**这些点击单独归类为 `kind: 'proxy'`**，理由不只是统计干净：一个人刚读到「需要日本手机号、海外卡会被拒」就点了代购，那是全站**转化意图最强**的一次点击。而这个数字也正好回答「要不要自己下场做代购」——用数据决定，不靠拍脑袋。
+
+`affiliateParam` 留空，联盟号批下来填上即可，链接结构不用改。
+
 ## 测试
 
 [crawler.spec.ts](e2e/crawler.spec.ts) **整个文件在 `javaScriptEnabled: false` 下运行**，断言的就是不执行 JS 的答案引擎实际收到的东西。预渲染一旦坏掉，这些测试会失败，而不是站点悄悄消失。
@@ -231,7 +250,7 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 | 命令 | 内容 |
 | :--- | :--- |
 | `npm run typecheck` | 应用/测试/工具三套 tsconfig 分别检查 |
-| `npm test` | Vitest 288 个单元与组件测试 |
+| `npm test` | Vitest 356 个单元与组件测试 |
 | `npm run test:coverage` | 同上 + 覆盖率，阈值 80%（当前 97% 语句 / 91% 分支） |
 | `npm run test:e2e` | Playwright 154 个用例，chromium + Pixel 5 两套（含关掉 JS 的爬虫视角） |
 | `npm run test:e2e:ui` | Playwright UI 模式，调试用 |

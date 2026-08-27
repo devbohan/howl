@@ -4,6 +4,7 @@ import { FrictionBadge } from '../components/FrictionBadge'
 import { CheckMark, CrossMark } from '../components/icons'
 import { MediaLinks } from '../components/MediaLinks'
 import { OutboundLink } from '../components/OutboundLink'
+import { ProxyRoute } from '../components/ProxyRoute'
 import { VipBanner } from '../components/VipBanner'
 import { DROPS } from '../data/mock'
 import { useT } from '../lib/i18n'
@@ -217,6 +218,8 @@ export function ItemPage() {
               )}
             </section>
           )}
+
+          <ProxyRoute drop={drop} />
 
           {drop.media && <MediaLinks items={drop.media} />}
 

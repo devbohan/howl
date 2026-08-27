@@ -8,7 +8,13 @@ import type { Locale } from './types'
  * Nothing here identifies a person: a drop slug, which channel, which language,
  * and a timestamp. That is everything the report needs and nothing more.
  */
-export type OutboundKind = 'store' | 'coverage' | 'news'
+/**
+ * `proxy` is separate on purpose: it is the click that happens right after
+ * someone learns they cannot buy directly, which makes it both the highest-
+ * intent click on the site and the number that answers whether running a proxy
+ * service ourselves would be worth it.
+ */
+export type OutboundKind = 'store' | 'coverage' | 'news' | 'proxy'
 
 export interface OutboundClick {
   kind: OutboundKind

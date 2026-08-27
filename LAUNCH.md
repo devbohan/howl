@@ -178,9 +178,11 @@ npm run ingest -- --check <url>    # 这个源能不能加
 
 ### [ ] 申请联盟号
 
-Buyee / AmiAmi Global / StockX / END.。免费，但**审核要时间，而且不少联盟要求站点已有流量**——现在申请，等有量时正好能用。
+Buyee / ZenMarket / FromJapan / AmiAmi Global / StockX / END.。免费，但**审核要时间，而且不少联盟要求站点已有流量**——现在申请，等有量时正好能用。
 
-顺序上先申请、后导流：链接位已经建好（`Channel.affiliate` + `rel="sponsored"` + 点击追踪），拿到联盟参数直接换 URL 即可。
+顺序上先申请、后导流：链接位已经建好（`Channel.affiliate` + `rel="sponsored"` + 点击追踪），拿到联盟参数填进 [proxies.ts](src/lib/proxies.ts) 的 `affiliateParam` 即可，链接结构不用改。
+
+**代购的联盟优先申请** —— 那是全站转化意图最强的一批点击（用户刚读到「买不了」就点了「谁能帮我买」）。
 
 ---
 
