@@ -1,0 +1,65 @@
+{
+  "_comment": "只列主动把内容交给机器的源。加新源前先跑 `npm run ingest -- --check <url>`。返回 403、连不上、或页面写着「アクセス制限」的站不要加——那是拒绝，不是待解决的技术问题。",
+  "_removed": {
+    "p-bandai": "sitemap 是开放的，但商品页连续请求几次后返回「アクセス制限」。robots.txt 允许 ≠ 欢迎程序连续抓取，所以移除。它的限定受注信息改从官方 X 与新闻稿人工获取。"
+  },
+  "sources": [
+    {
+      "id": "hypebeast-footwear",
+      "name": "Hypebeast Footwear",
+      "kind": "web",
+      "type": "rss",
+      "url": "https://hypebeast.com/footwear/feed",
+      "withinDays": 7,
+      "limit": 20
+    },
+    {
+      "id": "hypebeast-jp",
+      "name": "Hypebeast 日本版",
+      "kind": "web",
+      "type": "rss",
+      "url": "https://hypebeast.com/jp/feed",
+      "match": "(抽選|発売|再販|受注|限定|ドロップ|リリース)",
+      "withinDays": 7,
+      "limit": 20
+    },
+    {
+      "id": "dengeki-hobby",
+      "name": "電撃ホビーウェブ",
+      "kind": "web",
+      "type": "rss",
+      "url": "https://hobby.dengeki.com/feed",
+      "withinDays": 7,
+      "limit": 20
+    },
+    {
+      "id": "4gamer",
+      "name": "4Gamer",
+      "kind": "web",
+      "type": "rss",
+      "url": "https://www.4gamer.net/rss/index.xml",
+      "match": "(限定|予約|受注|抽選|同梱|コラボ)",
+      "withinDays": 5,
+      "limit": 15
+    },
+    {
+      "id": "gamespark",
+      "name": "Game*Spark",
+      "kind": "web",
+      "type": "rss",
+      "url": "https://www.gamespark.jp/rss/index.rdf",
+      "match": "(限定|予約|受注|抽選|同梱)",
+      "withinDays": 5,
+      "limit": 15
+    },
+    {
+      "id": "surugaya",
+      "name": "駿河屋 新着",
+      "kind": "web",
+      "type": "sitemap",
+      "url": "https://www.suruga-ya.jp/sitemap.xml",
+      "withinDays": 7,
+      "limit": 10
+    }
+  ]
+}

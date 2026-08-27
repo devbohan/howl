@@ -101,6 +101,55 @@ Cloudflare Web Analytics：免费、无 cookie、不需要 GDPR 弹窗。Pages �
 - 🔴 **有机器人防护的**（403 / 连不上）—— **不要绕**。绕过机器人识别属于「规避访问控制」，和当初砍掉自动填单避开的是同一类风险。这些站的信息从它们的官方公告和社交账号拿
 - ⚫ **抓不到的** —— Instagram Story、LINE 推送、Discord 公告、店头张贴，以及 **Friction Index 本身**和**日期的最终确认**。这部分永远是人工，也正是护城河
 
+### [ ] 保护后台与经营数据
+
+**已修的两个洞**（代码已就位，缺配置）：
+
+- `robots.txt` 原本写着 `Disallow: /admin.html` —— robots.txt 是每个爬虫读的第一个文件，那等于**主动广播后台地址**。已移除，改用真实鉴权。
+- `GET /api/clicks` 原本无鉴权 —— 那是经营数据（哪些零售商拿到多少点击、哪些商品在转化），竞争对手轮询就全知道了。现在需要鉴权。
+
+**你要做的：**
+
+```
+Pages → Settings → Environment variables → 新增 ADMIN_PASSWORD
+```
+
+**没设 = 后台和点击报表全部返回 503，不是全部开放** —— [_middleware.ts](functions/_middleware.ts) 是 fail closed 的。
+
+更好的方案是在 `/admin.html` 前面加 **Cloudflare Access**（50 用户以内免费）：真 SSO、没有共享密钥躺在环境变量里、还有审计日志。middleware 是 Access 配错时仍然生效的底线。
+
+**⚠️ 关于「防别人爬我」要认清的事**
+
+你不可能同时做到：被 Google 和 AI 答案引擎完整读取（你**全部**的获客策略），以及不被竞争对手抓取。因为爬虫可以伪装成 Googlebot，而你的内容按设计就是静态 HTML + 结构化数据。
+
+**真正有效的是决定什么公开，而不是拦爬虫：**
+
+| 手段 | 有没有用 |
+| :--- | :--- |
+| 保护后台与 `/api/clicks` | ✅ 真的有用 —— 这些本来就不该公开 |
+| Cloudflare WAF 限流（免费版 1 条规则） | ✅ 挡得住随手写的脚本 |
+| **埋金丝雀数据** —— 放几条无害但唯一可识别的记录 | ✅ 抄袭时能**举证**（地图行业的「陷阱街道」就是这个原理） |
+| 把最深的 Friction Index 攻略放进 VIP | ✅ **最有效** —— 公开的是你想被索引的，值钱的在账号后面 |
+| 封 User-Agent | ❌ 一行代码就能伪造 |
+| 禁右键 / JS 混淆 | ❌ 无效，且会毁掉 SEO |
+| Cloudflare Bot Fight Mode | ⚠️ 会连你想要的 AI 爬虫一起挡 |
+
+另外：**日期和价格是事实，多数法域下事实不受版权保护**；你的**表述**（Friction 说明的具体措辞、编排）才受保护。所以真正抄不走的是判断，不是数据。
+
+### [ ] 用摄取器拿一批真实线索
+
+```bash
+npm run ingest                     # 全部源
+npm run ingest -- --only 4gamer    # 单个源
+npm run ingest -- --check <url>    # 这个源能不能加
+```
+
+产出 `leads.json`，在 [/admin.html](admin.html) 收件箱点「导入线索文件」，重复的自动跳过。
+
+**只抓主动把内容交给机器的源**，源清单在 [scripts/sources.json](scripts/sources.json)。摄取器会：先读 robots.txt 并遵守、请求间隔 1.5 秒、UA 带真实联系方式、**识别到「アクセス制限」这类拒绝页就停止抓该源**。
+
+> p-bandai 已被移除：它的 sitemap 是开放的，但商品页连续请求几次后返回「アクセス制限」。**robots.txt 允许 ≠ 欢迎程序连抓。** 它的限定受注信息改从官方 X 与新闻稿人工获取。
+
 ## 🏃 先到先得
 
 ### [ ] 注册 `howl.tokyo`

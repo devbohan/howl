@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { patrolStatus } from './logic'
 import { newId } from './store'
 import { SOURCE_LABEL, WHY_MANUAL, type AdminState, type Lead, type SourceKind } from './types'
@@ -22,7 +22,33 @@ export function Inbox({
   const [raw, setRaw] = useState('')
   const [url, setUrl] = useState('')
   const [kind, setKind] = useState<SourceKind>('instagram')
+  const [imported, setImported] = useState<string | null>(null)
+  const fileRef = useRef<HTMLInputElement>(null)
   const now = Date.now()
+
+  /**
+   * Merges a leads.json from `npm run ingest`. Appends rather than replaces,
+   * and skips anything already captured — running the ingester twice in a day
+   * should not fill the inbox with the same items.
+   */
+  const importLeads = async (file: File) => {
+    try {
+      const parsed = JSON.parse(await file.text()) as { leads?: Lead[] }
+      const incoming = parsed.leads ?? []
+      if (incoming.length === 0) throw new Error('文件里没有 leads')
+
+      let added = 0
+      update((prev) => {
+        const seen = new Set(prev.leads.map((l) => l.url ?? l.id))
+        const fresh = incoming.filter((l) => !seen.has(l.url ?? l.id))
+        added = fresh.length
+        return { ...prev, leads: [...fresh, ...prev.leads] }
+      })
+      setImported(`导入 ${added} 条，跳过 ${incoming.length - added} 条重复`)
+    } catch (error) {
+      setImported(`导入失败：${error instanceof Error ? error.message : '文件读不出来'}`)
+    }
+  }
 
   const capture = () => {
     if (!raw.trim() && !url.trim()) return
@@ -95,6 +121,31 @@ export function Inbox({
               存入
             </button>
           </div>
+
+          <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-line-soft pt-3">
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              className="rounded border border-line bg-surface-2 px-3 py-1.5 text-[11px] font-semibold text-fg transition hover:border-accent"
+            >
+              导入线索文件
+            </button>
+            <span className="text-[11px] text-faint">
+              先跑 <code className="font-mono">npm run ingest</code>，再把 leads.json 拖进来
+            </span>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="application/json"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0]
+                if (file) void importLeads(file)
+                e.target.value = ''
+              }}
+            />
+          </div>
+          {imported && <p className="mt-1.5 text-[11px] text-muted">{imported}</p>}
         </section>
 
         <section>

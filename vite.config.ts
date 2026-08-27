@@ -132,7 +132,6 @@ ${items}
         source: `# HOWL — global drop and raffle calendar
 User-agent: *
 Allow: /
-Disallow: /admin.html
 
 # Answer engines are allowed on purpose: being cited in an AI answer is close
 # to free reach for a site whose whole value is closing an information gap.

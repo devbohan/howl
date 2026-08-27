@@ -17,7 +17,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prerender": "node scripts/prerender.mjs",
-    "build:static": "npm run build && npm run prerender"
+    "build:static": "npm run build && npm run prerender",
+    "ingest": "node scripts/ingest.mjs"
   },
   "dependencies": {
     "react": "^19.1.0",
