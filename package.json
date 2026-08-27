@@ -18,7 +18,8 @@
     "build-storybook": "storybook build",
     "prerender": "node scripts/prerender.mjs",
     "build:static": "npm run build && npm run prerender",
-    "ingest": "node scripts/ingest.mjs"
+    "ingest": "node scripts/ingest.mjs",
+    "build:bookmarklet": "node scripts/build-bookmarklet.mjs"
   },
   "dependencies": {
     "react": "^19.1.0",
@@ -41,6 +42,7 @@
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^4.4.0",
     "@vitest/coverage-v8": "^3.2.7",
+    "esbuild": "^0.28.2",
     "jsdom": "^29.1.1",
     "sirv": "^3.0.2",
     "storybook": "^9.1.20",

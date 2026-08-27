@@ -1,15 +1,17 @@
 import { useState } from 'react'
 import { Backup } from './Backup'
+import { Compare, type CaptureRecord } from './Compare'
 import { Channels } from './Channels'
 import { Inbox } from './Inbox'
 import { Verify } from './Verify'
 import { emptyDraft, useAdminState } from './store'
 import type { AdminState, Lead } from './types'
 
-type Tab = 'inbox' | 'verify' | 'channels' | 'backup'
+type Tab = 'inbox' | 'compare' | 'verify' | 'channels' | 'backup'
 
 const TABS: [Tab, string, string][] = [
   ['inbox', '收件箱', '爬虫拿不到的，先手动接住'],
+  ['compare', '比价台', '你开店，书签抓页，价格并排放'],
   ['verify', '核对', '到页面上确认，默认未知'],
   ['channels', '渠道', '门槛只研究一次，商品继承'],
   ['backup', '备份', '导出，别让数据困在浏览器里'],
@@ -20,6 +22,22 @@ export default function AdminApp() {
   const [tab, setTab] = useState<Tab>('inbox')
   const [draftId, setDraftId] = useState<string | null>(null)
   const [channelId, setChannelId] = useState<string | null>(null)
+  const [captures, setCaptures] = useState<CaptureRecord[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('wolfgrandma-captures') ?? '[]') as CaptureRecord[]
+    } catch {
+      return []
+    }
+  })
+
+  const saveCaptures = (next: CaptureRecord[]) => {
+    setCaptures(next)
+    try {
+      localStorage.setItem('wolfgrandma-captures', JSON.stringify(next.slice(0, 200)))
+    } catch {
+      /* private mode — captures just won't survive a reload */
+    }
+  }
 
   /** A lead becomes a draft with its text kept as the source trail. */
   const promote = (lead: Lead) => {
@@ -58,6 +76,9 @@ export default function AdminApp() {
         <p className="mb-4 text-[11px] text-faint">{TABS.find(([k]) => k === tab)?.[2]}</p>
 
         {tab === 'inbox' && <Inbox state={state} update={update} onPromote={promote} />}
+        {tab === 'compare' && (
+          <Compare state={state} update={update} captures={captures} setCaptures={saveCaptures} />
+        )}
         {tab === 'verify' && (
           <Verify state={state} update={update} selectedId={draftId} onSelect={setDraftId} />
         )}
