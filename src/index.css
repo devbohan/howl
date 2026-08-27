@@ -1,0 +1,88 @@
+@import 'tailwindcss';
+
+/*
+ * Light is the base palette; the dark values below override the same custom
+ * properties, so every Tailwind utility (bg-surface, text-muted, …) follows
+ * the theme without any dark: variants in the markup.
+ *
+ * accent      — brand fill (button/chip backgrounds)
+ * accent-ink  — text drawn ON an accent fill
+ * accent-fg   — accent used AS text or a dot on a page background
+ */
+@theme {
+  --color-ink: #f6f7f9;
+  --color-surface: #ffffff;
+  --color-surface-2: #f1f3f6;
+  --color-line: #e2e6ec;
+  --color-line-soft: #edeff3;
+  --color-fg: #101317;
+  --color-muted: #59616e;
+  --color-faint: #878f9b;
+
+  --color-accent: #bdeb00;
+  --color-accent-dim: #a8d200;
+  --color-accent-ink: #0b0d06;
+  --color-accent-fg: #5a7500;
+
+  --color-easy: #0e9c57;
+  --color-medium: #b06a00;
+  --color-hard: #d92546;
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', 'PingFang SC', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  --grid-line: rgba(0, 0, 0, 0.024);
+}
+
+:root[data-theme='dark'] {
+  --color-ink: #08090a;
+  --color-surface: #101216;
+  --color-surface-2: #171a1f;
+  --color-line: #23272e;
+  --color-line-soft: #1a1d23;
+  --color-fg: #f1f3f6;
+  --color-muted: #8b929d;
+  --color-faint: #5d646e;
+
+  --color-accent: #ccff33;
+  --color-accent-dim: #9dc41f;
+  --color-accent-ink: #08090a;
+  --color-accent-fg: #ccff33;
+
+  --color-easy: #3ddc84;
+  --color-medium: #ffb020;
+  --color-hard: #ff5470;
+
+  --grid-line: rgba(255, 255, 255, 0.022);
+}
+
+body {
+  background-color: var(--color-ink);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Faint grid so the page has some texture behind the cards. */
+.page-grid {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.8); }
+}
+
+.live-dot {
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
