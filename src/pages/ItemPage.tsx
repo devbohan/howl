@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { Countdown, CountdownLabel } from '../components/Countdown'
 import { FrictionBadge } from '../components/FrictionBadge'
+import { MediaLinks } from '../components/MediaLinks'
 import { VipBanner } from '../components/VipBanner'
 import { DROPS } from '../data/mock'
 import { useT } from '../lib/i18n'
@@ -210,6 +211,8 @@ export function ItemPage() {
             </section>
           )}
 
+          {drop.media && <MediaLinks items={drop.media} />}
+
           <div className="mt-8">
             <VipBanner />
           </div>
@@ -266,7 +269,7 @@ export function ItemPage() {
               <TimelineRow label={t('detEntryOpens')} iso={drop.opensAt} />
               <TimelineRow label={t('detEntryCloses')} iso={drop.closesAt} />
               <TimelineRow label={t('detRelease')} iso={drop.releaseAt} />
-              <p className="mt-2 text-[11px] text-faint/80">{t('detYourTime')}</p>
+              <p className="mt-2 text-[11px] text-faint">{t('detYourTime')}</p>
             </div>
           </div>
         </aside>

@@ -34,6 +34,70 @@ export type Market = 'retail' | 'resale'
 
 export type Stock = 'in-stock' | 'low' | 'sold-out'
 
+/** Engagement signals behind the feed ranking. Both are refreshed by the CMS. */
+export interface Heat {
+  /** Interactions on HOWL itself — card opens, notify taps, watchlist adds. */
+  site: number
+  /** Reach on the source platform — views, reposts, likes. */
+  external: number
+}
+
+export type NewsKind = 'confirmed' | 'rumor' | 'restock' | 'leak' | 'result'
+
+/** A one-line update in the category ticker. Short enough to read while it scrolls. */
+export interface NewsItem {
+  id: string
+  category: Category
+  kind: NewsKind
+  text: L
+  /** ISO — drives the relative stamp and the ordering. */
+  at: string
+  /** Deep-links into a drop we already track. */
+  dropSlug?: string
+  /** External source when there is no drop page yet. */
+  url?: string
+  source?: string
+  /** Breaking — scores a large boost so it usually leads the ticker. */
+  urgent?: boolean
+  heat?: Heat
+}
+
+export type MediaKind = 'video' | 'article' | 'social'
+
+export type Platform =
+  | 'youtube'
+  | 'bilibili'
+  | 'x'
+  | 'instagram'
+  | 'tiktok'
+  | 'weibo'
+  | 'xiaohongshu'
+  | 'note'
+  | 'web'
+
+/**
+ * Third-party coverage — creator unboxings, media write-ups, official teasers.
+ * We link out only; nothing is embedded or re-hosted.
+ */
+export interface MediaLink {
+  id: string
+  kind: MediaKind
+  platform: Platform
+  /** Creator handle or outlet name, as it appears on the platform. */
+  source: string
+  title: L
+  url: string
+  /** Language of the content, so users can skip what they can't read. */
+  lang: Locale
+  /** Subscriber / follower count, pre-formatted for display. */
+  audience?: string
+  /** Videos only, e.g. "12:04". */
+  duration?: string
+  /** Editor's pick — scores a boost in the feed ranking. */
+  featured?: boolean
+  heat?: Heat
+}
+
 export interface Channel {
   id: string
   name: string
@@ -80,6 +144,8 @@ export interface Drop {
   dutyNote?: L
   forwarders?: string[]
   tags?: string[]
+  /** Unboxings, reviews and press coverage from outside HOWL. */
+  media?: MediaLink[]
   /** Decorative art for the card — no remote images in the prototype. */
   art: { from: string; to: string; glyph: string }
   hot?: boolean

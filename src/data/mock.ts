@@ -1,6 +1,12 @@
 import type { Drop } from '../lib/types'
 
-/** Offsets from page load so the prototype always has live countdowns. */
+/**
+ * Offsets from page load so the prototype always has live countdowns.
+ *
+ * `media` entries are PLACEHOLDERS: the creator handles are invented and the
+ * URLs point at platform search pages, not specific posts. Real coverage has to
+ * be sourced per drop through the CMS — never auto-generated.
+ */
 const H = (h: number) => new Date(Date.now() + h * 3_600_000).toISOString()
 const M = (m: number) => new Date(Date.now() + m * 60_000).toISOString()
 
@@ -41,6 +47,12 @@ export const DROPS: Drop[] = [
     ],
     dutyNote: { en: 'CN import duty on footwear ≈ 10% + 13% VAT on declared value.', ja: '中国輸入時：靴類の関税約10%＋増値税13%。', 'zh-CN': '中国进境鞋类关税约 10% + 13% 增值税（按申报价）。', 'zh-TW': '中國進境鞋類關稅約 10% + 13% 增值稅（按申報價）。' },
     forwarders: ['Buyee', 'Tenso', 'Blackship'],
+    media: [
+      { id: 'm01', kind: 'video', platform: 'youtube', source: '@kicksdaily', lang: 'en', audience: '1.2M', duration: '11:48', featured: true, url: 'https://www.youtube.com/results?search_query=travis+scott+air+jordan+1+low+olive+review', title: { en: 'On-foot review: is the Olive worth resale?', ja: '実着レビュー：オリーブは転売価格を払う価値があるか', 'zh-CN': '上脚实测：橄榄绿值不值二级市场的价', 'zh-TW': '上腳實測：橄欖綠值不值二級市場的價' } },
+      { id: 'm02', kind: 'video', platform: 'youtube', source: '@atmos_tokyo_ch', lang: 'ja', audience: '38.4万', duration: '8:02', url: 'https://www.youtube.com/results?search_query=atmos+travis+scott+jordan+1+low', title: { en: 'Sizing and materials, straight from the Tokyo floor', ja: '東京店頭から：サイズ感と素材をチェック', 'zh-CN': '东京店头实拍：尺码与用料', 'zh-TW': '東京店頭實拍：尺碼與用料' } },
+      { id: 'm03', kind: 'article', platform: 'web', source: 'Hypebeast', lang: 'en', url: 'https://hypebeast.com/footwear', title: { en: 'Official release info and every confirmed stockist', ja: '公式発売情報と取扱店舗一覧', 'zh-CN': '官方发售信息与全部已确认渠道', 'zh-TW': '官方發售資訊與全部已確認渠道' } },
+      { id: 'm04', kind: 'social', platform: 'x', source: '@snkr_alerts', lang: 'en', audience: '412K', url: 'https://x.com/search?q=jordan%201%20low%20olive%20raffle', title: { en: 'Live thread: raffles as they open', ja: '実況スレッド：抽選が開くたびに更新', 'zh-CN': '实时贴：抽选一开就更新', 'zh-TW': '即時貼：抽選一開就更新' } },
+    ],
   },
   {
     id: 'd02',
@@ -77,6 +89,11 @@ export const DROPS: Drop[] = [
     ],
     dutyNote: { en: 'Trading cards enter most countries duty-free under de-minimis thresholds.', ja: 'トレカは多くの国で少額免税枠内。', 'zh-CN': '卡牌多数国家在免税额度内可免税进境。', 'zh-TW': '卡牌多數國家在免稅額度內可免稅進境。' },
     forwarders: ['Buyee', 'ZenMarket', 'FromJapan'],
+    media: [
+      { id: 'm05', kind: 'video', platform: 'youtube', source: '@ptcg_kaitai', lang: 'ja', audience: '52.1万', duration: '19:30', featured: true, url: 'https://www.youtube.com/results?search_query=ポケモンカード151+プレミアムコレクション+開封', title: { en: 'Full box opening — pull rates from ten boxes', ja: '151プレミアムコレクションBOX開封：10箱分の封入率', 'zh-CN': '整盒开箱：10 盒实测出货率', 'zh-TW': '整盒開箱：10 盒實測出貨率' } },
+      { id: 'm06', kind: 'article', platform: 'note', source: 'ポケカ投資メモ', lang: 'ja', url: 'https://note.com/hashtag/ポケモンカード', title: { en: 'How the 事前抽選 actually allocates — and why overseas accounts fail', ja: '事前抽選の当選ロジックと、海外アカウントが弾かれる理由', 'zh-CN': '事前抽选的中签逻辑，以及海外账号为何被拒', 'zh-TW': '事前抽選的中籤邏輯，以及海外帳號為何被拒' } },
+      { id: 'm07', kind: 'video', platform: 'bilibili', source: '卡牌老张', lang: 'zh-CN', audience: '84.3万', duration: '14:22', url: 'https://search.bilibili.com/all?keyword=宝可梦151典藏礼盒', title: { en: 'Proxy-buying walkthrough for the JP-only raffle', ja: '日本限定抽選を代行で買う手順', 'zh-CN': '日限抽选代购全流程，含手续费拆解', 'zh-TW': '日限抽選代購全流程，含手續費拆解' } },
+    ],
   },
   {
     id: 'd03',
@@ -109,6 +126,11 @@ export const DROPS: Drop[] = [
       { en: 'Queue-it randomises position — refreshing does not help.', ja: 'Queue-itは順番をランダム化。連打しても無意味。', 'zh-CN': 'Queue-it 随机分配排位，狂刷新无用。', 'zh-TW': 'Queue-it 隨機分配排位，狂重整無用。' },
     ],
     forwarders: ['MyUS', 'Stackry'],
+    media: [
+      { id: 'm08', kind: 'video', platform: 'youtube', source: '@consolecollector', lang: 'en', audience: '640K', duration: '16:05', featured: true, url: 'https://www.youtube.com/results?search_query=ps5+30th+anniversary+unboxing', title: { en: 'Unboxing the 30th Anniversary set — every piece in the box', ja: '30周年セット開封：同梱物をすべて確認', 'zh-CN': '30 周年套装开箱：盒内每一件都过一遍', 'zh-TW': '30 週年套裝開箱：盒內每一件都過一遍' } },
+      { id: 'm09', kind: 'article', platform: 'web', source: 'Famitsu', lang: 'ja', url: 'https://www.famitsu.com', title: { en: 'Restock schedule and how the Sony Store queue works', ja: '再販スケジュールとソニーストア待機列の仕組み', 'zh-CN': '补货排期与索尼商店排队机制说明', 'zh-TW': '補貨排期與索尼商店排隊機制說明' } },
+      { id: 'm10', kind: 'social', platform: 'x', source: '@restock_jp', lang: 'ja', audience: '128K', url: 'https://x.com/search?q=PS5%2030周年%20再販', title: { en: 'Restock alerts, JP retailers only', ja: '再販速報（国内販売店のみ）', 'zh-CN': '补货速报（仅日本本土渠道）', 'zh-TW': '補貨速報（僅日本本土渠道）' } },
+    ],
   },
   {
     id: 'd04',
@@ -140,6 +162,11 @@ export const DROPS: Drop[] = [
       { en: '1000% pieces are 70cm — expect volumetric shipping charges.', ja: '1000%は70cm級。容積重量での送料計算に注意。', 'zh-CN': '1000% 尺寸约 70cm，运费按体积重计算。', 'zh-TW': '1000% 尺寸約 70cm，運費按體積重計算。' },
     ],
     forwarders: ['Superbuy', 'Wegobuy'],
+    media: [
+      { id: 'm11', kind: 'video', platform: 'bilibili', source: '潮玩日报', lang: 'zh-CN', audience: '126万', duration: '10:41', featured: true, url: 'https://search.bilibili.com/all?keyword=MEGA+MOLLY+1000%25+开箱', title: { en: '1000% MEGA opening — paint quality up close', ja: '1000% MEGA開封：塗装の仕上がりを接写で確認', 'zh-CN': '1000% MEGA 开箱：喷漆细节微距实拍', 'zh-TW': '1000% MEGA 開箱：噴漆細節微距實拍' } },
+      { id: 'm12', kind: 'social', platform: 'xiaohongshu', source: '@泡泡收藏笔记', lang: 'zh-CN', audience: '31.2万', url: 'https://www.xiaohongshu.com/search_result?keyword=MEGA%20MOLLY%201000', title: { en: 'Real-name verification walkthrough for the CN mini-program raffle', ja: '中国ミニプログラム抽選の実名認証手順', 'zh-CN': '小程序抽选实名认证避坑指南', 'zh-TW': '小程式抽選實名認證避坑指南' } },
+      { id: 'm13', kind: 'video', platform: 'youtube', source: '@arttoyworld', lang: 'en', audience: '221K', duration: '7:58', url: 'https://www.youtube.com/results?search_query=pop+mart+mega+molly+1000+unboxing', title: { en: 'Buying MEGA from outside China — what actually works', ja: '中国国外からMEGAを買う：現実的に通る方法', 'zh-CN': '中国境外买 MEGA：哪条路真的走得通', 'zh-TW': '中國境外買 MEGA：哪條路真的走得通' } },
+    ],
   },
   {
     id: 'd05',
@@ -173,6 +200,10 @@ export const DROPS: Drop[] = [
       { en: 'GOODSMILE GLOBAL takes overseas cards directly — no proxy needed.', ja: 'GLOBAL店は海外カード直接対応。代行不要。', 'zh-CN': 'GLOBAL 店直接支持海外卡，无需代购。', 'zh-TW': 'GLOBAL 店直接支援海外卡，無需代購。' },
     ],
     forwarders: ['Direct'],
+    media: [
+      { id: 'm14', kind: 'video', platform: 'youtube', source: '@figure_no_heya', lang: 'ja', audience: '17.8万', duration: '12:14', featured: true, url: 'https://www.youtube.com/results?search_query=ワンフェス限定+ねんどろいど+開封', title: { en: 'WF-exclusive Nendoroid unboxing and paint check', ja: 'ワンフェス限定ねんどろいど開封＆塗装チェック', 'zh-CN': 'WF 限定黏土人开箱与涂装检查', 'zh-TW': 'WF 限定黏土人開箱與塗裝檢查' } },
+      { id: 'm15', kind: 'article', platform: 'web', source: 'Tokyo Otaku Mode', lang: 'en', url: 'https://otakumode.com', title: { en: 'Wonder Festival exclusives: how the online lottery works', ja: 'ワンフェス限定品：オンライン抽選の仕組み', 'zh-CN': 'WF 限定品：线上抽选规则详解', 'zh-TW': 'WF 限定品：線上抽選規則詳解' } },
+    ],
   },
   {
     id: 'd06',
@@ -204,6 +235,11 @@ export const DROPS: Drop[] = [
       { en: 'Ships ~6 months after the order window closes.', ja: '受注締切から約6ヶ月後の発送。', 'zh-CN': '受注截止后约 6 个月发货。', 'zh-TW': '受注截止後約 6 個月發貨。' },
     ],
     forwarders: ['Buyee', 'ZenMarket'],
+    media: [
+      { id: 'm16', kind: 'video', platform: 'youtube', source: '@holo_goods_review', lang: 'ja', audience: '9.4万', duration: '15:37', featured: true, url: 'https://www.youtube.com/results?search_query=ホロライブ+誕生日記念グッズ+開封', title: { en: 'Birthday set unboxing — print quality on the acrylics', ja: '誕生日記念セット開封：アクリルの印刷品質', 'zh-CN': '生日套组开箱：亚克力印刷质量实拍', 'zh-TW': '生日套組開箱：壓克力印刷品質實拍' } },
+      { id: 'm17', kind: 'social', platform: 'x', source: '@vt_goods_intl', lang: 'en', audience: '64K', url: 'https://x.com/search?q=hololive%20birthday%20goods%20shipping', title: { en: 'Which items the global shop actually ships (voice packs excluded)', ja: 'グローバル店で実際に買える商品（ボイスは対象外）', 'zh-CN': '海外店实际能买哪些（语音不含）', 'zh-TW': '海外店實際能買哪些（語音不含）' } },
+      { id: 'm18', kind: 'article', platform: 'web', source: 'Dexerto', lang: 'en', url: 'https://www.dexerto.com', title: { en: 'Why VTuber voice merch is region-locked', ja: 'VTuberのボイス商品が地域限定になる理由', 'zh-CN': 'VTuber 语音周边为何锁区', 'zh-TW': 'VTuber 語音周邊為何鎖區' } },
+    ],
   },
   {
     id: 'd07',
@@ -233,6 +269,10 @@ export const DROPS: Drop[] = [
       { en: 'Winning the lottery only grants entry — goods still sell out inside.', ja: '当選は入場権のみ。店内で完売する場合あり。', 'zh-CN': '中签仅获得入场资格，店内仍可能售罄。', 'zh-TW': '中籤僅獲得入場資格，店內仍可能售罄。' },
       { en: 'ID is checked at the door against the ticket name — proxies are risky.', ja: '入場時に本人確認あり。代行はリスク高。', 'zh-CN': '入场需核对本人证件，代排风险高。', 'zh-TW': '入場需核對本人證件，代排風險高。' },
       { en: 'No overseas route exists — this is a "find a friend in Japan" drop.', ja: '海外からの正規ルートなし。現地の知人頼み。', 'zh-CN': '无海外正规途径，只能托日本本地朋友。', 'zh-TW': '無海外正規途徑，只能託日本本地朋友。' },
+    ],
+    media: [
+      { id: 'm19', kind: 'video', platform: 'youtube', source: '@popup_hunter_jp', lang: 'ja', audience: '22.6万', duration: '9:19', featured: true, url: 'https://www.youtube.com/results?search_query=ちいかわ+ポップアップ+入場+抽選', title: { en: 'Inside the pop-up: what sells out in the first hour', ja: 'ポップアップ入場レポ：最初の1時間で消えるもの', 'zh-CN': '快闪店实录：开场一小时内售罄的都是什么', 'zh-TW': '快閃店實錄：開場一小時內售罄的都是什麼' } },
+      { id: 'm20', kind: 'article', platform: 'note', source: 'LivePocket攻略メモ', lang: 'ja', url: 'https://note.com/hashtag/LivePocket', title: { en: 'LivePocket entry lottery: signup, SMS, and why tickets are non-transferable', ja: 'LivePocket入場抽選：登録・SMS認証・名義変更不可の理由', 'zh-CN': 'LivePocket 入场抽选：注册、SMS 与不可转让的原因', 'zh-TW': 'LivePocket 入場抽選：註冊、SMS 與不可轉讓的原因' } },
     ],
   },
   {
@@ -299,6 +339,11 @@ export const DROPS: Drop[] = [
       { en: '1000% ships in a 40kg crate — sea freight is usually cheaper.', ja: '1000%は40kg級の木箱。船便が割安。', 'zh-CN': '1000% 木箱重约 40kg，海运通常更划算。', 'zh-TW': '1000% 木箱重約 40kg，海運通常更划算。' },
     ],
     forwarders: ['Blackship', 'Tenso'],
+    media: [
+      { id: 'm21', kind: 'video', platform: 'youtube', source: '@toystudio_hk', lang: 'en', audience: '385K', duration: '13:52', featured: true, url: 'https://www.youtube.com/results?search_query=bearbrick+kaws+1000%25+unboxing', title: { en: '1000% BE@RBRICK unboxing — spotting a fake in 60 seconds', ja: '1000%ベアブリック開封：60秒で偽物を見抜く', 'zh-CN': '1000% BE@RBRICK 开箱：60 秒辨真假', 'zh-TW': '1000% BE@RBRICK 開箱：60 秒辨真假' } },
+      { id: 'm22', kind: 'article', platform: 'web', source: 'HYPEBEAST JP', lang: 'ja', url: 'https://hypebeast.com/jp/tags/bearbrick', title: { en: 'Release details and the resale curve after past KAWS drops', ja: '発売詳細と過去KAWS作の二次価格推移', 'zh-CN': '发售详情与历代 KAWS 款二级价格走势', 'zh-TW': '發售詳情與歷代 KAWS 款二級價格走勢' } },
+      { id: 'm23', kind: 'social', platform: 'instagram', source: '@bearbrick_archive', lang: 'en', audience: '198K', url: 'https://www.instagram.com/explore/tags/bearbrick/', title: { en: 'Archive of every 1000% colourway, with original retail prices', ja: '歴代1000%カラーと当時の定価アーカイブ', 'zh-CN': '历代 1000% 配色与当年定价存档', 'zh-TW': '歷代 1000% 配色與當年定價存檔' } },
+    ],
   },
   {
     id: 'd10',
@@ -391,6 +436,10 @@ export const DROPS: Drop[] = [
       { en: 'Entry pages are Japanese-only with no English fallback.', ja: '応募ページは日本語のみ。', 'zh-CN': '登记页面仅日文，无英文版本。', 'zh-TW': '登記頁面僅日文，無英文版本。' },
     ],
     forwarders: ['ZenMarket', 'Buyee'],
+    media: [
+      { id: 'm29', kind: 'video', platform: 'youtube', source: '@opcg_kaitai', lang: 'ja', audience: '41.7万', duration: '22:08', featured: true, url: 'https://www.youtube.com/results?search_query=ワンピースカード+プレミアムブースター+開封', title: { en: 'Premium Booster: ten-box pull rate breakdown', ja: 'プレミアムブースター10箱開封：封入率まとめ', 'zh-CN': '高级补充包 10 盒开箱：出货率汇总', 'zh-TW': '高級補充包 10 盒開箱：出貨率彙總' } },
+      { id: 'm30', kind: 'social', platform: 'x', source: '@opcg_market', lang: 'ja', audience: '96K', url: 'https://x.com/search?q=ワンピースカード%20相場', title: { en: 'Daily secondary-market pricing for singles', ja: 'シングル相場の日次更新', 'zh-CN': '单卡二级市场每日行情', 'zh-TW': '單卡二級市場每日行情' } },
+    ],
   },
   {
     id: 'd13',
@@ -419,6 +468,10 @@ export const DROPS: Drop[] = [
     frictionNotes: [
       { en: 'One piece per person per store; passport checked in some regions.', ja: '一人一点。地域によりパスポート確認あり。', 'zh-CN': '每人每店限购一只，部分地区查验护照。', 'zh-TW': '每人每店限購一只，部分地區查驗護照。' },
       { en: 'No online channel at all — proxy queuing services are the only remote route.', ja: 'オンライン販売なし。並び代行のみ。', 'zh-CN': '完全没有线上渠道，只能找代排。', 'zh-TW': '完全沒有線上通路，只能找代排。' },
+    ],
+    media: [
+      { id: 'm27', kind: 'video', platform: 'youtube', source: '@watchdesk', lang: 'en', audience: '512K', duration: '10:12', featured: true, url: 'https://www.youtube.com/results?search_query=moonswatch+unboxing+review', title: { en: 'Hands-on: is the queue worth it for a bioceramic quartz?', ja: '実機レビュー：バイオセラミックのクォーツに並ぶ価値はあるか', 'zh-CN': '上手实测：为一块生物陶瓷石英表排队值不值', 'zh-TW': '上手實測：為一塊生物陶瓷石英錶排隊值不值' } },
+      { id: 'm28', kind: 'article', platform: 'web', source: 'Hodinkee', lang: 'en', url: 'https://www.hodinkee.com', title: { en: 'Why Swatch still refuses to sell MoonSwatch online', ja: 'スウォッチがMoonSwatchをオンライン販売しない理由', 'zh-CN': 'Swatch 为何坚持不做 MoonSwatch 线上销售', 'zh-TW': 'Swatch 為何堅持不做 MoonSwatch 線上銷售' } },
     ],
   },
   {
@@ -484,6 +537,11 @@ export const DROPS: Drop[] = [
     ],
     dutyNote: { en: 'Declared at resale value, not MSRP — duty is calculated on the higher figure.', ja: '申告額は落札価格。関税も高い方の額で計算される。', 'zh-CN': '按成交价申报而非定价，关税以较高金额计。', 'zh-TW': '按成交價申報而非定價，關稅以較高金額計。' },
     forwarders: ['Direct', 'Buyee'],
+    media: [
+      { id: 'm24', kind: 'video', platform: 'youtube', source: '@resellreality', lang: 'en', audience: '928K', duration: '18:26', featured: true, url: 'https://www.youtube.com/results?search_query=travis+scott+fragment+jordan+1+legit+check', title: { en: 'Legit check at +1200%: the four details fakes get wrong', ja: '+1200%で買う前に：偽物が外す4つのディテール', 'zh-CN': '溢价 1200% 前先验真：假货必错的四个细节', 'zh-TW': '溢價 1200% 前先驗真：假貨必錯的四個細節' } },
+      { id: 'm25', kind: 'article', platform: 'web', source: 'Complex', lang: 'en', url: 'https://www.complex.com/sneakers', title: { en: 'How fragment x Travis became the most counterfeited AJ1', ja: 'fragment x Travisが最も偽造されたAJ1になった経緯', 'zh-CN': 'fragment x Travis 如何成为被仿最多的 AJ1', 'zh-TW': 'fragment x Travis 如何成為被仿最多的 AJ1' } },
+      { id: 'm26', kind: 'video', platform: 'bilibili', source: '球鞋鉴定所', lang: 'zh-CN', audience: '203万', duration: '11:03', url: 'https://search.bilibili.com/all?keyword=fragment+travis+aj1+鉴定', title: { en: 'Side-by-side: StockX, GOAT and SNKRDUNK authentication compared', ja: 'StockX・GOAT・スニダンの鑑定を横並び比較', 'zh-CN': 'StockX / GOAT / 走地鸡 三家鉴定横评', 'zh-TW': 'StockX / GOAT / 走地雞 三家鑑定橫評' } },
+    ],
   },
   {
     id: 'd16',
@@ -549,6 +607,10 @@ export const DROPS: Drop[] = [
       { en: 'AmiAmi ships worldwide and takes foreign cards directly.', ja: 'AmiAmiは海外発送・海外カード直接対応。', 'zh-CN': 'AmiAmi 全球直邮且直接支持海外卡。', 'zh-TW': 'AmiAmi 全球直郵且直接支援海外卡。' },
     ],
     forwarders: ['Direct', 'Buyee'],
+    media: [
+      { id: 'm31', kind: 'video', platform: 'youtube', source: '@nendo_shelf', lang: 'en', audience: '158K', duration: '9:44', featured: true, url: 'https://www.youtube.com/results?search_query=nendoroid+yor+forger+review', title: { en: 'Nendoroid Yor review — face plates, stand and QC notes', ja: 'ねんどろいどヨル レビュー：顔パーツ・スタンド・品質', 'zh-CN': '黏土人约尔评测：脸模、支架与做工', 'zh-TW': '黏土人約爾評測：臉模、支架與做工' } },
+      { id: 'm32', kind: 'article', platform: 'web', source: 'AmiAmi Blog', lang: 'en', url: 'https://www.amiami.com', title: { en: 'Why mass-produced Nendoroids often sell below MSRP', ja: '量産ねんどろいどが定価割れする理由', 'zh-CN': '量产黏土人为何常低于定价', 'zh-TW': '量產黏土人為何常低於定價' } },
+    ],
   },
   {
     id: 'd18',

@@ -48,7 +48,7 @@ export function DropCard({ drop, now, currency }: { drop: Drop; now: number; cur
           )}
         </div>
 
-        <span className="absolute right-3 top-3 rounded-full bg-black/65 px-2 py-1 text-[10px] font-semibold tracking-wide text-fg/85 backdrop-blur">
+        <span className="absolute right-3 top-3 rounded-full bg-black/65 px-2 py-1 text-[10px] font-semibold tracking-wide text-white backdrop-blur">
           {REGION_FLAG[drop.region]} {t(REGION_KEY[drop.region])}
         </span>
       </div>

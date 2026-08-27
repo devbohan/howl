@@ -1,53 +1,76 @@
 import { Link } from 'react-router-dom'
 import { DROPS } from '../data/mock'
 import { useT } from '../lib/i18n'
-import { CATEGORIES, CATEGORY_ART, CATEGORY_ICON, CATEGORY_KEY } from '../lib/labels'
+import { CATEGORIES, CATEGORY_KEY } from '../lib/labels'
 import { dropState, isAvailableNow } from '../lib/schedule'
 import { useNow } from '../lib/useNow'
 import type { Category } from '../lib/types'
 
-function CategoryTile({ category, now }: { category: Category; now: number }) {
+/**
+ * Zeros stay in place rather than disappearing, so the columns stay scannable.
+ * They are dimmed by dropping to the faint token rather than by lowering
+ * opacity — a translucent digit falls below the contrast floor.
+ */
+function Stat({
+  value,
+  className,
+  label,
+  name,
+}: {
+  value: number
+  className: string
+  label: string
+  /** Stable hook for tests; the visual columns carry no text of their own. */
+  name: string
+}) {
+  return (
+    <span
+      title={label}
+      data-stat={name}
+      className={`flex w-8 items-center justify-end gap-1.5 tabular-nums ${
+        value === 0 ? 'text-faint' : className
+      }`}
+    >
+      {value}
+    </span>
+  )
+}
+
+/**
+ * One flat row per category, carrying the same three numbers as the header —
+ * tracked / live / buyable — so you can tell which genre is worth opening.
+ */
+function CategoryRow({ category, now }: { category: Category; now: number }) {
   const { t, locale } = useT()
   const items = DROPS.filter((d) => d.category === category)
   const live = items.filter((d) => dropState(d, now).phase === 'open').length
-  const inStock = items.filter((d) => dropState(d, now).phase === 'in-stock').length
-  const art = CATEGORY_ART[category]
+  const inStock = items.filter(isAvailableNow).length
 
   return (
     <Link
       to={`/${locale}/c/${category}`}
-      className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-line p-5 transition
-        hover:-translate-y-1 hover:border-accent/50 sm:p-6"
-      style={{ background: `radial-gradient(120% 130% at 25% 15%, ${art.from} 0%, ${art.to} 75%)` }}
+      data-category={category}
+      // min-w-0 lets the row shrink inside the grid; without it the fixed-width
+      // stat columns push the whole card past a narrow viewport.
+      className="flex min-w-0 items-center gap-3 rounded-lg border border-line bg-surface px-4 py-3.5 transition hover:border-accent"
     >
-      <span className="text-4xl leading-none transition-transform duration-500 group-hover:scale-110 sm:text-5xl">
-        {CATEGORY_ICON[category]}
+      <span className="min-w-0 flex-1 truncate text-[14px] font-semibold text-fg">
+        {t(CATEGORY_KEY[category])}
       </span>
 
-      <div className="mt-8">
-        <h2 className="text-[15px] font-bold leading-snug text-white sm:text-lg">{t(CATEGORY_KEY[category])}</h2>
-        <div className="mt-2 flex items-center gap-3 text-[11px] text-white/60">
-          <span className="font-mono tabular-nums">
-            {items.length} {t('portalTracked')}
-          </span>
-          {live > 0 && (
-            <span className="inline-flex items-center gap-1.5 text-accent">
-              <span className="live-dot h-1.5 w-1.5 rounded-full bg-accent" />
-              <span className="font-mono tabular-nums">{live}</span> {t('heroLive')}
-            </span>
-          )}
-          {inStock > 0 && (
-            <span className="inline-flex items-center gap-1.5 text-easy">
-              <span className="h-1.5 w-1.5 rounded-full bg-easy" />
-              <span className="font-mono tabular-nums">{inStock}</span> {t('cdInStock')}
-            </span>
-          )}
-        </div>
+      <div className="flex shrink-0 items-center gap-2 font-mono text-[12px]">
+        <Stat value={items.length} className="text-muted" label={t('portalTracked')} name="tracked" />
+        <span className="flex items-center gap-1.5">
+          <span
+            className={`h-1.5 w-1.5 rounded-full ${live > 0 ? 'live-dot bg-accent-fg' : 'bg-line'}`}
+          />
+          <Stat value={live} className="text-accent-fg" label={t('heroLive')} name="live" />
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className={`h-1.5 w-1.5 rounded-full ${inStock > 0 ? 'bg-easy' : 'bg-line'}`} />
+          <Stat value={inStock} className="text-easy" label={t('cdInStock')} name="stock" />
+        </span>
       </div>
-
-      <span className="absolute right-5 top-5 text-lg text-white/40 transition group-hover:translate-x-0.5 group-hover:text-accent">
-        →
-      </span>
     </Link>
   )
 }
@@ -56,33 +79,39 @@ export function PortalPage() {
   const { t } = useT()
   const now = useNow(30_000)
   const live = DROPS.filter((d) => dropState(d, now).phase === 'open').length
-  const inStock = DROPS.filter((d) => isAvailableNow(d)).length
+  const inStock = DROPS.filter(isAvailableNow).length
 
   return (
-    <div className="mx-auto max-w-5xl px-4">
-      <section className="pt-14 pb-9 md:pt-20 md:pb-12">
-        <h1 className="max-w-2xl text-[28px] font-extrabold leading-[1.2] tracking-tight text-fg md:text-[38px]">
+    <div className="mx-auto max-w-3xl px-4">
+      <section className="pt-12 pb-7 md:pt-16 md:pb-9">
+        <h1 className="max-w-xl text-[26px] font-extrabold leading-[1.2] tracking-tight text-fg md:text-[34px]">
           {t('heroTitle')}
         </h1>
-        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] text-muted">
+        {/* Doubles as the legend for the per-category columns below. */}
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] text-muted">
           <span className="font-mono tabular-nums">
-            {DROPS.length} {t('portalTracked')}
+            <span data-stat="tracked-total">{DROPS.length}</span> {t('portalTracked')}
           </span>
           <span className="inline-flex items-center gap-1.5 text-accent-fg">
             <span className="live-dot h-1.5 w-1.5 rounded-full bg-accent-fg" />
-            <span className="font-mono tabular-nums">{live}</span> {t('heroLive')}
+            <span className="font-mono tabular-nums" data-stat="live-total">
+              {live}
+            </span>{' '}
+            {t('heroLive')}
           </span>
           <span className="inline-flex items-center gap-1.5 text-easy">
             <span className="h-1.5 w-1.5 rounded-full bg-easy" />
-            <span className="font-mono tabular-nums">{inStock}</span> {t('cdInStock')}
+            <span className="font-mono tabular-nums" data-stat="stock-total">
+              {inStock}
+            </span>{' '}
+            {t('cdInStock')}
           </span>
         </div>
       </section>
 
-      <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-faint">{t('portalPick')}</p>
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+      <div className="grid gap-2 sm:grid-cols-2">
         {CATEGORIES.map((category) => (
-          <CategoryTile key={category} category={category} now={now} />
+          <CategoryRow key={category} category={category} now={now} />
         ))}
       </div>
     </div>

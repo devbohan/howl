@@ -1,6 +1,10 @@
 node_modules
 dist
+storybook-static
+coverage
+playwright-report
+test-results
 .DS_Store
 *.local
-.wrangler
 *.tsbuildinfo
+.wrangler

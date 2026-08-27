@@ -35,3 +35,22 @@ export function localTimeZone() {
     return 'UTC'
   }
 }
+
+/** "12m ago" / 「12分前」 — Intl handles the per-locale wording. */
+export function formatRelative(at: string | number, locale: Locale, now: number) {
+  const diff = (typeof at === 'number' ? at : new Date(at).getTime()) - now
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto', style: 'narrow' })
+
+  // Rounding happens before the unit is chosen, so 59.9s reads "1m ago"
+  // rather than "60s ago" and 59.9min reads "1h ago" rather than "60m ago".
+  const units: [Intl.RelativeTimeFormatUnit, number, number][] = [
+    ['second', 1000, 60],
+    ['minute', 60_000, 60],
+    ['hour', 3_600_000, 24],
+  ]
+  for (const [unit, ms, limit] of units) {
+    const value = Math.round(diff / ms)
+    if (Math.abs(value) < limit) return rtf.format(value, unit)
+  }
+  return rtf.format(Math.round(diff / 86_400_000), 'day')
+}

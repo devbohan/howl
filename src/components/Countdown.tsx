@@ -21,12 +21,16 @@ export function Countdown({ state, size = 'md' }: { state: DropState; size?: 'sm
   }
 
   if (state.phase === 'ended') {
-    return <span className={`${sizes[size]} font-mono font-bold text-faint`}>—— {t('cdEnded')}</span>
+    return (
+      <span data-testid="countdown" className={`${sizes[size]} font-mono font-bold text-faint`}>
+        —— {t('cdEnded')}
+      </span>
+    )
   }
 
   if (state.phase === 'in-stock') {
     return (
-      <span className={`inline-flex items-center gap-1.5 font-bold text-easy ${sizes[size]}`}>
+      <span data-testid="countdown" className={`inline-flex items-center gap-1.5 font-bold text-easy ${sizes[size]}`}>
         <span className="h-1.5 w-1.5 rounded-full bg-easy" />
         {t('cdInStock')}
       </span>
@@ -36,7 +40,7 @@ export function Countdown({ state, size = 'md' }: { state: DropState; size?: 'sm
   const tone = state.urgent ? 'text-hard' : state.phase === 'open' ? 'text-accent-fg' : 'text-fg'
 
   return (
-    <span className={`inline-flex items-baseline gap-2 font-bold ${sizes[size]} ${tone}`}>
+    <span data-testid="countdown" className={`inline-flex items-baseline gap-2 font-bold ${sizes[size]} ${tone}`}>
       {days > 0 && <Unit value={days} label={t('cdDay')} pad={1} />}
       <Unit value={hours} label={t('cdHour')} />
       <Unit value={minutes} label={t('cdMin')} />

@@ -16,17 +16,31 @@
   --color-line: #e2e6ec;
   --color-line-soft: #edeff3;
   --color-fg: #101317;
+  /* muted / faint / easy / medium / hard all clear 4.5:1 against surface,
+   * surface-2 AND their own 10% badge tint — verified by the axe pass in
+   * e2e/a11y.spec.ts, which is why these are not rounder numbers. */
   --color-muted: #59616e;
-  --color-faint: #878f9b;
+  --color-faint: #666e7b;
 
   --color-accent: #bdeb00;
   --color-accent-dim: #a8d200;
   --color-accent-ink: #0b0d06;
   --color-accent-fg: #5a7500;
 
-  --color-easy: #0e9c57;
-  --color-medium: #b06a00;
-  --color-hard: #d92546;
+  --color-easy: #0b7c45;
+  --color-medium: #9d5e00;
+  --color-hard: #cd2342;
+
+  /* Corners one step tighter than the Tailwind defaults — the product reads
+   * as a schedule board, and sharper edges suit that better than pill shapes. */
+  --radius: 0.1875rem;
+  --radius-xs: 0.0625rem;
+  --radius-sm: 0.1875rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.375rem;
+  --radius-xl: 0.5rem;
+  --radius-2xl: 0.625rem;
+  --radius-3xl: 1rem;
 
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', 'PingFang SC', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
@@ -44,7 +58,7 @@
   --color-line-soft: #1a1d23;
   --color-fg: #f1f3f6;
   --color-muted: #8b929d;
-  --color-faint: #5d646e;
+  --color-faint: #7b8490;
 
   --color-accent: #ccff33;
   --color-accent-dim: #9dc41f;
@@ -85,4 +99,32 @@ body {
 ::selection {
   background: var(--color-accent);
   color: var(--color-accent-ink);
+}
+
+/*
+ * Ticker panels scroll for real (see VerticalMarquee), so they get a visible,
+ * theme-aware scrollbar. Styling ::-webkit-scrollbar also stops macOS from
+ * hiding the overlay bar until the moment you scroll.
+ */
+.ticker-viewport {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+  overscroll-behavior: contain;
+}
+
+.ticker-viewport::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ticker-viewport::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ticker-viewport::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 3px;
+}
+
+.ticker-viewport:hover::-webkit-scrollbar-thumb {
+  background: var(--color-faint);
 }
