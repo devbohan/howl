@@ -58,7 +58,7 @@ export function WantsPage() {
           ))}
         </div>
         <span className="h-4 w-px bg-line" />
-        <div className="flex flex-wrap gap-1">
+        <div className="flex flex-wrap gap-1" role="group" aria-label={t('wantsFilterGroup')}>
           <button
             type="button"
             onClick={() => setCategory(null)}
@@ -169,7 +169,9 @@ function WantForm({ wants }: { wants: Want[] }) {
         </p>
       )}
 
-      <div className="mt-3 flex flex-wrap gap-1">
+      <div className="mt-3">
+        <span className="text-[11px] text-faint">{t('wantsFieldCategory')}</span>
+        <div className="mt-1 flex flex-wrap gap-1" role="group" aria-label={t('wantsFieldCategory')}>
         {CATEGORIES.map((c) => (
           <button
             key={c}
@@ -182,6 +184,7 @@ function WantForm({ wants }: { wants: Want[] }) {
             {t(CATEGORY_KEY[c])}
           </button>
         ))}
+        </div>
       </div>
 
       <label className="mt-3 block">

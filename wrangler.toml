@@ -1,0 +1,24 @@
+# Cloudflare Pages 配置。生产环境的绑定也可以在面板里设，但写在这里的好处是
+# 本地 `wrangler pages dev` 和 `wrangler d1 execute --local` 共用同一份本地库，
+# 所以那些 SQL 在上线前真的被执行过一次。
+name = "howl"
+compatibility_date = "2026-09-01"
+pages_build_output_dir = "dist"
+
+# ADMIN_PASSWORD 不写在这里 —— 它是密钥，应该在面板的 Environment variables 里设。
+# 没设时 _middleware.ts 会让后台和报表返回 503（fail closed），而不是全部开放。
+
+[[d1_databases]]
+binding = "CLICKS_DB"
+database_name = "howl-clicks"
+database_id = "REPLACE_WITH_ID_FROM_wrangler_d1_create"
+
+[[d1_databases]]
+binding = "WANTS_DB"
+database_name = "howl-wants"
+database_id = "REPLACE_WITH_ID_FROM_wrangler_d1_create"
+
+[[d1_databases]]
+binding = "DEMAND_DB"
+database_name = "howl-demand"
+database_id = "REPLACE_WITH_ID_FROM_wrangler_d1_create"

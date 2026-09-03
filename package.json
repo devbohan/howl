@@ -20,7 +20,9 @@
     "build:static": "npm run build && npm run prerender",
     "ingest": "node scripts/ingest.mjs",
     "build:bookmarklet": "node scripts/build-bookmarklet.mjs",
-    "check:launch": "node scripts/check-launch.mjs"
+    "check:launch": "node scripts/check-launch.mjs",
+    "dev:api": "wrangler pages dev --port 8788",
+    "db:local": "for db in howl-clicks howl-wants howl-demand; do wrangler d1 execute $db --local --file=schema.sql; done"
   },
   "dependencies": {
     "react": "^19.1.0",

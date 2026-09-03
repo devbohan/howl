@@ -241,13 +241,19 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 | 命令 | 内容 |
 | :--- | :--- |
 | `npm run typecheck` | 应用/测试/工具三套 tsconfig 分别检查 |
-| `npm test` | Vitest 371 个单元与组件测试 |
+| `npm test` | Vitest 478 个单元与组件测试 |
 | `npm run test:coverage` | 同上 + 覆盖率，阈值 80%（当前 97% 语句 / 91% 分支） |
 | `npm run test:e2e` | Playwright 154 个用例，chromium + Pixel 5 两套（含关掉 JS 的爬虫视角） |
 | `npm run test:e2e:ui` | Playwright UI 模式，调试用 |
 | `npm run storybook` | Storybook 9，组件工作台 |
 
 **为什么这么分层**：单元测试盯纯逻辑和组件契约，E2E 盯真实浏览器里才会暴露的东西（布局溢出、CSS 变量主题、滚动容器、首屏无闪烁、axe 无障碍）。两边不重复覆盖同一件事。
+
+### ⚠️ Functions 是唯一没有自动化测试的部分
+
+单元测试跑在 jsdom 里，碰不到 D1；E2E 跑在 `vite preview` 上，那里没有 Functions。所以 [functions/](functions/) 下的代码**只能靠手动跑一次 wrangler 验证**，步骤和期望结果写在 [LAUNCH.md](LAUNCH.md) 的「本地把后端跑一遍」。
+
+这不是理论风险：那次本地验证当场抓到两个问题 —— schema 从没被执行过（`d1 execute --local` 和 `pages dev` 用的不是同一份本地库，所以补了 [wrangler.toml](wrangler.toml)），以及 `/api/wants` 的投票路径在校验一个它根本不会用到的商品名，导致合法投票被 400 拒掉。
 
 ### 关键约定
 

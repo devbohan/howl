@@ -18,7 +18,13 @@ export function WantVote({
   compact?: boolean
 }) {
   const { t } = useT()
-  const [voted, setVoted] = useState(() => hasVoted(wantId))
+  /**
+   * Whether this device had already voted when the component mounted. Captured
+   * once, because voting writes to localStorage — reading it again afterwards
+   * would say "already counted" and cancel the optimistic +1 it just showed.
+   */
+  const [votedBefore] = useState(() => hasVoted(wantId))
+  const [voted, setVoted] = useState(votedBefore)
   const [queued, setQueued] = useState(false)
 
   const vote = async () => {
@@ -32,7 +38,7 @@ export function WantVote({
     <div className={`flex shrink-0 items-center ${compact ? 'gap-2' : 'gap-3'}`}>
       <div className="text-right">
         <div className="font-mono text-[15px] font-bold text-fg tabular-nums">
-          {(count + (voted && !hasVotedInitially(wantId) ? 1 : 0)).toLocaleString()}
+          {(count + (voted && !votedBefore ? 1 : 0)).toLocaleString()}
         </div>
         <div className="text-[10px] text-faint">{t('wantsCount')}</div>
       </div>
@@ -51,14 +57,4 @@ export function WantVote({
       </button>
     </div>
   )
-}
-
-/**
- * Whether the vote predates this render — a device that already voted before
- * the snapshot was taken is inside `count`, so adding one would double-count.
- */
-const initial = new Set<string>()
-function hasVotedInitially(id: string) {
-  if (!initial.has(id) && hasVoted(id)) initial.add(id)
-  return initial.has(id)
 }

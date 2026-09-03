@@ -119,6 +119,23 @@ export function PortalPage() {
         </div>
       </section>
 
+      {/*
+        All zeros is honest but reads as abandoned. Saying what is happening —
+        and pointing at the one thing that works with no catalogue at all —
+        is the difference between "new" and "broken".
+      */}
+      {DROPS.length === 0 && (
+        <div className="mb-4 rounded-lg border border-line bg-surface p-4">
+          <p className="text-[12px] leading-relaxed text-muted">{t('portalSeeding')}</p>
+          <Link
+            to={`/${locale}/wants`}
+            className="mt-2 inline-block text-[12px] font-semibold text-fg underline underline-offset-4"
+          >
+            {t('portalSeedingCta')} →
+          </Link>
+        </div>
+      )}
+
       <div className="grid gap-2 sm:grid-cols-2">
         {CATEGORIES.map((category) => (
           <CategoryRow key={category} category={category} now={now} />

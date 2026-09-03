@@ -79,18 +79,35 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   const name = (body.name ?? '').trim()
-  if (name.length < 2 || name.length > 120 || /https?:\/\//i.test(name)) {
+  const votingOn = (body.wantId ?? '').trim()
+
+  /**
+   * Voting on an existing request and creating a new one are different
+   * operations. A vote carries an id, and the name is then irrelevant — so
+   * validating it there would reject a perfectly good vote for a field the
+   * server is not going to use.
+   */
+  if (!votingOn && (name.length < 2 || name.length > 120 || /https?:\/\//i.test(name))) {
     return json({ error: 'invalid-name' }, 400)
   }
+
   const category = CATEGORIES.includes(body.category ?? '') ? body.category! : 'sneakers'
   const note = (body.note ?? '').trim().slice(0, 300) || null
   const now = new Date().toISOString()
   const voter = await voterId(request)
   const norm = normalize(name)
 
-  const existing = await env.WANTS_DB.prepare('SELECT id FROM wants WHERE norm = ?')
-    .bind(norm)
-    .first<{ id: string }>()
+  const existing = votingOn
+    ? await env.WANTS_DB.prepare('SELECT id FROM wants WHERE id = ?')
+        .bind(votingOn)
+        .first<{ id: string }>()
+    : await env.WANTS_DB.prepare('SELECT id FROM wants WHERE norm = ?')
+        .bind(norm)
+        .first<{ id: string }>()
+
+  // A vote for something that is not there any more is not an error worth
+  // surfacing — the row may simply have been merged or removed by an editor.
+  if (votingOn && !existing) return json({ id: votingOn, counted: false })
 
   const id = existing?.id ?? crypto.randomUUID().slice(0, 8)
 

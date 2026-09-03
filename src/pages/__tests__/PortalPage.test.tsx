@@ -6,7 +6,8 @@ import { CATEGORIES } from '../../lib/labels'
 import { dropState, isAvailableNow } from '../../lib/schedule'
 import { renderApp } from '../../test/render'
 
-const rows = () => screen.getAllByRole('link')
+/** Category rows only — the page also links out to the wantlist. */
+const rows = () => screen.getAllByRole('link').filter((a) => a.hasAttribute('data-category'))
 
 describe('PortalPage', () => {
   it('lists every category exactly once', () => {
@@ -68,5 +69,21 @@ describe('PortalPage', () => {
   it('translates category names', () => {
     renderApp(<PortalPage />, { locale: 'ja' })
     expect(screen.getByText('スニーカー・アパレル')).toBeInTheDocument()
+  })
+})
+
+describe('with nothing tracked yet', () => {
+  it('says entries are being added, rather than showing only zeros', () => {
+    const { container } = renderApp(<PortalPage />)
+    if (DROPS.length > 0) return
+    // All zeros and no explanation reads as abandoned, not as new.
+    expect(container.textContent).toContain('Nothing tracked yet')
+  })
+
+  it('points at the one thing that works without a catalogue', () => {
+    if (DROPS.length > 0) return
+    const { container } = renderApp(<PortalPage />)
+    const cta = [...container.querySelectorAll('a')].find((a) => a.getAttribute('href') === '/en/wants')
+    expect(cta).toBeTruthy()
   })
 })

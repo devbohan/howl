@@ -61,3 +61,25 @@ describe('CategoryPage', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('トレーディングカード')
   })
 })
+
+describe('empty states say which emptiness it is', () => {
+  it('says the category has nothing when no filter is applied', () => {
+    show('tcg')
+    if (cards().length > 0) return
+    expect(screen.getByText(/Nothing tracked in this category/)).toBeInTheDocument()
+    // Blaming filters the visitor never set reads as a broken page.
+    expect(screen.queryByText('No drops match these filters.')).not.toBeInTheDocument()
+  })
+
+  it('blames the filters only when the filters are what excluded everything', async () => {
+    const user = userEvent.setup()
+    show('tcg')
+    if (cards().length === 0) return
+
+    await user.click(screen.getByRole('button', { name: /Filters/ }))
+    await user.click(screen.getByRole('button', { name: /China only/ }))
+    if (cards().length === 0) {
+      expect(screen.getByText('No drops match these filters.')).toBeInTheDocument()
+    }
+  })
+})

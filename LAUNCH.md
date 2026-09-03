@@ -19,13 +19,10 @@ npx wrangler d1 create howl-clicks
 # 变量名必须是 CLICKS_DB
 ```
 
-```sql
-CREATE TABLE clicks (
-  day TEXT NOT NULL, kind TEXT NOT NULL, host TEXT NOT NULL,
-  locale TEXT NOT NULL, context TEXT, channel_id TEXT,
-  affiliate INTEGER NOT NULL DEFAULT 0, hits INTEGER NOT NULL DEFAULT 0,
-  PRIMARY KEY (day, kind, host, locale, context, channel_id)
-);
+建表用仓库里的 [schema.sql](schema.sql)（三个库都执行同一份，重复执行安全）：
+
+```bash
+npx wrangler d1 execute howl-clicks --remote --file=schema.sql
 ```
 
 验证：点一个商品页的「前往商店」，然后 `GET /api/clicks?days=1` 应该看到一条。
@@ -39,18 +36,8 @@ CREATE TABLE clicks (
 npx wrangler d1 create howl-wants   # 绑定变量名：WANTS_DB
 ```
 
-```sql
-CREATE TABLE wants (
-  id TEXT PRIMARY KEY, name TEXT NOT NULL, norm TEXT NOT NULL UNIQUE,
-  category TEXT NOT NULL, note TEXT,
-  count INTEGER NOT NULL DEFAULT 1,
-  first_asked_at TEXT NOT NULL, last_asked_at TEXT NOT NULL,
-  matched_slug TEXT
-);
-CREATE TABLE want_votes (
-  want_id TEXT NOT NULL, voter TEXT NOT NULL,
-  PRIMARY KEY (want_id, voter)
-);
+```bash
+npx wrangler d1 execute howl-wants --remote --file=schema.sql
 ```
 
 实现见 [functions/api/wants.ts](functions/api/wants.ts)。
@@ -61,12 +48,8 @@ CREATE TABLE want_votes (
 npx wrangler d1 create howl-demand   # 绑定变量名：DEMAND_DB
 ```
 
-```sql
-CREATE TABLE proxy_demand (
-  day TEXT NOT NULL, slug TEXT NOT NULL, locale TEXT NOT NULL,
-  hits INTEGER NOT NULL DEFAULT 0,
-  PRIMARY KEY (day, slug, locale)
-);
+```bash
+npx wrangler d1 execute howl-demand --remote --file=schema.sql
 ```
 
 只存日期、商品、语种、次数——**没有任何联系方式**，所以这张表里没有可泄露的东西。
@@ -213,6 +196,36 @@ Buyee / ZenMarket / FromJapan / AmiAmi Global / StockX / END.。免费，但**�
 - [ ] 门户页加可索引内容（目前约 500 字符，是最大的 SEO 短板）
 
 ---
+
+## 本地把后端跑一遍
+
+静态页面用 `vite preview` 就够，但 **Pages Functions 和那些 SQL 只有 wrangler 才会真的执行**。上线前至少跑一次：
+
+```bash
+npm run build:static     # 产物
+npm run db:local         # 在本地 D1 建表（用的是同一份 schema.sql）
+npm run dev:api          # → http://localhost:8788，带 Functions 和 D1
+```
+
+带上密码启动才能看报表：
+
+```bash
+npx wrangler pages dev --port 8788 --binding ADMIN_PASSWORD=你的密码
+```
+
+该看到的结果：
+
+| 请求 | 期望 |
+| :--- | :--- |
+| `GET /admin.html` 无密码 | **401** |
+| `GET /api/clicks` 无密码 | **401** |
+| `GET /api/proxy-demand` 无密码 | **401** |
+| `POST /api/clicks`（任何人） | `{"recorded":1}` |
+| `POST /api/wants` 同一商品的不同写法 | 同一个 `id`，`counted:false` |
+| `POST /api/clicks` 坏 JSON | **400**，不是 500 |
+| `GET /api/clicks` 带密码 | 按渠道分组的报表，`byKind` 里 `proxy` 与 `store` 分开 |
+
+> ⚠️ **Functions 没有自动化测试** —— 单元测试跑在 jsdom 里，碰不到 D1。这一节的手动检查是它们唯一的验证途径，改动 `functions/` 下的任何东西之后都要重跑一次。
 
 ## 常做的事
 

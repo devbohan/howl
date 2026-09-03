@@ -29,6 +29,12 @@ export function CategoryPage() {
     window.scrollTo(0, 0)
   }, [category])
 
+  /** Everything in this category, before any filter is applied. */
+  const inCategory = useMemo(
+    () => (valid ? DROPS.filter((d) => d.category === category) : []),
+    [category, valid],
+  )
+
   const visible = useMemo(() => {
     if (!valid) return []
     return DROPS.filter(
@@ -103,7 +109,13 @@ export function CategoryPage() {
         <FilterBar filters={filters} onChange={setFilters} count={visible.length} showCategory={false} />
       </div>
 
-      {visible.length === 0 && <p className="py-16 text-center text-sm text-faint">{t('filterEmpty')}</p>}
+      {visible.length === 0 && (
+        // Two different situations, and saying the wrong one reads as broken:
+        // an empty category is not the same as filters that excluded everything.
+        <p className="py-16 text-center text-sm text-faint">
+          {inCategory.length === 0 ? t('catEmpty') : t('filterEmpty')}
+        </p>
+      )}
 
       {grouped.map(([phase, items]) =>
         items.length === 0 ? null : (

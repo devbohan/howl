@@ -133,6 +133,8 @@ const en = {
   wantsFormTitle: 'Ask for something',
   wantsFieldName: 'What is it',
   wantsFieldNamePlaceholder: 'e.g. Pokémon Card 151 UPC, reissue',
+  wantsFieldCategory: 'Category',
+  wantsFilterGroup: 'Filter by category',
   wantsFieldNote: 'Why, or which version (optional)',
   wantsFieldNotePlaceholder: 'The 2023 run, or anything with the same card list',
   wantsSubmit: 'Add my request',
@@ -165,6 +167,10 @@ const en = {
   demandDone: 'Counted. Nothing else happens — we collect no contact details.',
   demandQueued: 'Saved on this device, will retry.',
   demandCount: 'people said the same on this drop',
+
+  catEmpty: 'Nothing tracked in this category yet — entries are added by hand.',
+  portalSeeding: 'Nothing tracked yet. Entries are being added one at a time, each date checked on the retailer’s own page.',
+  portalSeedingCta: 'Ask for a reissue in the meantime',
 
   vipTitle: 'Get told 24 hours earlier.',
   vipBody: 'Free accounts get a browser push 1 hour before entry opens. VIP gets Discord and Telegram alerts the moment a drop is confirmed, plus the full import playbook for every red-tier drop.',
@@ -307,6 +313,8 @@ const ja: Record<Key, string> = {
   wantsFormTitle: 'リクエストする',
   wantsFieldName: '何が欲しいか',
   wantsFieldNamePlaceholder: '例：ポケモンカード151 UPC 再販',
+  wantsFieldCategory: 'カテゴリ',
+  wantsFilterGroup: 'カテゴリで絞り込む',
   wantsFieldNote: '理由・どのバージョンか（任意）',
   wantsFieldNotePlaceholder: '2023年版、または同じ収録内容のもの',
   wantsSubmit: 'リクエストを追加',
@@ -339,6 +347,10 @@ const ja: Record<Key, string> = {
   demandDone: 'カウントしました。連絡先は取得していないので、これ以上は何も起きません。',
   demandQueued: 'この端末に保存しました。後で再送します。',
   demandCount: '人が同じことを言っています',
+
+  catEmpty: 'このカテゴリはまだ登録がありません（手作業で追加しています）。',
+  portalSeeding: 'まだ登録がありません。1件ずつ、日付は販売店のページで確認してから追加しています。',
+  portalSeedingCta: 'その間に再販リクエストをどうぞ',
 
   vipTitle: '24時間早く、知る。',
   vipBody: '無料プランは受付開始1時間前のブラウザ通知。VIPは情報確定と同時にDiscord・Telegramへ即時通知、さらに難易度「赤」の全商品に完全攻略ガイドが付きます。',
@@ -479,6 +491,8 @@ const zhCN: Record<Key, string> = {
   wantsFormTitle: '提一个',
   wantsFieldName: '你想要什么',
   wantsFieldNamePlaceholder: '例：宝可梦卡牌 151 UPC 复刻',
+  wantsFieldCategory: '分类',
+  wantsFilterGroup: '按分类筛选',
   wantsFieldNote: '理由，或指定哪个版本（可选）',
   wantsFieldNotePlaceholder: '2023 年那版，或者收录一样的都行',
   wantsSubmit: '加上我这一票',
@@ -511,6 +525,10 @@ const zhCN: Record<Key, string> = {
   demandDone: '已计入。不会再发生别的事——我们没有收集任何联系方式。',
   demandQueued: '已存在本设备，之后重试。',
   demandCount: '人在这件商品上说了同样的话',
+
+  catEmpty: '这个品类还没有收录商品——都是人工一条条录的。',
+  portalSeeding: '还没有收录商品。正在一条条录入，每个日期都到零售商页面上核对过才会上线。',
+  portalSeedingCta: '这期间可以先提个求复刻',
 
   vipTitle: '比别人早 24 小时知道。',
   vipBody: '免费用户在登记开始前 1 小时收到浏览器推送。VIP 在情报确认的瞬间就能收到 Discord / Telegram 秒推，并解锁全部红色难度商品的完整海淘攻略。',
@@ -646,6 +664,8 @@ const zhTW: Record<Key, string> = {
   wantsFormTitle: '提一個',
   wantsFieldName: '你想要什麼',
   wantsFieldNamePlaceholder: '例：寶可夢卡牌 151 UPC 復刻',
+  wantsFieldCategory: '分類',
+  wantsFilterGroup: '按分類篩選',
   wantsFieldNote: '理由，或指定哪個版本（可選）',
   wantsFieldNotePlaceholder: '2023 年那版，或者收錄一樣的都行',
   wantsSubmit: '加上我這一票',
@@ -678,6 +698,10 @@ const zhTW: Record<Key, string> = {
   demandDone: '已計入。不會再發生別的事——我們沒有收集任何聯絡方式。',
   demandQueued: '已存在本裝置，之後重試。',
   demandCount: '人在這件商品上說了同樣的話',
+
+  catEmpty: '這個品類還沒有收錄商品——都是人工一條條錄的。',
+  portalSeeding: '還沒有收錄商品。正在一條條錄入，每個日期都到零售商頁面上核對過才會上線。',
+  portalSeedingCta: '這期間可以先提個求復刻',
 
   vipTitle: '比別人早 24 小時知道。',
   vipBody: '免費用戶在登記開始前 1 小時收到瀏覽器推播。VIP 在情報確認的瞬間就能收到 Discord / Telegram 即時通知，並解鎖全部紅色難度商品的完整攻略。',
