@@ -3,11 +3,13 @@ import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { CategoryPage } from './pages/CategoryPage'
+import { CrowPage } from './pages/CrowPage'
 import { ItemPage } from './pages/ItemPage'
 import { PortalPage } from './pages/PortalPage'
 import { WantsPage } from './pages/WantsPage'
 import { LocaleContext } from './lib/i18n'
 import { CurrencyContext } from './lib/prefs'
+import { TierContext, readTier } from './lib/entitlement'
 import { ThemeContext, applyTheme, readTheme, type Theme } from './lib/theme'
 import { flushOutbound } from './lib/outbound'
 import { LOCALES, type Currency, type Locale } from './lib/types'
@@ -35,6 +37,7 @@ function LocaleShell() {
   const [currency, setCurrency] = useState<Currency>('JPY')
   const [touchedCurrency, setTouchedCurrency] = useState(false)
   const [theme, setTheme] = useState<Theme>(() => readTheme())
+  const [tier] = useState(() => readTier())
 
   const toggleTheme = () => {
     setTheme((prev) => {
@@ -65,6 +68,7 @@ function LocaleShell() {
     <LocaleContext.Provider value={locale as Locale}>
       <ThemeContext.Provider value={{ theme, toggle: toggleTheme }}>
         <CurrencyContext.Provider value={currency}>
+        <TierContext.Provider value={tier}>
         <div className="page-grid min-h-screen">
           <Header
             currency={currency}
@@ -78,12 +82,14 @@ function LocaleShell() {
               <Route index element={<PortalPage />} />
               <Route path="c/:category" element={<CategoryPage />} />
               <Route path="drop/:slug" element={<ItemPage />} />
+              <Route path="crow" element={<CrowPage />} />
               <Route path="wants" element={<WantsPage />} />
               <Route path="*" element={<Navigate to={`/${locale}`} replace />} />
             </Routes>
           </main>
           <Footer />
         </div>
+        </TierContext.Provider>
         </CurrencyContext.Provider>
       </ThemeContext.Provider>
     </LocaleContext.Provider>

@@ -145,6 +145,41 @@ export function wantsHead(locale: Locale, wants: { name: string; count: number }
   }
 }
 
+/**
+ * CROW targets the intent a retailer's own product page cannot answer:
+ * "<product> 抽選", "<product> 抢购", "where can I still enter". The queue is
+ * cross-category, so the description leads with the counts rather than with
+ * any single item.
+ */
+export function crowHead(locale: Locale, openCount: number, closingSoon: number): HeadData {
+  const path = '/crow'
+  const lead = t(locale, 'crowLead')
+  const description =
+    openCount === 0
+      ? lead
+      : `${t(locale, 'crowOpenNow')}: ${openCount} · ${t(locale, 'crowClosingSoon')}: ${closingSoon}. ${lead}`
+
+  return {
+    title: clamp(`${t(locale, 'crowTitle')} — ${SITE_NAME}`, TITLE_BUDGET),
+    description: clamp(description, DESCRIPTION_BUDGET),
+    path,
+    jsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: t(locale, 'crowTitle'),
+        description: clamp(description, DESCRIPTION_BUDGET),
+        url: absolute(locale, path),
+        inLanguage: locale,
+      },
+      breadcrumbs(locale, [
+        { name: t(locale, 'seoBreadcrumbHome'), path: '' },
+        { name: t(locale, 'crowTitle'), path },
+      ]),
+    ],
+  }
+}
+
 export function categoryHead(locale: Locale, category: Category, drops: Drop[]): HeadData {
   const name = t(locale, CATEGORY_KEY[category])
   const path = `/c/${category}`

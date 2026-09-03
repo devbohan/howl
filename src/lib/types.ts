@@ -105,8 +105,14 @@ export interface Channel {
   region: Region
   url: string
   status: ChannelStatus
-  shipsWorldwide: boolean
-  acceptsForeignCard: boolean
+  /**
+   * Optional on purpose. Plenty of shops never say, and several refuse to serve
+   * a program at all — New Balance Japan answers 403. A required boolean would
+   * force a guess at publish time on exactly the two fields the whole product
+   * is trusted for, so absent means "not established" and renders that way.
+   */
+  shipsWorldwide?: boolean
+  acceptsForeignCard?: boolean
   /** Retailer-specific gotcha, e.g. "requires JP phone number". */
   note?: L
   /** Whether we earn affiliate revenue on this link. */
@@ -132,6 +138,15 @@ export interface Drop {
   friction: Friction
   price: number
   currency: Currency
+  /**
+   * How precisely the schedule is actually known.
+   *
+   * Plenty of announcements give a date and no time. Encoding that as midnight
+   * and saying nothing would present a guess as a fact, so `'date'` means the
+   * countdown runs to the start of that day — always early, never late — and
+   * the UI says the time was not announced.
+   */
+  timePrecision?: 'exact' | 'date'
   /** ISO strings. `opensAt` is when entry/sale starts. */
   opensAt: string
   closesAt?: string

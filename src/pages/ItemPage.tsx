@@ -26,6 +26,34 @@ const STOCK_STYLE = {
 
 const STOCK_KEY = { 'in-stock': 'stockIn', low: 'stockLow', 'sold-out': 'stockOut' } as const
 
+/**
+ * Three states, not two. "We have not established this" is a real answer, and
+ * dressing it as a ✓ or a ✕ is how a friction index stops being worth trusting.
+ */
+function Verdict({
+  known,
+  yes,
+  no,
+  unknown,
+  noTone,
+}: {
+  known: boolean | undefined
+  yes: string
+  no: string
+  unknown: string
+  noTone: string
+}) {
+  if (known === undefined) {
+    return <span className="inline-flex items-center gap-1 text-faint">? {unknown}</span>
+  }
+  return (
+    <span className={`inline-flex items-center gap-1 ${known ? 'text-easy' : noTone}`}>
+      {known ? <CheckMark /> : <CrossMark />}
+      {known ? yes : no}
+    </span>
+  )
+}
+
 function ChannelRow({ channel, drop }: { channel: Channel; drop: Drop }) {
   const { t, tl, locale } = useT()
   const currency = useCurrency()
@@ -70,14 +98,20 @@ function ChannelRow({ channel, drop }: { channel: Channel; drop: Drop }) {
         )}
 
         <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px]">
-          <span className={`inline-flex items-center gap-1 ${channel.shipsWorldwide ? 'text-easy' : 'text-medium'}`}>
-            {channel.shipsWorldwide ? <CheckMark /> : <CrossMark />}
-            {channel.shipsWorldwide ? t('detShipsWorldwide') : t('detShipsDomestic')}
-          </span>
-          <span className={`inline-flex items-center gap-1 ${channel.acceptsForeignCard ? 'text-easy' : 'text-hard'}`}>
-            {channel.acceptsForeignCard ? <CheckMark /> : <CrossMark />}
-            {channel.acceptsForeignCard ? t('detForeignCard') : t('detNoForeignCard')}
-          </span>
+          <Verdict
+            known={channel.shipsWorldwide}
+            yes={t('detShipsWorldwide')}
+            no={t('detShipsDomestic')}
+            unknown={t('detShipsUnknown')}
+            noTone="text-medium"
+          />
+          <Verdict
+            known={channel.acceptsForeignCard}
+            yes={t('detForeignCard')}
+            no={t('detNoForeignCard')}
+            unknown={t('detCardUnknown')}
+            noTone="text-hard"
+          />
         </div>
 
         {channel.note && <p className="mt-1.5 text-[12px] leading-relaxed text-muted">{tl(channel.note)}</p>}

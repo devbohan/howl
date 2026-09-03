@@ -34,6 +34,7 @@ import {
   alternates,
   categoryHead,
   clamp,
+  crowHead,
   dropHead,
   portalHead,
   visualWidth,
@@ -179,5 +180,33 @@ describe('the live catalogue', () => {
         expect(head.jsonLd.length).toBeGreaterThan(0)
       }
     }
+  })
+})
+
+describe('crowHead', () => {
+  it('leads the description with the counts, because the queue is the product', () => {
+    const head = crowHead('en', 14, 5)
+    expect(head.description).toContain('14')
+    expect(head.description).toContain('5')
+    expect(head.path).toBe('/crow')
+  })
+
+  it('falls back to the premise when nothing is open', () => {
+    const head = crowHead('en', 0, 0)
+    expect(head.description).not.toMatch(/^open now: 0/i)
+  })
+
+  it('stays inside the title and description budgets in every language', () => {
+    for (const locale of LOCALES) {
+      const head = crowHead(locale, 120, 40)
+      expect(visualWidth(head.title)).toBeLessThanOrEqual(TITLE_BUDGET)
+      expect(head.description.length).toBeLessThanOrEqual(DESCRIPTION_BUDGET)
+    }
+  })
+
+  it('declares a CollectionPage and a breadcrumb trail', () => {
+    const types = crowHead('ja', 3, 1).jsonLd.map((n) => (n as { '@type': string })['@type'])
+    expect(types).toContain('CollectionPage')
+    expect(types).toContain('BreadcrumbList')
   })
 })

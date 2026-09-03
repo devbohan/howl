@@ -120,9 +120,13 @@ test('the sitemap indexes every page in every language, with alternates', async 
       expect(xml).toContain('hreflang="x-default"')
     }
   }
-  // 4 locales × (portal + wantlist + 6 categories + however many drops exist)
+  // Derive the expected count from the two halves rather than hardcoding the
+  // number of static pages — that number changes whenever a page is added.
   const drops = [...(await (await request.get('/sitemap-drops.xml')).text()).matchAll(/<loc>/g)].length
-  expect(total).toBe(4 * 8 + drops)
+  const pages = [...(await (await request.get('/sitemap-pages.xml')).text()).matchAll(/<loc>/g)].length
+  expect(total).toBe(pages + drops)
+  // Every static page is present in all four languages.
+  expect(pages % LOCALES.length).toBe(0)
 })
 
 test('llms.txt describes the site for answer engines', async ({ request }) => {
@@ -182,4 +186,53 @@ test('the wantlist is in the sitemap in every language', async ({ request }) => 
   for (const locale of LOCALES) {
     expect(xml).toContain(`/${locale}/wants</loc>`)
   }
+})
+
+test('the CROW queue is prerendered for a raffle-intent search', async ({ page }) => {
+  await page.goto('/ja/crow')
+  await expect(page.locator('h1')).toBeVisible()
+
+  // This page exists to answer "<product> 抽選 / where can I still enter", so a
+  // crawler with no JS must get the premise, the counts and the disclaimer.
+  const text = await page.locator('body').innerText()
+  expect(text.length).toBeGreaterThan(400)
+  expect(text).toContain('代行入力は行いません')
+
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /\/ja\/crow$/)
+  await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveCount(1)
+
+  const nodes = JSON.parse(await page.locator('script[type="application/ld+json"]').innerText())
+  expect(nodes.some((n: { '@type': string }) => n['@type'] === 'CollectionPage')).toBe(true)
+})
+
+test('CROW is in the sitemap for every language', async ({ page }) => {
+  const response = await page.request.get('/sitemap-pages.xml')
+  const xml = await response.text()
+  for (const locale of ['en', 'ja', 'zh-CN', 'zh-TW']) {
+    expect(xml).toContain(`/${locale}/crow`)
+  }
+})
+
+test('the paywall does not hide the page from crawlers', async ({ page }) => {
+  await page.goto('/en/crow')
+  // Gated rows are fine; a gated *page* would be cloaking, and the intent copy
+  // plus the counts are what earns the ranking in the first place.
+  const text = await page.locator('body').innerText()
+  expect(text).toContain('Every raffle you can still enter')
+  expect(text).toContain('We do not fill entry forms for you')
+})
+
+test('the two sitemaps are split by page type, not by position in a list', async ({ page }) => {
+  // Regression: the split used a hardcoded index, so adding a static page
+  // pushed a category page into the drop sitemap. The point of the split is
+  // that drop pages churn hourly and the rest barely move.
+  const drops = await (await page.request.get('/sitemap-drops.xml')).text()
+  const pages = await (await page.request.get('/sitemap-pages.xml')).text()
+
+  const dropLocs = [...drops.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])
+  const pageLocs = [...pages.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])
+
+  for (const loc of dropLocs) expect(loc).toContain('/drop/')
+  for (const loc of pageLocs) expect(loc).not.toContain('/drop/')
+  expect(pageLocs.length).toBeGreaterThan(0)
 })

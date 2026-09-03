@@ -86,11 +86,20 @@ export interface Blockers {
   payment: boolean
 }
 
+/**
+ * Only an explicit "no" counts. An unresearched channel is not evidence that
+ * a buyer is stuck, and telling someone they cannot buy something when we
+ * simply have not checked is the same mistake as a wrong date.
+ */
 export function blockersFor(channels: Channel[]): Blockers {
-  if (channels.length === 0) return { shipping: false, payment: false }
+  const known = (values: (boolean | undefined)[]) => values.filter((v) => v !== undefined)
+
+  const shipping = known(channels.map((c) => c.shipsWorldwide))
+  const payment = known(channels.map((c) => c.acceptsForeignCard))
+
   return {
-    shipping: !channels.some((c) => c.shipsWorldwide),
-    payment: !channels.some((c) => c.acceptsForeignCard),
+    shipping: shipping.length > 0 && !shipping.includes(true),
+    payment: payment.length > 0 && !payment.includes(true),
   }
 }
 

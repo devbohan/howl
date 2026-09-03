@@ -7,6 +7,7 @@ const state = (overrides: Partial<DropState> = {}): DropState => ({
   target: new Date().toISOString(),
   msLeft: 0,
   urgent: false,
+  dateOnly: false,
   ...overrides,
 })
 

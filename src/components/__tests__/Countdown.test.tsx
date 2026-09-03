@@ -9,6 +9,7 @@ const state = (overrides: Partial<DropState> = {}): DropState => ({
   target: '2026-01-01T00:00:00.000Z',
   msLeft: 0,
   urgent: false,
+  dateOnly: false,
   ...overrides,
 })
 
@@ -75,5 +76,27 @@ describe('CountdownLabel', () => {
     expect(ended).toBeEmptyDOMElement()
     const { container: stock } = renderApp(<CountdownLabel state={state({ phase: 'in-stock' })} />)
     expect(stock).toBeEmptyDOMElement()
+  })
+})
+
+describe('with only a date announced', () => {
+  it('shows days and hours but not minutes or seconds', () => {
+    const { container } = renderApp(
+      <Countdown state={state({ msLeft: 2 * 86_400_000 + 5 * 3_600_000, dateOnly: true })} />,
+    )
+    expect(screen.getByText('2')).toBeInTheDocument()
+    expect(screen.getByText('05')).toBeInTheDocument()
+    // Minutes and seconds would be precision the source never gave.
+    expect(container.querySelectorAll('.tabular-nums')).toHaveLength(2)
+  })
+
+  it('says outright that the time was not announced', () => {
+    renderApp(<Countdown state={state({ msLeft: 86_400_000, dateOnly: true })} />)
+    expect(screen.getByText('· time TBA')).toBeInTheDocument()
+  })
+
+  it('keeps full precision when the time is known', () => {
+    renderApp(<Countdown state={state({ msLeft: 86_400_000 })} />)
+    expect(screen.queryByText('· time TBA')).not.toBeInTheDocument()
   })
 })

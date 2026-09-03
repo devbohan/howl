@@ -179,11 +179,11 @@ describe('bestOffer', () => {
 
 describe('sortWeight', () => {
   it('orders live entries by urgency, then stock, then upcoming, then ended', () => {
-    const live = sortWeight({ phase: 'open', target: '', msLeft: 60_000, urgent: true })
-    const liveLater = sortWeight({ phase: 'open', target: '', msLeft: 600_000, urgent: false })
-    const stock = sortWeight({ phase: 'in-stock', target: '', msLeft: 0, urgent: false })
-    const upcoming = sortWeight({ phase: 'upcoming', target: '', msLeft: 1000, urgent: false })
-    const ended = sortWeight({ phase: 'ended', target: '', msLeft: 0, urgent: false })
+    const live = sortWeight({ phase: 'open', target: '', msLeft: 60_000, urgent: true, dateOnly: false })
+    const liveLater = sortWeight({ phase: 'open', target: '', msLeft: 600_000, urgent: false, dateOnly: false })
+    const stock = sortWeight({ phase: 'in-stock', target: '', msLeft: 0, urgent: false, dateOnly: false })
+    const upcoming = sortWeight({ phase: 'upcoming', target: '', msLeft: 1000, urgent: false, dateOnly: false })
+    const ended = sortWeight({ phase: 'ended', target: '', msLeft: 0, urgent: false, dateOnly: false })
 
     expect(live).toBeLessThan(liveLater)
     expect(liveLater).toBeLessThan(stock)
@@ -200,5 +200,42 @@ describe('splitDuration', () => {
 
   it('clamps negative input to zero rather than counting backwards', () => {
     expect(splitDuration(-5000)).toEqual({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+  })
+})
+
+describe('date-only schedules', () => {
+  it('marks the state so the UI can say the time is unannounced', () => {
+    const d = drop({ timePrecision: 'date', opensAt: at(86_400_000) })
+    expect(dropState(d, NOW).dateOnly).toBe(true)
+  })
+
+  it('defaults to exact when the field is absent', () => {
+    expect(dropState(drop(), NOW).dateOnly).toBe(false)
+    expect(dropState(drop({ timePrecision: 'exact' }), NOW).dateOnly).toBe(false)
+  })
+
+  it('never calls a date-only drop urgent — the hour itself is unknown', () => {
+    // Claiming "under an hour left" when the time was never announced would be
+    // a guess presented as a warning.
+    const soon = drop({ timePrecision: 'date', opensAt: at(60_000) })
+    expect(dropState(soon, NOW).urgent).toBe(false)
+
+    const exact = drop({ opensAt: at(60_000) })
+    expect(dropState(exact, NOW).urgent).toBe(true)
+  })
+
+  it('still counts down, and to the start of the day', () => {
+    const d = drop({ timePrecision: 'date', opensAt: at(3 * 86_400_000) })
+    const state = dropState(d, NOW)
+    expect(state.phase).toBe('upcoming')
+    expect(state.msLeft).toBe(3 * 86_400_000)
+  })
+
+  it('carries the flag through a closing window too', () => {
+    const d = drop({ timePrecision: 'date', opensAt: at(-1000), closesAt: at(60_000) })
+    const state = dropState(d, NOW)
+    expect(state.phase).toBe('open')
+    expect(state.dateOnly).toBe(true)
+    expect(state.urgent).toBe(false)
   })
 })

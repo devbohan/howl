@@ -46,6 +46,8 @@ export type Phase = 'upcoming' | 'open' | 'in-stock' | 'ended'
 
 export interface DropState {
   phase: Phase
+  /** True when only the day is known, so the countdown is a lower bound. */
+  dateOnly: boolean
   /** The moment the countdown is ticking toward. */
   target: string
   msLeft: number
@@ -56,24 +58,39 @@ export interface DropState {
 export function dropState(drop: Drop, now: number): DropState {
   const opens = new Date(drop.opensAt).getTime()
   const closes = drop.closesAt ? new Date(drop.closesAt).getTime() : undefined
+  const dateOnly = drop.timePrecision === 'date'
 
   const ended = (): DropState => ({
     phase: isAvailableNow(drop) ? 'in-stock' : 'ended',
     target: drop.closesAt ?? drop.opensAt,
     msLeft: 0,
     urgent: false,
+    dateOnly,
   })
 
   if (now < opens) {
-    return { phase: 'upcoming', target: drop.opensAt, msLeft: opens - now, urgent: opens - now < 3_600_000 }
+    return {
+      phase: 'upcoming',
+      target: drop.opensAt,
+      msLeft: opens - now,
+      // "Under an hour" means nothing when the hour itself is unknown.
+      urgent: !dateOnly && opens - now < 3_600_000,
+      dateOnly,
+    }
   }
   if (closes === undefined) {
     // First-come first-served with no stated end: treat the first 24h as live.
     const msLeft = opens + 86_400_000 - now
-    return msLeft > 0 ? { phase: 'open', target: drop.opensAt, msLeft, urgent: false } : ended()
+    return msLeft > 0 ? { phase: 'open', target: drop.opensAt, msLeft, urgent: false, dateOnly } : ended()
   }
   if (now < closes) {
-    return { phase: 'open', target: drop.closesAt!, msLeft: closes - now, urgent: closes - now < 3_600_000 }
+    return {
+      phase: 'open',
+      target: drop.closesAt!,
+      msLeft: closes - now,
+      urgent: !dateOnly && closes - now < 3_600_000,
+      dateOnly,
+    }
   }
   return ended()
 }

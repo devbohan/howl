@@ -3,6 +3,7 @@ import type { ReactElement, ReactNode } from 'react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { LocaleContext } from '../lib/i18n'
 import { CurrencyContext } from '../lib/prefs'
+import { TierContext, type Tier } from '../lib/entitlement'
 import { ThemeContext } from '../lib/theme'
 import type { Currency, Locale } from '../lib/types'
 
@@ -13,6 +14,8 @@ export interface Options extends Omit<RenderOptions, 'wrapper'> {
   route?: string
   /** Route pattern to mount the element under, e.g. "/:locale/drop/:slug". */
   path?: string
+  /** Entitlement tier; defaults to the signed-out view. */
+  tier?: Tier
 }
 
 /**
@@ -20,7 +23,7 @@ export interface Options extends Omit<RenderOptions, 'wrapper'> {
  * a real locale, currency and router without each test rebuilding the shell.
  */
 export function renderApp(ui: ReactElement, options: Options = {}) {
-  const { locale = 'en', currency = 'JPY', route = '/', path, ...rest } = options
+  const { locale = 'en', currency = 'JPY', route = '/', path, tier = 'free', ...rest } = options
 
   function Wrapper({ children }: { children: ReactNode }) {
     return (
@@ -28,7 +31,9 @@ export function renderApp(ui: ReactElement, options: Options = {}) {
         <LocaleContext.Provider value={locale}>
           <ThemeContext.Provider value={{ theme: 'dark', toggle: () => {} }}>
             <CurrencyContext.Provider value={currency}>
+              <TierContext.Provider value={tier}>
               {path ? <Routes><Route path={path} element={children} /></Routes> : children}
+              </TierContext.Provider>
             </CurrencyContext.Provider>
           </ThemeContext.Provider>
         </LocaleContext.Provider>

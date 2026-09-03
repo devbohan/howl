@@ -39,6 +39,21 @@ export function Countdown({ state, size = 'md' }: { state: DropState; size?: 'sm
 
   const tone = state.urgent ? 'text-hard' : state.phase === 'open' ? 'text-live-fg' : 'text-fg'
 
+  /**
+   * With only a day announced, showing minutes and seconds would dress a
+   * guess up as precision. Days and hours to the start of that day is the
+   * most the source actually supports.
+   */
+  if (state.dateOnly) {
+    return (
+      <span data-testid="countdown" className={`inline-flex items-baseline gap-2 font-bold ${sizes[size]} ${tone}`}>
+        {days > 0 && <Unit value={days} label={t('cdDay')} pad={1} />}
+        <Unit value={hours} label={t('cdHour')} />
+        <span className="text-[0.6em] font-semibold text-faint">{t('cdTimeUnknown')}</span>
+      </span>
+    )
+  }
+
   return (
     <span data-testid="countdown" className={`inline-flex items-baseline gap-2 font-bold ${sizes[size]} ${tone}`}>
       {days > 0 && <Unit value={days} label={t('cdDay')} pad={1} />}

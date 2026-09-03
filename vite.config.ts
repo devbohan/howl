@@ -9,7 +9,7 @@ import { LOCALES, type Drop, type Locale } from './src/lib/types'
 const SITE_URL = (process.env.VITE_SITE_URL ?? 'https://howl.tokyo').replace(/\/$/, '')
 
 /** Every indexable path, locale-relative. Order matters only for readability. */
-const PATHS = ['', '/wants', ...CATEGORIES.map((c) => `/c/${c}`), ...DROPS.map((d) => `/drop/${d.slug}`)]
+const PATHS = ['', '/crow', '/wants', ...CATEGORIES.map((c) => `/c/${c}`), ...DROPS.map((d) => `/drop/${d.slug}`)]
 
 const BUILT_AT = new Date().toISOString()
 const xml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -47,7 +47,7 @@ ${entries}
         const alternates = LOCALES.map(
           (l) => `    <xhtml:link rel="alternate" hreflang="${l}" href="${SITE_URL}/${l}${path}"/>`,
         ).join('\n')
-        return LOCALES.map(
+        const block = LOCALES.map(
           (locale) => `  <url>
     <loc>${SITE_URL}/${locale}${path}</loc>
 ${alternates}
@@ -58,15 +58,24 @@ ${alternates}
         : BUILT_AT
     }</lastmod>
     <changefreq>${path.startsWith('/drop/') ? 'hourly' : 'daily'}</changefreq>
-    <priority>${path === '' ? '1.0' : path === '/wants' ? '0.9' : path.startsWith('/c/') ? '0.8' : '0.7'}</priority>
+    <priority>${
+      path === '' ? '1.0' : path === '/crow' || path === '/wants' ? '0.9' : path.startsWith('/c/') ? '0.8' : '0.7'
+    }</priority>
   </url>`,
         ).join('\n')
+
+        return { path, block }
       })
 
-      // Split by page type: a drop sitemap churns hourly while the category and
-      // portal pages barely move, and crawlers budget per sitemap.
-      const pageUrls = urls.slice(0, 2 + CATEGORIES.length).join('\n')
-      const dropUrls = urls.slice(2 + CATEGORIES.length).join('\n')
+      /*
+       * Split by what the path is, not by where it sits in the list. This used
+       * to slice at a hardcoded index, which silently leaked a category page
+       * into the drop sitemap the moment another static page was added — and
+       * the split exists precisely so crawlers can budget the hourly-churning
+       * drop pages separately from the ones that barely move.
+       */
+      const pageUrls = urls.filter((u) => !u.path.startsWith('/drop/')).map((u) => u.block).join('\n')
+      const dropUrls = urls.filter((u) => u.path.startsWith('/drop/')).map((u) => u.block).join('\n')
 
       this.emitFile({ type: 'asset', fileName: 'sitemap-pages.xml', source: urlset(pageUrls) })
       this.emitFile({ type: 'asset', fileName: 'sitemap-drops.xml', source: urlset(dropUrls) })
