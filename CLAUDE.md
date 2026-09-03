@@ -111,6 +111,18 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 
 > **未来的"中签者直接转手"是交易场所，不是资讯服务。** 那会跨过 R0.1 那条边界，需要先做法务与支付的地基；另外转卖**抽选资格**与转卖**已中签的实物**是两件不同的事，日本对票券类还有专门的不正転売禁止法。
 
+## 什么值得登：品牌名单（[brands.ts](src/lib/brands.ts)）
+
+判断的**不是「这个牌子潮不潮」，而是「看点是什么」**。
+
+四档：`hype`（人们查日历的原因）/ `current`（量贩但当下被这群人要，如 New Balance、ASICS、Clarks）/ `mass`（量贩，只能靠联名过关）/ `ip`（游戏动漫等，联名里真正的看点）。
+
+**EDWIN 是 `mass`** —— 1947 年的量贩牛仔，单独出现不登。但 EDWIN × ELDEN RING 该登，因为看点是 FromSoftware，所以条目上有 `collab: ['ELDEN RING', 'FromSoftware']`，标题也以 ELDEN RING 打头。
+
+- `listable(brand, collab)` 返回**为什么过关**，让编辑能复核这个判断
+- 没登记过的品牌**被标记而不是静默放行** —— 有测试把整个目录卡在这条规则上
+- **这份名单是编辑判断，会过时**，预期由你持续修改。测试能守住「每条都说得出看点」，但没有测试能替你判断什么现在火
+
 ## ⚠️ 数据现状：全部为空，等待录入
 
 四份数据集**全部清空**了，这是上线前的正确状态：
@@ -265,7 +277,7 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 | 命令 | 内容 |
 | :--- | :--- |
 | `npm run typecheck` | 应用/测试/工具三套 tsconfig 分别检查 |
-| `npm test` | Vitest 529 个单元与组件测试 |
+| `npm test` | Vitest 542 个单元与组件测试 |
 | `npm run test:coverage` | 同上 + 覆盖率，阈值 80%（当前 97% 语句 / 91% 分支） |
 | `npm run test:e2e` | Playwright 154 个用例，chromium + Pixel 5 两套（含关掉 JS 的爬虫视角） |
 | `npm run test:e2e:ui` | Playwright UI 模式，调试用 |

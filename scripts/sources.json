@@ -1,8 +1,12 @@
 {
-  "_comment": "只列主动把内容交给机器的源。加新源前先跑 `npm run ingest -- --check <url>`。返回 403、连不上、或页面写着「アクセス制限」的站不要加——那是拒绝，不是待解决的技术问题。 PR TIMES 是新闻稿分发平台——企业发布本就是给媒体转载的，robots.txt 是 Allow: /，命中率靠 match 关键词过滤。",
+  "_comment": "只列主动把内容交给机器的源。加新源前先跑 `npm run ingest -- --check <url>`。返回 403、连不上、或页面写着「アクセス制限」的站不要加——那是拒绝，不是待解决的技术问题。 sitemap 源会逐页抓标题（每 1.5 秒一次），所以 limit 别开太大。 render:true 表示该站商品页是 JS 渲染的，需要用浏览器取标题。 match 是必需的过滤器：潮流媒体一天几十条，绝大多数不是限定发售。",
   "_removed": {
     "p-bandai": "sitemap 是开放的，但商品页连续请求几次后返回「アクセス制限」。robots.txt 允许 ≠ 欢迎程序连续抓取，所以移除。它的限定受注信息改从官方 X 与新闻稿人工获取。",
-    "facebook / x": "两家的 robots.txt 都是 User-agent: * → Disallow: /（全站禁止爬虫），Facebook 还有登录墙。同样的信息从 PR TIMES 和新闻媒体的 RSS 拿——那些平台的存在目的就是被转载。"
+    "facebook / x": "两家的 robots.txt 都是 User-agent: * → Disallow: /（全站禁止爬虫），Facebook 还有登录墙。同样的信息从 PR TIMES 和新闻媒体的 RSS 拿——那些平台的存在目的就是被转载。",
+    "fashion-press.net": "RSS 返回 403，且 robots.txt 对 * 是 Disallow: /",
+    "fashionsnap / houyhnhnm / fasu / honeyee": "没有可用的 feed（404 或连不上）",
+    "nicekicks.com": "robots.txt 明确 Disallow: /feed",
+    "wwdjapan.com": "robots.txt 返回 403 —— 拒绝程序读取规则本身"
   },
   "sources": [
     {
@@ -71,6 +75,47 @@
       "url": "https://www.suruga-ya.jp/sitemap.xml",
       "withinDays": 7,
       "limit": 10
+    },
+    {
+      "id": "highsnobiety",
+      "name": "Highsnobiety",
+      "kind": "web",
+      "type": "rss",
+      "url": "https://www.highsnobiety.com/feed/",
+      "match": "(raffle|lottery|limited|exclusive|drop|release|restock)",
+      "withinDays": 5,
+      "limit": 15
+    },
+    {
+      "id": "sneakernews",
+      "name": "Sneaker News",
+      "kind": "web",
+      "type": "rss",
+      "url": "https://sneakernews.com/feed/",
+      "match": "(raffle|release date|limited|exclusive|restock)",
+      "withinDays": 5,
+      "limit": 15
+    },
+    {
+      "id": "hypebeast-jp-footwear",
+      "name": "Hypebeast 日本版 Footwear",
+      "kind": "web",
+      "type": "rss",
+      "url": "https://hypebeast.com/jp/footwear/feed",
+      "match": "(抽選|発売|再販|受注|限定|ドロップ|リリース)",
+      "withinDays": 7,
+      "limit": 20
+    },
+    {
+      "id": "shoesmaster",
+      "name": "SHOES MASTER",
+      "kind": "web",
+      "type": "rss",
+      "url": "https://www.shoesmaster.jp/feed",
+      "match": "(抽選|発売|限定|受注|再販)",
+      "withinDays": 7,
+      "limit": 15
     }
-  ]
+  ],
+  "_note_trend_vs_deadline": "Highsnobiety / Sneaker News 是趋势源不是截止日源：实测它们的标题是评论与图集（「Bicycle Fashion Is the New Gorpcore」这种），几乎不含发售日期，所以 match 会把绝大多数过滤掉，产出常年接近 0。留着是因为大发售周偶尔会命中，成本只有 1.5 秒。 真正带截止时间的是日本媒体（Hypebeast 日本版、SHOES MASTER）和品牌自己的公告。"
 }

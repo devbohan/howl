@@ -23,6 +23,9 @@ export const DROPS: Drop[] = [
       'zh-TW': 'ELDEN RING × EDWIN 牛仔外套 / 襯衫 再受注',
     },
     brand: 'EDWIN',
+    // EDWIN alone would not earn a slot — it is mass-market denim. The draw is
+    // FromSoftware, which is why the title leads with ELDEN RING.
+    collab: ['ELDEN RING', 'FromSoftware'],
     subtitle: {
       en: 'Reorder of the 2022 collaboration, four years on. Closes 30 Sept 23:59 JST.',
       ja: '2022年コラボの4年ぶり再受注。9月30日23:59まで。',

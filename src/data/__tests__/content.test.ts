@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { CATEGORY_MEDIA } from '../creators'
 import { DROPS } from '../mock'
 import { NEWS } from '../news'
+import { listable } from '../../lib/brands'
 import { DICT } from '../../lib/i18n'
 import { CATEGORIES, MECHANICS, PLATFORM_LABEL, REGIONS } from '../../lib/labels'
 import { LOCALES, type L } from '../../lib/types'
@@ -199,6 +200,23 @@ describe('localised content', () => {
     const keys = new Set(Object.keys(DICT.en))
     for (const [, value] of ALL_L) {
       for (const l of LOCALES) expect(keys.has(value[l] ?? '')).toBe(false)
+    }
+  })
+})
+
+describe('editorial fit', () => {
+  it('every listed drop earns its slot on a brand or a named collaborator', () => {
+    // A mass-market label with nothing attached is the entry that tells the
+    // audience this calendar does not know the scene.
+    const unearned = DROPS.filter((d) => !listable(d.brand, d.collab).ok).map(
+      (d) => `${d.slug} (${d.brand}): ${listable(d.brand, d.collab).reason}`,
+    )
+    expect(unearned).toEqual([])
+  })
+
+  it('names what the draw is for every drop, for an editor to check', () => {
+    for (const d of DROPS) {
+      expect(listable(d.brand, d.collab).draw, d.slug).toBeTruthy()
     }
   })
 })

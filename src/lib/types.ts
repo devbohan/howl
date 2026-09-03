@@ -131,6 +131,12 @@ export interface Drop {
   slug: string
   title: L
   brand: string
+  /**
+   * Collaborators or IP that are the actual reason this is listed. A
+   * mass-market label with a hot IP belongs here; the same label alone does
+   * not. See src/lib/brands.ts.
+   */
+  collab?: string[]
   subtitle?: L
   category: Category
   region: Region
