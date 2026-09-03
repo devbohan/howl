@@ -51,7 +51,10 @@ export const DROPS: Drop[] = [
         id: 'ch-edwin-mall',
         name: 'EDWIN MALL',
         region: 'JP',
-        url: 'https://edwin-mall.jp/shop/pages/eldenring.aspx',
+        // The order page, not the landing page. The 特設サイト explains the
+        // collaboration but does not obviously lead anywhere you can order —
+        // the two 【予約】 product pages are where the cart button lives.
+        url: 'https://edwin-mall.jp/shop/g/gET0042-77-02/',
         status: 'open',
         // The official page routes overseas buyers through WorldShopping.
         shipsWorldwide: true,
@@ -88,6 +91,18 @@ export const DROPS: Drop[] = [
         ja: '海外発行カードが使えるかは、確認できる範囲に記載がありません。未確認です。',
         'zh-CN': '店家是否接受海外发行的信用卡，在能读到的页面上都没写。未确认。',
         'zh-TW': '店家是否接受海外發行的信用卡，在能讀到的頁面上都沒寫。未確認。',
+      },
+      {
+        en: 'The collaboration page itself has no order button. Ordering happens on the two 【予約】 product pages — Denim Coat gET0042-77-02 and Denim Shirt gET0043-77-02 — where the cart button is.',
+        ja: '特設サイトに注文ボタンはありません。注文は【予約】商品ページ2点（Denim Coat gET0042-77-02 / Denim Shirt gET0043-77-02）から。カートに入れるボタンはそちらにあります。',
+        'zh-CN': '特設页面上没有下单按钮。下单要去两个【予約】商品页：Denim Coat gET0042-77-02 和 Denim Shirt gET0043-77-02 ——「カートに入れる」在那里。',
+        'zh-TW': '特設頁面上沒有下單按鈕。下單要去兩個【予約】商品頁：Denim Coat gET0042-77-02 和 Denim Shirt gET0043-77-02 ——「カートに入れる」在那裡。',
+      },
+      {
+        en: 'The collaboration page is the 2022 one, reused: it still carries that run’s dates (order period ending 2022, delivery March 2022) next to this year’s. The dates above are the 2026 run.',
+        ja: '特設サイトは2022年のものを再利用しており、当時の日程（2022年3月上旬お届けなど）が今年の日程と並んで残っています。上記は2026年分の日程です。',
+        'zh-CN': '特設页面是 2022 年那版改的，页面上仍留着当年的日程（2022 年 3 月上旬到货等）与今年的并列。上面写的是 2026 年这轮的日程。',
+        'zh-TW': '特設頁面是 2022 年那版改的，頁面上仍留著當年的日程（2022 年 3 月上旬到貨等）與今年的並列。上面寫的是 2026 年這輪的日程。',
       },
     ],
     forwarders: ['WorldShopping', 'Buyee', 'tenso.com'],
