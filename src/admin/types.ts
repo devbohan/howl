@@ -28,13 +28,24 @@ export interface Fact<T> {
 export const unknownFact = <T>(): Fact<T> => ({ value: null, confidence: 'unknown' })
 
 /** Sources that a crawler cannot reach, which is why they need a human round. */
-export type SourceKind = 'instagram' | 'line' | 'discord' | 'x' | 'web' | 'store' | 'tip'
+export type SourceKind =
+  | 'instagram'
+  | 'line'
+  | 'mail'
+  | 'discord'
+  | 'x'
+  | 'app'
+  | 'web'
+  | 'store'
+  | 'tip'
 
 export const SOURCE_LABEL: Record<SourceKind, string> = {
   instagram: 'Instagram',
   line: 'LINE',
+  mail: 'メルマガ',
   discord: 'Discord',
   x: 'X',
+  app: 'App / 小程序',
   web: '官网 / 新闻',
   store: '线下店头',
   tip: '用户投稿',
@@ -44,9 +55,12 @@ export const SOURCE_LABEL: Record<SourceKind, string> = {
 export const WHY_MANUAL: Record<SourceKind, string> = {
   instagram: 'Story 24 小时过期，且需登录',
   line: '公式账号推送不公开，只能自己收',
+  mail: '推送到收件箱，没有可抓的页面',
   discord: '公告在服务器内，需入群',
-  x: '可抓，但限流且常被折叠',
-  web: '通常可抓 —— 优先交给自动抽取',
+  // Measured, not assumed: x.com/robots.txt is `User-agent: * / Disallow: /`.
+  x: 'robots.txt 全站禁止爬虫，只能自己看',
+  app: '只在 App / 小程序里，网页端没有',
+  web: '通常可抓 —— 先试 scripts/sources.json',
   store: '只在店头张贴，没有线上版本',
   tip: '来自用户，天然无法自动获取',
 }

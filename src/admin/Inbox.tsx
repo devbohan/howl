@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react'
-import { patrolStatus } from './logic'
+import { overdueLabel, patrolStatus } from './logic'
 import { newId } from './store'
 import { SOURCE_LABEL, WHY_MANUAL, type AdminState, type Lead, type SourceKind } from './types'
 
-const KINDS: SourceKind[] = ['instagram', 'line', 'discord', 'x', 'web', 'store', 'tip']
+const KINDS: SourceKind[] = ['instagram', 'line', 'mail', 'discord', 'x', 'app', 'web', 'store', 'tip']
 
 /**
  * Capture first, structure later. The cost of losing an Instagram Story is
@@ -217,13 +217,16 @@ export function Inbox({
         </p>
         <div className="mt-3 flex flex-col gap-2">
           {due.length === 0 && <p className="text-[12px] text-easy">全部都在周期内，没有逾期的。</p>}
-          {due.map(({ source, overdueHours }) => (
+          {due.map((status) => {
+            const { source } = status
+            return (
             <div key={source.id} className="flex items-center gap-2 rounded border border-line px-2.5 py-2">
               <div className="min-w-0 flex-1">
                 <div className="truncate text-[12px] font-medium text-fg">{source.name}</div>
                 <div className="text-[10px] text-faint">
-                  {SOURCE_LABEL[source.kind]} · 逾期 {Math.floor(overdueHours)} 小时
+                  {SOURCE_LABEL[source.kind]} · {overdueLabel(status)}
                 </div>
+                <div className="text-[10px] text-faint/80">{WHY_MANUAL[source.kind]}</div>
               </div>
               {source.url && (
                 <a
@@ -250,7 +253,8 @@ export function Inbox({
                 查过了
               </button>
             </div>
-          ))}
+            )
+          })}
         </div>
       </aside>
     </div>

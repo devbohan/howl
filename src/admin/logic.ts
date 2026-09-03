@@ -104,16 +104,33 @@ export interface PatrolStatus {
   /** Hours past due; negative means not due yet. */
   overdueHours: number
   due: boolean
+  /** Never been checked at all, which is different from being late. */
+  fresh: boolean
+}
+
+/**
+ * How overdue this is, in words. A never-checked source is "not checked yet",
+ * not "overdue by 496,779 hours" — the sort treats it as maximally late, but
+ * showing the epoch arithmetic makes the whole list look broken.
+ */
+export function overdueLabel(status: PatrolStatus): string {
+  if (status.fresh) return '还没查过'
+  if (!status.due) return '在周期内'
+  const hours = Math.floor(status.overdueHours)
+  if (hours < 1) return '刚到期'
+  if (hours < 48) return `逾期 ${hours} 小时`
+  return `逾期 ${Math.floor(hours / 24)} 天`
 }
 
 /** Patrol list ordered by how overdue each source is. */
 export function patrolStatus(sources: PatrolSource[], now: number): PatrolStatus[] {
   return sources
     .map((source) => {
-      const last = source.lastCheckedAt ? new Date(source.lastCheckedAt).getTime() : 0
+      const fresh = !source.lastCheckedAt
+      const last = fresh ? 0 : new Date(source.lastCheckedAt!).getTime()
       const elapsed = (now - last) / 3_600_000
       const overdueHours = elapsed - source.everyHours
-      return { source, overdueHours, due: overdueHours >= 0 }
+      return { source, overdueHours, due: overdueHours >= 0, fresh }
     })
     .sort((a, b) => b.overdueHours - a.overdueHours)
 }

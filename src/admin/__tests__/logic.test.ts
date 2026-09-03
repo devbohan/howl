@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { frictionOf, openQuestions, patrolStatus, readiness } from '../logic'
+import { frictionOf, openQuestions, overdueLabel, patrolStatus, readiness } from '../logic'
 import { emptyChannel, emptyDraft } from '../store'
 import type { ChannelProfile, Confidence, DropDraft, Fact } from '../types'
 import { unknownFact } from '../types'
@@ -171,5 +171,34 @@ describe('patrol', () => {
     )
     expect(list[0].source.id).toBe('never')
     expect(list[0].due).toBe(true)
+  })
+})
+
+describe('overdueLabel', () => {
+  const NOW = Date.UTC(2026, 0, 2, 12, 0, 0)
+  const ago = (hours: number) => new Date(NOW - hours * 3_600_000).toISOString()
+  const label = (source: Parameters<typeof patrolStatus>[0][number]) =>
+    overdueLabel(patrolStatus([source], NOW)[0])
+
+  it('says a never-checked source has not been checked, not that it is 56 years late', () => {
+    // The sort treats it as maximally overdue; showing the epoch arithmetic
+    // ("逾期 496779 小时") makes the whole list look broken.
+    expect(label({ id: 'a', name: 'A', kind: 'line', everyHours: 12 })).toBe('还没查过')
+  })
+
+  it('says it is within its cycle when it is not due', () => {
+    expect(label({ id: 'a', name: 'A', kind: 'line', everyHours: 12, lastCheckedAt: ago(2) })).toBe('在周期内')
+  })
+
+  it('counts hours while that is still readable', () => {
+    expect(label({ id: 'a', name: 'A', kind: 'line', everyHours: 12, lastCheckedAt: ago(20) })).toBe('逾期 8 小时')
+  })
+
+  it('switches to days once hours stop being useful', () => {
+    expect(label({ id: 'a', name: 'A', kind: 'line', everyHours: 12, lastCheckedAt: ago(24 * 5) })).toBe('逾期 4 天')
+  })
+
+  it('says just-due rather than "逾期 0 小时"', () => {
+    expect(label({ id: 'a', name: 'A', kind: 'line', everyHours: 12, lastCheckedAt: ago(12) })).toBe('刚到期')
   })
 })

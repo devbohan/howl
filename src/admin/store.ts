@@ -77,14 +77,28 @@ export function emptyDraft(overrides: Partial<DropDraft> = {}): DropDraft {
   }
 }
 
-/** The starting patrol list: the sources CLAUDE.md flags as un-crawlable. */
+/**
+ * The starting rounds. Every entry here is a source a program cannot read —
+ * either it refuses crawlers, expires, or arrives by push. Anything crawlable
+ * belongs in scripts/sources.json instead; seeding one here would spend the
+ * operator's time on work the ingester already does.
+ *
+ * These carry the thing a catalogue never does: the entry deadline. A product
+ * listing tells you a shipping month; only the announcement tells you that
+ * registration closes Thursday.
+ */
 function seed(): AdminState {
   const patrol: PatrolSource[] = [
     { id: newId('p'), name: 'Pokémon Center 公式 LINE', kind: 'line', everyHours: 12 },
     { id: newId('p'), name: 'atmos Instagram Story', kind: 'instagram', url: 'https://www.instagram.com/atmos_japan/', everyHours: 12 },
     { id: newId('p'), name: 'Supreme Japan Instagram', kind: 'instagram', everyHours: 24 },
-    { id: newId('p'), name: 'GSC / WF 公式 X', kind: 'x', url: 'https://x.com/', everyHours: 24 },
-    { id: newId('p'), name: 'POP MART 中国小程序公告', kind: 'web', everyHours: 24 },
+    { id: newId('p'), name: 'GSC / WF 公式 X', kind: 'x', url: 'https://x.com/goodsmile_jp', everyHours: 24 },
+    // P-Bandai's own catalogue refuses programs (「アクセス制限」), and a
+    // third-party scraper API of it returns shipping months, not deadlines.
+    // These two do carry 受注開始/締切, because announcing them is their job.
+    { id: newId('p'), name: 'プレミアムバンダイ 公式 X', kind: 'x', url: 'https://x.com/p_bandai', everyHours: 12 },
+    { id: newId('p'), name: 'プレミアムバンダイ メルマガ', kind: 'mail', everyHours: 24 },
+    { id: newId('p'), name: 'POP MART 微信小程序公告', kind: 'app', everyHours: 24 },
     { id: newId('p'), name: '球鞋情报 Discord', kind: 'discord', everyHours: 24 },
   ]
   return { ...EMPTY, patrol }

@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, renderHook } from '@testing-library/react'
+import { SOURCE_LABEL, WHY_MANUAL } from '../types'
 import {
   EMPTY,
   emptyChannel,
@@ -29,11 +30,25 @@ describe('loadState', () => {
     expect(state.drafts).toEqual([])
   })
 
-  it('seeds only sources that genuinely cannot be crawled', () => {
-    const kinds = new Set(loadState().patrol.map((p) => p.kind))
+  it('seeds only sources a program genuinely cannot read', () => {
     // A crawlable source belongs in scripts/sources.json, not on a human's
     // rounds — seeding one here would spend the operator's time for nothing.
-    expect(kinds.has('instagram') || kinds.has('line') || kinds.has('discord')).toBe(true)
+    const crawlable = loadState().patrol.filter((p) => p.kind === 'web')
+    expect(crawlable).toEqual([])
+  })
+
+  it('gives every seeded source a stated reason it has to be done by hand', () => {
+    for (const source of loadState().patrol) {
+      expect(WHY_MANUAL[source.kind], source.name).toBeTruthy()
+      expect(SOURCE_LABEL[source.kind], source.name).toBeTruthy()
+    }
+  })
+
+  it('covers the announcement channels that carry an entry deadline', () => {
+    // A catalogue gives a shipping month; only the announcement gives the
+    // deadline the countdown is built on — so those sources must be on the list.
+    const names = loadState().patrol.map((p) => p.name).join(' ')
+    expect(names).toContain('プレミアムバンダイ')
   })
 
   it('round-trips what was saved', () => {
