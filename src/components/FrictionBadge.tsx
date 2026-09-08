@@ -12,7 +12,7 @@ export function FrictionBadge({ friction, withDesc = false }: { friction: Fricti
   const { t } = useT()
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold tracking-wide ${STYLES[friction]}`}
+      className={`inline-flex items-center gap-1.5 rounded-sm border px-2.5 py-1 text-[11px] font-semibold tracking-wide ${STYLES[friction]}`}
     >
       <span className="h-1.5 w-1.5 rounded-full bg-current" />
       {t(FRICTION_KEY[friction])}

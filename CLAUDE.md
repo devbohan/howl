@@ -141,7 +141,9 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 ## 约定
 
 - **主题用 CSS 变量整套换，不写 `dark:` 变体**。浅色是基准调色板，`[data-theme="dark"]` 覆盖同一批变量，组件不用改就跟着变。[index.html](index.html) 里有首屏前脚本，刷新不闪。
-- **圆角统一在 `@theme` 里覆盖 Tailwind 的 `--radius-*` 令牌**，比默认小一档（`rounded-xl` 12px→8px、`rounded-2xl` 16px→10px、`rounded` 4px→3px）。不要在组件里逐个改类名。
+- **圆角基本为零，统一在 `@theme` 里覆盖 `--radius-*` 令牌**（`rounded-xl` → 2px、`rounded` → 0）。不要在组件里逐个改类名。理由有两条，第二条才是真的：这个产品是排程板；而**大圆角卡片配深色渐变是每一个生成式落地页的长相** —— 看起来像没有人做过任何决定。`rounded-full` 保留，所以状态圆点仍是圆的，其余面板/卡片/胶囊/按钮一律方角。
+- **Aceternity 的视觉语言是改写接入的，不是粘贴**（[src/components/ui/](src/components/ui/)）。原版写死 `white`/`bg-black` 只在深色下成立；我们用 `currentColor` 和 `--color-*` 画，一份定义两个主题都对。全部是装饰层，都不压在文字上，所以动不了任何对比度。
+- **效果一律不放进 React state 的每帧更新**：`GlowCard` 的光标位置和 `Tilt3D` 的角度都写进 CSS 自定义属性，否则卡片网格会每帧重渲染；`MovingBorder` 是纯 CSS 的 conic-gradient + mask，不占 rAF。
 - 商品图区与品类横幅**特意不跟随主题**，白天模式下仍是深色渐变——那是将来商品实拍图的占位，图片本来就不随主题变色。（门户页原来也是这样，简化后已改为扁平卡片。）
 - `--color-live-fg`：荧光绿做**填充**在两种主题都能用，但当**文字色**时白底看不清，所以浅色主题下文字用深橄榄绿。
 - **门户标题和正文同号（12px）**，靠 `.shimmer` 的扫光取代字号来获得存在感。三个实现要点：`w-fit` 让渐变盒子贴合文字（否则光带大半时间扫在空白列上）；`background-size: 600%` 让光带每个周期只有约 1/4 时间在字上，读起来是脉冲而不是持续晃动；用 `-webkit-text-fill-color: transparent` 而不是 `color: transparent`，这样 computed color 仍是真实前景色，axe 才量得出对比度。`prefers-reduced-motion` 下动画与渐变一并关掉。

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { GlowCard } from './ui/GlowCard'
+import { Tilt3D } from './ui/Tilt3D'
 import { Countdown, CountdownLabel } from './Countdown'
 import { FrictionBadge } from './FrictionBadge'
 import { useT } from '../lib/i18n'
@@ -16,8 +17,9 @@ export function DropCard({ drop, now, currency }: { drop: Drop; now: number; cur
   const offer = state.phase === 'in-stock' ? bestOffer(drop) : null
 
   return (
-    <GlowCard
-      as="div"
+    <Tilt3D>
+      <GlowCard
+        as="div"
       className={`group rounded-xl border border-line bg-surface transition hover:border-faint hover:-translate-y-0.5 ${
         dim ? 'opacity-55' : ''
       }`}
@@ -31,7 +33,7 @@ export function DropCard({ drop, now, currency }: { drop: Drop; now: number; cur
         <div className="absolute left-3 top-3 flex items-center gap-1.5">
           {(state.phase === 'open' || state.phase === 'in-stock') && !dim && (
             <span
-              className={`inline-flex items-center gap-1.5 rounded-full bg-black/65 px-2 py-1 text-[10px] font-bold uppercase tracking-wider backdrop-blur ${
+              className={`inline-flex items-center gap-1.5 rounded-sm bg-black/65 px-2 py-1 text-[10px] font-bold uppercase tracking-wider backdrop-blur ${
                 state.phase === 'open' ? 'text-live' : 'text-easy'
               }`}
             >
@@ -44,13 +46,13 @@ export function DropCard({ drop, now, currency }: { drop: Drop; now: number; cur
             </span>
           )}
           {drop.hot && (
-            <span className="rounded-full bg-black/65 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-hard backdrop-blur">
+            <span className="rounded-sm bg-black/65 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-hard backdrop-blur">
               HOT
             </span>
           )}
         </div>
 
-        <span className="absolute right-3 top-3 rounded-full bg-black/65 px-2 py-1 text-[10px] font-semibold tracking-wide text-white backdrop-blur">
+        <span className="absolute right-3 top-3 rounded-sm bg-black/65 px-2 py-1 text-[10px] font-semibold tracking-wide text-white backdrop-blur">
           {t(REGION_KEY[drop.region])}
         </span>
       </div>
@@ -90,7 +92,8 @@ export function DropCard({ drop, now, currency }: { drop: Drop; now: number; cur
           </div>
         </div>
       </div>
-      </Link>
-    </GlowCard>
+        </Link>
+      </GlowCard>
+    </Tilt3D>
   )
 }

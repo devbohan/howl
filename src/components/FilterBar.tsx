@@ -42,7 +42,7 @@ function Chip({
     <button
       type="button"
       onClick={onClick}
-      className={`whitespace-nowrap rounded-full border px-3 py-1.5 text-[12px] font-medium transition ${
+      className={`whitespace-nowrap rounded-sm border px-3 py-1.5 text-[12px] font-medium transition ${
         active
           ? 'border-accent bg-accent text-accent-ink'
           : 'border-line bg-surface text-muted hover:border-faint hover:text-fg'
@@ -114,7 +114,7 @@ export function FilterBar({
           <span className={`text-[10px] transition-transform ${open ? 'rotate-90' : ''}`}>▶</span>
           {t('filterToggle')}
           {active > 0 && (
-            <span className="rounded-full bg-accent px-1.5 py-0.5 font-mono text-[10px] font-bold text-accent-ink tabular-nums">
+            <span className="rounded-sm bg-accent px-1.5 py-0.5 font-mono text-[10px] font-bold text-accent-ink tabular-nums">
               {active}
             </span>
           )}

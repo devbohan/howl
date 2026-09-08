@@ -37,16 +37,23 @@
   --color-medium: #9d5e00;
   --color-hard: #cd2342;
 
-  /* Corners one step tighter than the Tailwind defaults — the product reads
-   * as a schedule board, and sharper edges suit that better than pill shapes. */
-  --radius: 0.1875rem;
-  --radius-xs: 0.0625rem;
-  --radius-sm: 0.1875rem;
-  --radius-md: 0.25rem;
-  --radius-lg: 0.375rem;
-  --radius-xl: 0.5rem;
-  --radius-2xl: 0.625rem;
-  --radius-3xl: 1rem;
+  /*
+   * Corners are effectively square. Two reasons, and the second one is the
+   * real one: this product is a schedule board, and generously rounded cards
+   * on a dark gradient is the house style of every generated landing page —
+   * the fastest way to look like nobody decided anything.
+   *
+   * `rounded-full` is untouched, so status dots stay circular. Everything that
+   * is a panel, a card, a chip or a button is square.
+   */
+  --radius: 0px;
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 1px;
+  --radius-lg: 1px;
+  --radius-xl: 2px;
+  --radius-2xl: 2px;
+  --radius-3xl: 3px;
 
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', 'PingFang SC', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
@@ -291,4 +298,55 @@ body {
   .animate-spotlight { animation: none; opacity: 1; }
   .moving-border::before { animation: none; }
   .glow-card::before { display: none; }
+}
+
+/* Meteor streaks: one CSS animation, no JS per streak. */
+@keyframes meteor-fall {
+  0% { transform: rotate(215deg) translateX(0); opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: rotate(215deg) translateX(-680px); opacity: 0; }
+}
+
+.meteor {
+  animation-name: meteor-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* The trailing tail. Drawn with a pseudo-element so each streak is one node. */
+.meteor::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46px;
+  height: 1px;
+  background: linear-gradient(90deg, color-mix(in oklab, var(--color-fg) 55%, transparent), transparent);
+}
+
+/*
+ * 3D tilt. Perspective lives on the scene so the card rotates in depth rather
+ * than skewing flat; the angles come from custom properties the component
+ * writes on mousemove.
+ */
+.tilt-3d-scene {
+  perspective: 900px;
+}
+
+.tilt-3d {
+  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 300ms ease;
+  will-change: transform;
+}
+
+.tilt-3d.is-tilting {
+  /* Follow the cursor closely while lit, then ease back on leave. */
+  transition: transform 90ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meteor { display: none; }
+  .tilt-3d { transform: none; transition: none; }
+  .lamp-cone { opacity: 0.5; }
 }
