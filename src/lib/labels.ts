@@ -71,3 +71,30 @@ export const PLATFORM_LABEL: Record<Platform, string> = {
   note: 'note',
   web: 'Web',
 }
+
+export const CATEGORY_BLURB_KEY: Record<Category, Key> = {
+  sneakers: 'catSneakersBlurb',
+  tcg: 'catTcgBlurb',
+  figure: 'catFigureBlurb',
+  arttoy: 'catArttoyBlurb',
+  goods: 'catGoodsBlurb',
+  hardware: 'catHardwareBlurb',
+}
+
+/**
+ * The blurred field behind a category tile.
+ *
+ * Generated rather than photographic, on purpose. At the blur radius this runs
+ * at, a stock photo is a colour field with some grain — so a mesh gradient is
+ * visually the same thing without a network request, a licence to track, or a
+ * layout shift. Swapping in real photography later means changing only these
+ * values.
+ */
+export const CATEGORY_FIELD: Record<Category, string[]> = {
+  sneakers: ['#2f3a1c', '#0f1408', '#4a5a24'],
+  tcg: ['#4a1f22', '#160a0b', '#6b2b2f'],
+  figure: ['#153f3a', '#07120f', '#1f5a52'],
+  arttoy: ['#3a1f52', '#12081b', '#54306f'],
+  goods: ['#1b3560', '#080d18', '#284a80'],
+  hardware: ['#252d38', '#0a0d11', '#39424f'],
+}

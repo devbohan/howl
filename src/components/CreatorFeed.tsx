@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { CATEGORY_MEDIA } from '../data/creators'
+import { CATEGORY_MEDIA } from '../data/live'
 import { HeatMark } from './icons'
 import { formatCount, rankFeed } from '../lib/feed'
 import { formatRelative } from '../lib/format'

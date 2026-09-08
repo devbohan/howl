@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
 import { Logo } from '../components/Logo'
-import { DROPS } from '../data/mock'
+import { DROPS } from '../data/live'
 import { useT } from '../lib/i18n'
-import { CATEGORIES, CATEGORY_KEY } from '../lib/labels'
+import { NewsTicker } from '../components/NewsTicker'
+import { CATEGORIES, CATEGORY_BLURB_KEY, CATEGORY_FIELD, CATEGORY_KEY } from '../lib/labels'
 import { dropState, isAvailableNow } from '../lib/schedule'
 import { useHead } from '../lib/useHead'
 import { portalHead } from '../lib/seo'
@@ -40,41 +41,66 @@ function Stat({
 }
 
 /**
- * One flat row per category, carrying the same three numbers as the header —
- * tracked / live / buyable — so you can tell which genre is worth opening.
+ * A category plate. Bigger than a row because this is the only page where the
+ * reader is choosing rather than working, and a name alone does not tell an
+ * outsider what a category involves — the blurb is what makes "Trading Cards"
+ * mean "pre-order lotteries you probably cannot enter from abroad".
+ *
+ * The field behind it is a generated mesh rather than a photograph: at this
+ * blur radius a stock photo is a colour field anyway, and generating it costs
+ * no request, no licence and no layout shift.
  */
-function CategoryRow({ category, now }: { category: Category; now: number }) {
+function CategoryPlate({ category, now }: { category: Category; now: number }) {
   const { t, locale } = useT()
   const items = DROPS.filter((d) => d.category === category)
   const live = items.filter((d) => dropState(d, now).phase === 'open').length
   const inStock = items.filter(isAvailableNow).length
+  const [a, b, c] = CATEGORY_FIELD[category]
 
   return (
-    <Link
-      to={`/${locale}/c/${category}`}
-      data-category={category}
-      // min-w-0 lets the row shrink inside the grid; without it the fixed-width
-      // stat columns push the whole card past a narrow viewport.
-      className="flex min-w-0 items-center gap-3 rounded-lg border border-line bg-surface px-4 py-3.5 transition hover:border-accent"
-    >
-      <span className="min-w-0 flex-1 truncate text-[14px] font-semibold text-fg">
-        {t(CATEGORY_KEY[category])}
-      </span>
+    <div className="relative overflow-hidden border border-line bg-surface">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-45 blur-2xl"
+        aria-hidden="true"
+        style={{
+          background: `radial-gradient(60% 70% at 18% 22%, ${a} 0%, transparent 70%),
+                       radial-gradient(55% 65% at 82% 30%, ${c} 0%, transparent 68%),
+                       radial-gradient(70% 80% at 50% 90%, ${b} 0%, transparent 72%)`,
+        }}
+      />
 
-      <div className="flex shrink-0 items-center gap-2 font-mono text-[12px]">
-        <Stat value={items.length} className="text-muted" label={t('portalTracked')} name="tracked" />
-        <span className="flex items-center gap-1.5">
-          <span
-            className={`h-1.5 w-1.5 rounded-full ${live > 0 ? 'live-dot bg-live-fg' : 'bg-line'}`}
-          />
-          <Stat value={live} className="text-live-fg" label={t('heroLive')} name="live" />
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className={`h-1.5 w-1.5 rounded-full ${inStock > 0 ? 'bg-easy' : 'bg-line'}`} />
-          <Stat value={inStock} className="text-easy" label={t('cdInStock')} name="stock" />
-        </span>
+      <Link
+        to={`/${locale}/c/${category}`}
+        data-category={category}
+        className="relative block min-w-0 p-5 transition hover:bg-fg/[0.03] sm:p-6"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <h2 className="text-[17px] font-bold tracking-tight text-fg sm:text-[19px]">
+            {t(CATEGORY_KEY[category])}
+          </h2>
+          <div className="flex shrink-0 items-center gap-2 font-mono text-[12px]">
+            <Stat value={items.length} className="text-muted" label={t('portalTracked')} name="tracked" />
+            <span className="flex items-center gap-1.5">
+              <span className={`h-1.5 w-1.5 rounded-full ${live > 0 ? 'live-dot bg-live-fg' : 'bg-line'}`} />
+              <Stat value={live} className="text-live-fg" label={t('heroLive')} name="live" />
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className={`h-1.5 w-1.5 rounded-full ${inStock > 0 ? 'bg-easy' : 'bg-line'}`} />
+              <Stat value={inStock} className="text-easy" label={t('cdInStock')} name="stock" />
+            </span>
+          </div>
+        </div>
+
+        <p className="mt-2 max-w-prose text-[12.5px] leading-relaxed text-muted">
+          {t(CATEGORY_BLURB_KEY[category])}
+        </p>
+      </Link>
+
+      {/* The same ticker as the category page — it hides itself when empty. */}
+      <div className="relative border-t border-line-soft">
+        <NewsTicker category={category} compact />
       </div>
-    </Link>
+    </div>
   )
 }
 
@@ -86,7 +112,7 @@ export function PortalPage() {
   const inStock = DROPS.filter(isAvailableNow).length
 
   return (
-    <div className="mx-auto max-w-3xl px-4">
+    <div className="mx-auto max-w-5xl px-4">
       {/*
         Same treatment as the VIP panel: a bordered plate with the mark itself
         watermarked into the corner. That mark is the one piece of this design
@@ -142,9 +168,9 @@ export function PortalPage() {
         </div>
       )}
 
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className="grid items-start gap-3 lg:grid-cols-2">
         {CATEGORIES.map((category) => (
-          <CategoryRow key={category} category={category} now={now} />
+          <CategoryPlate key={category} category={category} now={now} />
         ))}
       </div>
     </div>

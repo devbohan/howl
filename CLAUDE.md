@@ -123,6 +123,18 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 - 没登记过的品牌**被标记而不是静默放行** —— 有测试把整个目录卡在这条规则上
 - **这份名单是编辑判断，会过时**，预期由你持续修改。测试能守住「每条都说得出看点」，但没有测试能替你判断什么现在火
 
+## Demo 数据：只在 `npm run dev:demo` 下存在
+
+想看排版有内容时长什么样，用 `npm run dev:demo`。[src/data/demo/](src/data/demo/) 里的假数据**结构上到不了线上**：
+
+- `__DEMO__` 是 vite.config 里的构建期常量，只有 `VITE_DEMO=1` 才为真
+- 原始数据集（mock/news/wants/creators）保持纯净 —— **vite.config 要在 Node 里 import 它们生成 sitemap**，所以那些文件不能碰构建期全局量。合并发生在 [live.ts](src/data/live.ts)，只有应用代码读它
+- 因此 `live.ts` 里的守卫不需要 `typeof`。**这点是关键**：esbuild 刻意不替换 `typeof x` 里的标识符，加了 `typeof` 分支就永远折不掉
+- demo 模块里每个构造调用都标了 `/*#__PURE__*/` —— 否则 Rollup 认为顶层函数调用可能有副作用，整个模块会被保留
+- **最后一道是验证产物而不是相信编译器**：`check:launch` 会读 `dist/assets/*.js`，发现 demo 标记就失败
+
+一句话：R1.9 说占位数据不能上线，而「记得删」这条运营纪律**已经失败过一次**。构建开关不会被忘记。
+
 ## ⚠️ 数据现状：全部为空，等待录入
 
 四份数据集**全部清空**了，这是上线前的正确状态：
@@ -280,7 +292,7 @@ score = 0.6 · norm(log1p(站内热度)) + 0.4 · norm(log1p(站外热度))
 | 命令 | 内容 |
 | :--- | :--- |
 | `npm run typecheck` | 应用/测试/工具三套 tsconfig 分别检查 |
-| `npm test` | Vitest 542 个单元与组件测试 |
+| `npm test` | Vitest 545 个单元与组件测试 |
 | `npm run test:coverage` | 同上 + 覆盖率，阈值 80%（当前 97% 语句 / 91% 分支） |
 | `npm run test:e2e` | Playwright 154 个用例，chromium + Pixel 5 两套（含关掉 JS 的爬虫视角） |
 | `npm run test:e2e:ui` | Playwright UI 模式，调试用 |

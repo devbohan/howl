@@ -65,7 +65,7 @@ describe('WantsPage', () => {
   it('invites a first request instead of showing a bare empty list', async () => {
     const user = userEvent.setup()
     renderApp(<WantsPage />)
-    await user.click(within(filters()).getByRole('button', { name: 'Sneakers & Apparel' }))
+    await user.click(within(filters()).getByRole('button', { name: 'Sneakers' }))
     expect(screen.getByText('Nothing requested yet. Be the first.')).toBeInTheDocument()
   })
 

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { CategoryPage } from '../CategoryPage'
-import { DROPS } from '../../data/mock'
+import { DROPS } from '../../data/live'
 import { renderApp } from '../../test/render'
 
 const show = (category: string, locale: 'en' | 'ja' = 'en') =>
@@ -23,7 +23,7 @@ describe('CategoryPage', () => {
 
   it('heads the page with the category name and a back link to the portal', () => {
     const { container } = show('sneakers')
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Sneakers & Apparel')
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Sneakers')
     expect(container.querySelector('a')).toHaveAttribute('href', '/en')
   })
 
@@ -58,7 +58,7 @@ describe('CategoryPage', () => {
 
   it('translates', () => {
     show('tcg', 'ja')
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('トレーディングカード')
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('トレカ')
   })
 })
 

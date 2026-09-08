@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { WANTS } from '../data/wants'
+import { WANTS } from '../data/live'
 import { useT } from '../lib/i18n'
 import { CATEGORIES, CATEGORY_KEY } from '../lib/labels'
 import { sortWants, findDuplicate, validateWant, type Want, type WantSort } from '../lib/wants'

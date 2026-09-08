@@ -1,10 +1,19 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["e2e", ".storybook", "playwright.config.ts", "vite.config.ts"],
-  "exclude": []
+  "include": [
+    "e2e",
+    ".storybook",
+    "playwright.config.ts",
+    "vite.config.ts",
+    "src/vite-env.d.ts"
+  ],
+  "exclude": [],
+  "_comment": "vite.config.ts imports src/data, so this program compiles those files too \u2014 it needs the Vite env declarations or import.meta.env is untyped there."
 }

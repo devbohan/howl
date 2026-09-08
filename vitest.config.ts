@@ -2,6 +2,8 @@ import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
+  // Tests run against real data; the demo overlay is off unless a test says so.
+  define: { __DEMO__: JSON.stringify(false) },
   plugins: [react()],
   test: {
     environment: 'jsdom',

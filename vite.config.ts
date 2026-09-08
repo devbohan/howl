@@ -216,6 +216,9 @@ ${LOCALES.map((l) => `- ${SITE_URL}/${l}`).join('\n')}
 }
 
 export default defineConfig({
+  // Replaced statically so the demo overlay folds away in a production build.
+  // Only `npm run dev:demo` sets VITE_DEMO; nothing else does.
+  define: { __DEMO__: JSON.stringify(process.env.VITE_DEMO === '1') },
   plugins: [react(), tailwindcss(), seoAssets()],
   build: {
     rollupOptions: {

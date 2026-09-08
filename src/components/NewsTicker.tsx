@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { NEWS } from '../data/news'
+import { NEWS } from '../data/live'
 import { HeatMark } from './icons'
 import { OutboundLink } from './OutboundLink'
 import { formatCount, rankFeed } from '../lib/feed'
@@ -84,7 +84,7 @@ function Row({ item, now, hot }: { item: NewsItem; now: number; hot: boolean }) 
   return <span className={className}>{body}</span>
 }
 
-export function NewsTicker({ category }: { category: Category }) {
+export function NewsTicker({ category, compact = false }: { category: Category; compact?: boolean }) {
   const { t, locale } = useT()
   // Minute granularity is enough for "12 min ago" — no need to re-render at 1Hz.
   const now = useNow(30_000)
@@ -99,8 +99,8 @@ export function NewsTicker({ category }: { category: Category }) {
   if (ranked.length === 0) return null
 
   return (
-    <div className="overflow-hidden rounded-lg border border-line bg-surface">
-      <div className="flex items-center gap-2 border-b border-line px-3.5 py-2">
+    <div className={compact ? 'overflow-hidden' : 'overflow-hidden border border-line bg-surface'}>
+      <div className={`flex items-center gap-2 px-3.5 py-2 ${compact ? '' : 'border-b border-line'}`}>
         <span className="live-dot h-1.5 w-1.5 rounded-full bg-hard" />
         <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-fg">{t('newsLabel')}</span>
         <span className="flex-1 font-mono text-[11px] text-faint tabular-nums">{ranked.length}</span>

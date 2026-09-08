@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { screen, within } from '@testing-library/react'
 import { PortalPage } from '../PortalPage'
-import { DROPS } from '../../data/mock'
+import { DROPS } from '../../data/live'
 import { CATEGORIES } from '../../lib/labels'
 import { dropState, isAvailableNow } from '../../lib/schedule'
 import { renderApp } from '../../test/render'
@@ -68,7 +68,7 @@ describe('PortalPage', () => {
 
   it('translates category names', () => {
     renderApp(<PortalPage />, { locale: 'ja' })
-    expect(screen.getByText('スニーカー・アパレル')).toBeInTheDocument()
+    expect(screen.getByText('スニーカー')).toBeInTheDocument()
   })
 })
 

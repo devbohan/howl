@@ -1,12 +1,14 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 
 /**
  * Continuous vertical scroll driven by scrollTop rather than a CSS transform,
  * so the panel is a real scroll container: it gets a scrollbar, and the wheel,
  * a drag on the bar, and keyboard scrolling all work mid-animation.
  *
- * `children` is rendered twice — the clone is aria-hidden and exists only so
- * resetting scrollTop by half the height loops without a visible seam.
+ * `children` is rendered twice so resetting scrollTop by half the height loops
+ * without a visible seam — but only when there is actually more content than
+ * fits. With two rows in a panel that holds three, the duplicate is not hiding
+ * a seam, it is just the same headline printed twice, which reads as a bug.
  */
 export function VerticalMarquee({
   children,
@@ -22,7 +24,9 @@ export function VerticalMarquee({
   className?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
+  const firstCopy = useRef<HTMLDivElement>(null)
   const paused = useRef(false)
+
   /**
    * Read synchronously on the first render: deciding this in an effect would
    * mount the clone and run the loop for a frame before switching off, which is
@@ -32,6 +36,7 @@ export function VerticalMarquee({
   const [animate, setAnimate] = useState(
     () => typeof window === 'undefined' || !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   )
+  const [overflows, setOverflows] = useState(false)
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -41,9 +46,25 @@ export function VerticalMarquee({
     return () => mq.removeEventListener('change', apply)
   }, [])
 
+  // Re-measured on resize: the same panel overflows at one width and not another.
+  useEffect(() => {
+    const viewport = ref.current
+    const copy = firstCopy.current
+    if (!viewport || !copy) return
+
+    const measure = () => setOverflows(copy.scrollHeight > viewport.clientHeight + 1)
+    measure()
+
+    if (typeof ResizeObserver === 'undefined') return
+    const observer = new ResizeObserver(measure)
+    observer.observe(copy)
+    observer.observe(viewport)
+    return () => observer.disconnect()
+  }, [children])
+
   useEffect(() => {
     const el = ref.current
-    if (!el || !animate) return
+    if (!el || !animate || !overflows) return
 
     let raf = 0
     let last = performance.now()
@@ -69,7 +90,7 @@ export function VerticalMarquee({
 
     raf = requestAnimationFrame(step)
     return () => cancelAnimationFrame(raf)
-  }, [animate, speed])
+  }, [animate, speed, overflows])
 
   const hold = () => {
     paused.current = true
@@ -80,27 +101,27 @@ export function VerticalMarquee({
 
   return (
     <div className="relative">
-      {/*
-        tabIndex on a scrollable region: without it a keyboard user cannot
-        scroll the panel at all when its rows happen to contain no links, and
-        the rows are only sometimes links. Focusing it also pauses the scroll,
-        which is what someone reading it wants anyway.
-      */}
       <div
         ref={ref}
-        tabIndex={0}
         role="region"
         aria-label={label}
+        // Focusable so a keyboard user can scroll a panel whose rows are not
+        // all links; a scroll container with no focusable child is otherwise
+        // unreachable without a pointer.
+        tabIndex={0}
         className={`ticker-viewport overflow-y-auto ${className ?? ''}`}
+        style={{ '--ticker-speed': `${speed}` } as CSSProperties}
         onPointerEnter={hold}
         onPointerLeave={release}
         onFocusCapture={hold}
         onBlurCapture={release}
       >
-        <div className="flex flex-col">{children}</div>
-        {animate && (
-          // inert as well as aria-hidden: without it the duplicated links stay
-          // in the tab order, so keyboard users walk the same rows twice.
+        <div ref={firstCopy} className="flex flex-col">
+          {children}
+        </div>
+        {animate && overflows && (
+          // The clone exists only to make the loop seamless — hide it from
+          // readers, and keep it out of the tab order (aria-hidden does not).
           <div className="flex flex-col" aria-hidden inert>
             {children}
           </div>

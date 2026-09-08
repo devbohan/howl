@@ -53,6 +53,31 @@ for (const [path, name, label] of DATASETS) {
   }
 }
 
+/*
+ * Verify the artifact, not the transform. The demo overlay is supposed to fold
+ * away in a production build, but "supposed to" is what the placeholder
+ * comments said too — so this reads the built files and fails if any demo
+ * marker survived.
+ */
+const { readdir } = await import('node:fs/promises')
+try {
+  const assets = resolve('dist/assets')
+  const files = await readdir(assets)
+  const leaked = []
+  for (const file of files.filter((f) => f.endsWith('.js'))) {
+    const code = await readFile(resolve(assets, file), 'utf8')
+    if (/demo-sneaker-raffle|DEMO ·|DEMO_DROPS/.test(code)) leaked.push(file)
+  }
+  if (leaked.length > 0) {
+    say('✗', `构建产物里有 demo 数据：${leaked.join(', ')} —— 用 npm run build 重建，别用 dev:demo 的产物`)
+    problems += 1
+  } else {
+    say('✓', '构建产物：无 demo 数据')
+  }
+} catch {
+  say('·', '构建产物：还没构建（先跑 npm run build:static）')
+}
+
 // The site-level origin has to be real before anything is crawled.
 const seo = await readFile(resolve('src/lib/seo.ts'), 'utf8')
 const origin = seo.match(/VITE_SITE_URL \?\? '([^']+)'/)?.[1]

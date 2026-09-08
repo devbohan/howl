@@ -22,7 +22,8 @@
     "build:bookmarklet": "node scripts/build-bookmarklet.mjs",
     "check:launch": "node scripts/check-launch.mjs",
     "dev:api": "wrangler pages dev --port 8788",
-    "db:local": "for db in howl-clicks howl-wants howl-demand; do wrangler d1 execute $db --local --file=schema.sql; done"
+    "db:local": "for db in howl-clicks howl-wants howl-demand; do wrangler d1 execute $db --local --file=schema.sql; done",
+    "dev:demo": "VITE_DEMO=1 vite"
   },
   "dependencies": {
     "clsx": "^2.1.1",

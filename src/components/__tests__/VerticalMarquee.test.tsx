@@ -3,8 +3,15 @@ import { act, fireEvent, render, screen } from '@testing-library/react'
 import { VerticalMarquee } from '../VerticalMarquee'
 import { preferReducedMotion } from '../../test/setup'
 
+/** jsdom reports zero for both, so overflow has to be stated explicitly. */
+function withOverflow() {
+  vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(400)
+  vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(120)
+}
+
 describe('VerticalMarquee', () => {
   it('renders the content twice so the loop has no seam', () => {
+    withOverflow()
     render(
       <VerticalMarquee label="test">
         <span>row</span>
@@ -14,6 +21,7 @@ describe('VerticalMarquee', () => {
   })
 
   it('hides the duplicate from assistive tech', () => {
+    withOverflow()
     const { container } = render(
       <VerticalMarquee label="test">
         <span>row</span>
@@ -184,5 +192,39 @@ describe('VerticalMarquee keyboard access', () => {
     expect(viewport).toHaveAttribute('tabindex', '0')
     expect(viewport).toHaveAttribute('role', 'region')
     expect(viewport).toHaveAttribute('aria-label', '快讯')
+  })
+})
+
+describe('when the content already fits', () => {
+  it('renders no duplicate, because the seam it hides would be visible instead', () => {
+    // Two rows in a panel that holds three: the clone is not covering a loop,
+    // it is just the same headline printed twice.
+    vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(40)
+    vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(200)
+
+    render(
+      <VerticalMarquee label="fits">
+        <span>row</span>
+      </VerticalMarquee>,
+    )
+    expect(screen.getAllByText('row')).toHaveLength(1)
+  })
+
+  it('does not scroll a panel that has nothing to scroll', () => {
+    vi.useFakeTimers()
+    vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(40)
+    vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(200)
+
+    const { container } = render(
+      <VerticalMarquee label="fits" speed={200}>
+        <span>row</span>
+      </VerticalMarquee>,
+    )
+    const viewport = container.querySelector('.ticker-viewport') as HTMLElement
+    act(() => {
+      vi.advanceTimersByTime(1000)
+    })
+    expect(viewport.scrollTop).toBe(0)
+    vi.useRealTimers()
   })
 })

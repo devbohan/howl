@@ -22,7 +22,7 @@ test('switching language keeps you on the same page', async ({ page }) => {
   await page.goto('/en/c/tcg')
   await switchLocale(page, LABEL.ja, 'ja')
   await expect(page).toHaveURL('/ja/c/tcg')
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('トレーディングカード')
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('トレカ')
 })
 
 test('switching language on a drop page keeps the drop', async ({ page, request }) => {
@@ -50,7 +50,7 @@ test('an unknown locale redirects instead of 404ing', async ({ page }) => {
 test('no locale leaves untranslated English on the portal', async ({ page }) => {
   await page.goto('/ja')
   const rowText = await portalRows(page).evaluateAll((els) => els.map((e) => e.textContent ?? '').join(' '))
-  expect(rowText).not.toContain('Sneakers & Apparel')
+  expect(rowText).not.toContain('Sneakers')
   expect(rowText).toContain('スニーカー')
 })
 
