@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { GlowCard } from './ui/GlowCard'
 import { Countdown, CountdownLabel } from './Countdown'
 import { FrictionBadge } from './FrictionBadge'
 import { useT } from '../lib/i18n'
@@ -15,11 +16,13 @@ export function DropCard({ drop, now, currency }: { drop: Drop; now: number; cur
   const offer = state.phase === 'in-stock' ? bestOffer(drop) : null
 
   return (
-    <Link
-      to={`/${locale}/drop/${drop.slug}`}
-      className={`group relative flex flex-col overflow-hidden rounded-xl border border-line bg-surface transition
-        hover:border-line/0 hover:ring-1 hover:ring-accent/50 hover:-translate-y-0.5 ${dim ? 'opacity-55' : ''}`}
+    <GlowCard
+      as="div"
+      className={`group rounded-xl border border-line bg-surface transition hover:border-faint hover:-translate-y-0.5 ${
+        dim ? 'opacity-55' : ''
+      }`}
     >
+      <Link to={`/${locale}/drop/${drop.slug}`} className="flex flex-col">
       {/* Product photography goes here; until then, just the gradient. */}
       <div
         className="relative h-36 overflow-hidden"
@@ -87,6 +90,7 @@ export function DropCard({ drop, now, currency }: { drop: Drop; now: number; cur
           </div>
         </div>
       </div>
-    </Link>
+      </Link>
+    </GlowCard>
   )
 }

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { Aurora, Spotlight } from '../components/ui/Spotlight'
 import { DROPS } from '../data/mock'
 import { useT } from '../lib/i18n'
 import { CATEGORIES, CATEGORY_KEY } from '../lib/labels'
@@ -86,7 +87,16 @@ export function PortalPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4">
-      <section className="pt-10 pb-6 md:pt-12 md:pb-7">
+      {/*
+        The wash sits behind the hero and never over the copy — contrast is
+        still decided by the page background, which is what keeps the axe pass
+        green in both themes.
+      */}
+      {/* overflow-hidden is load-bearing: the spotlight is wider than the
+          viewport by design, and without clipping it widens the document. */}
+      <section className="relative overflow-hidden pt-10 pb-6 md:pt-12 md:pb-7">
+        <Aurora className="-z-10" />
+        <Spotlight className="-top-40 left-0 -z-10 text-fg md:-top-20 md:left-60" />
         {/*
           Deliberately the same size as the rest of the page. The headline gets
           its weight from the shimmer travelling across it, not from scale —

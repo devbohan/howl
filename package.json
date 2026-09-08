@@ -25,9 +25,12 @@
     "db:local": "for db in howl-clicks howl-wants howl-demand; do wrangler d1 execute $db --local --file=schema.sql; done"
   },
   "dependencies": {
+    "clsx": "^2.1.1",
+    "motion": "^13.2.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.6.0"
+    "react-router-dom": "^7.6.0",
+    "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",

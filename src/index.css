@@ -186,3 +186,109 @@ body {
     -webkit-text-fill-color: var(--color-fg);
   }
 }
+
+/*
+ * ── Aceternity-derived effects ──────────────────────────────────────────────
+ *
+ * These carry Aceternity's visual language but are wired to our own tokens, so
+ * one definition works in both themes. Every one of them is decorative: none
+ * sits above text, so none of them can move a contrast ratio.
+ */
+
+@keyframes spotlight {
+  0% { opacity: 0; transform: translate(-72%, -62%) scale(0.5); }
+  100% { opacity: 1; transform: translate(-50%, -40%) scale(1); }
+}
+
+.animate-spotlight {
+  animation: spotlight 2s ease 0.75s 1 forwards;
+}
+
+/* Aurora: a slow wash behind a hero. Kept faint because it sits under text. */
+.aurora {
+  background:
+    radial-gradient(38% 44% at 22% 32%, var(--color-live) 0%, transparent 62%),
+    radial-gradient(34% 40% at 74% 28%, var(--color-fg) 0%, transparent 58%),
+    radial-gradient(42% 46% at 52% 78%, var(--color-live-fg) 0%, transparent 64%);
+  filter: blur(58px);
+}
+
+/*
+ * Card spotlight. The position comes from custom properties the component
+ * writes on mousemove, so the highlight follows the cursor without React
+ * re-rendering a grid of cards every frame.
+ */
+.glow-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 220ms ease;
+  background: radial-gradient(
+    260px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    color-mix(in oklab, var(--color-fg) 12%, transparent),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.glow-card.is-lit::before {
+  opacity: 1;
+}
+
+/* Content has to sit above the wash, or the wash would tint the text. */
+.glow-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/*
+ * Moving border: a conic gradient rotating behind the element, masked to the
+ * edge. Pure CSS, so a page full of them still costs nothing per frame.
+ */
+@property --border-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes border-spin {
+  to { --border-angle: 360deg; }
+}
+
+.moving-border {
+  --border-width: 1px;
+  position: relative;
+  isolation: isolate;
+}
+
+.moving-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: var(--border-width);
+  background: conic-gradient(
+    from var(--border-angle),
+    transparent 0%,
+    var(--color-fg) 12%,
+    transparent 28%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.moving-border.is-moving::before {
+  animation: border-spin 4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-spotlight { animation: none; opacity: 1; }
+  .moving-border::before { animation: none; }
+  .glow-card::before { display: none; }
+}

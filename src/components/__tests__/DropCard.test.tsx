@@ -62,7 +62,17 @@ describe('DropCard', () => {
   it('dims an ended drop', () => {
     const ended = drop({ opensAt: at(-9_000_000), closesAt: at(-1000) })
     const { container } = renderApp(<DropCard drop={ended} now={NOW} currency="JPY" />)
-    expect(container.querySelector('a')?.className).toContain('opacity-55')
+    // Dimming lives on the card shell, which wraps the link.
+    expect(container.querySelector('.glow-card')?.className).toContain('opacity-55')
+  })
+
+  it('keeps the decorative glow out of the accessibility tree and below the text', () => {
+    const { container } = renderApp(<DropCard drop={drop()} now={NOW} currency="JPY" />)
+    const card = container.querySelector('.glow-card')!
+    // The wash is a ::before on the shell — never an element that could be read
+    // out, and never above the copy it sits behind.
+    expect(card.querySelector('[aria-hidden="true"]')).toBeNull()
+    expect(card.className).toContain('overflow-hidden')
   })
 
   it('swaps in the best resale offer and its premium once in stock', () => {
