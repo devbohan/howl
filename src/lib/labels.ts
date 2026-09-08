@@ -84,6 +84,9 @@ export const CATEGORY_BLURB_KEY: Record<Category, Key> = {
 /**
  * The blurred field behind a category tile.
  *
+ * Colours are chosen at mid luminance, not near-black: a dark colour behind a
+ * dark panel adds murk rather than identity, which is what the first pass did.
+ *
  * Generated rather than photographic, on purpose. At the blur radius this runs
  * at, a stock photo is a colour field with some grain — so a mesh gradient is
  * visually the same thing without a network request, a licence to track, or a
@@ -91,10 +94,10 @@ export const CATEGORY_BLURB_KEY: Record<Category, Key> = {
  * values.
  */
 export const CATEGORY_FIELD: Record<Category, string[]> = {
-  sneakers: ['#2f3a1c', '#0f1408', '#4a5a24'],
-  tcg: ['#4a1f22', '#160a0b', '#6b2b2f'],
-  figure: ['#153f3a', '#07120f', '#1f5a52'],
-  arttoy: ['#3a1f52', '#12081b', '#54306f'],
-  goods: ['#1b3560', '#080d18', '#284a80'],
-  hardware: ['#252d38', '#0a0d11', '#39424f'],
+  sneakers: ['#6f8a2e', '#2b3512', '#9ec23f'],
+  tcg: ['#a8353c', '#3d1416', '#d4535a'],
+  figure: ['#1f7f74', '#0b2a26', '#34b3a3'],
+  arttoy: ['#6f3a9e', '#241033', '#9a5fd0'],
+  goods: ['#2f5fa8', '#101f38', '#4b8ada'],
+  hardware: ['#4a5768', '#1a1f27', '#6d7d92'],
 }

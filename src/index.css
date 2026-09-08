@@ -64,14 +64,23 @@
 }
 
 :root[data-theme='dark'] {
-  --color-ink: #08090a;
-  --color-surface: #101216;
-  --color-surface-2: #171a1f;
-  --color-line: #23272e;
-  --color-line-soft: #1a1d23;
+  /*
+   * A lifted ramp. The previous one put ink at #08090a and surface at #101216,
+   * a 1.06 contrast step — the panels did not read as panels, the whole page
+   * read as one dark smear. Each layer now separates by ~1.16, which is enough
+   * to see a card without turning the page grey.
+   *
+   * muted and faint were raised to match: on the lighter surface they fell to
+   * 3.75, under the 4.5 floor R5.2 sets.
+   */
+  --color-ink: #0d0f13;
+  --color-surface: #1a1f27;
+  --color-surface-2: #252b36;
+  --color-line: #39414f;
+  --color-line-soft: #2b323e;
   --color-fg: #f1f3f6;
-  --color-muted: #8b929d;
-  --color-faint: #7b8490;
+  --color-muted: #9aa1ac;
+  --color-faint: #8d95a1;
 
   --color-accent: #f1f3f6;
   --color-accent-dim: #cfd4dc;

@@ -60,7 +60,7 @@ function CategoryPlate({ category, now }: { category: Category; now: number }) {
   return (
     <div className="relative overflow-hidden border border-line bg-surface">
       <div
-        className="pointer-events-none absolute inset-0 opacity-45 blur-2xl"
+        className="pointer-events-none absolute inset-0 opacity-[0.22] blur-3xl"
         aria-hidden="true"
         style={{
           background: `radial-gradient(60% 70% at 18% 22%, ${a} 0%, transparent 70%),
@@ -119,7 +119,7 @@ export function PortalPage() {
         nobody else has — a glow or an aurora is available to every site on the
         internet, which is exactly why they stopped reading as a choice.
       */}
-      <section className="relative overflow-hidden border border-fg/20 bg-gradient-to-br from-fg/5 via-surface to-surface p-6 md:p-8">
+      <section className="relative mt-6 overflow-hidden border border-fg/20 bg-gradient-to-br from-fg/5 via-surface to-surface p-6 md:mt-8 md:p-8">
         <div className="relative max-w-2xl">
           <h1 className="shimmer w-fit whitespace-nowrap text-[12px] font-bold tracking-tight text-fg">
             {t('heroTitle')}
@@ -168,7 +168,7 @@ export function PortalPage() {
         </div>
       )}
 
-      <div className="grid items-start gap-3 lg:grid-cols-2">
+      <div className="mt-4 grid items-start gap-4 md:mt-6 lg:grid-cols-2">
         {CATEGORIES.map((category) => (
           <CategoryPlate key={category} category={category} now={now} />
         ))}

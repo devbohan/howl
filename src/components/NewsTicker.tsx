@@ -110,7 +110,9 @@ export function NewsTicker({ category, compact = false }: { category: Category; 
       </div>
 
       {/* Four 36px rows in view; the rest arrive as it scrolls. */}
-      <VerticalMarquee label={t('newsLabel')} className="h-36">
+      {/* A cap, not a fixed height: a two-item panel should be two items tall,
+          otherwise every plate in a grid is as tall as the busiest one. */}
+      <VerticalMarquee label={t('newsLabel')} className={compact ? 'max-h-[108px]' : 'max-h-36'}>
         {ranked.map(({ item }, i) => (
           <Row key={item.id} item={item} now={now} hot={i < HOT_ROWS} />
         ))}
