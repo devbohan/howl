@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Aurora, Spotlight } from '../components/ui/Spotlight'
+import { Logo } from '../components/Logo'
 import { DROPS } from '../data/mock'
 import { useT } from '../lib/i18n'
 import { CATEGORIES, CATEGORY_KEY } from '../lib/labels'
@@ -88,45 +88,41 @@ export function PortalPage() {
   return (
     <div className="mx-auto max-w-3xl px-4">
       {/*
-        The wash sits behind the hero and never over the copy — contrast is
-        still decided by the page background, which is what keeps the axe pass
-        green in both themes.
+        Same treatment as the VIP panel: a bordered plate with the mark itself
+        watermarked into the corner. That mark is the one piece of this design
+        nobody else has — a glow or an aurora is available to every site on the
+        internet, which is exactly why they stopped reading as a choice.
       */}
-      {/* overflow-hidden is load-bearing: the spotlight is wider than the
-          viewport by design, and without clipping it widens the document. */}
-      <section className="relative overflow-hidden pt-10 pb-6 md:pt-12 md:pb-7">
-        <Aurora className="-z-10" />
-        <Spotlight className="-top-40 left-0 -z-10 text-fg md:-top-20 md:left-60" />
-        {/*
-          Deliberately the same size as the rest of the page. The headline gets
-          its weight from the shimmer travelling across it, not from scale —
-          which also means it never wraps in any of the four languages.
-        */}
-        {/* w-fit so the gradient box matches the text, not the column — otherwise
-            the streak spends most of its travel over empty space. */}
-        <h1 className="shimmer w-fit whitespace-nowrap text-[12px] font-bold tracking-tight text-fg">
-          {t('heroTitle')}
-        </h1>
-        {/* Doubles as the legend for the per-category columns below. */}
-        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] text-muted">
-          <span className="font-mono tabular-nums">
-            <span data-stat="tracked-total">{DROPS.length}</span> {t('portalTracked')}
-          </span>
-          <span className="inline-flex items-center gap-1.5 text-live-fg">
-            <span className="live-dot h-1.5 w-1.5 rounded-full bg-live-fg" />
-            <span className="font-mono tabular-nums" data-stat="live-total">
-              {live}
-            </span>{' '}
-            {t('heroLive')}
-          </span>
-          <span className="inline-flex items-center gap-1.5 text-easy">
-            <span className="h-1.5 w-1.5 rounded-full bg-easy" />
-            <span className="font-mono tabular-nums" data-stat="stock-total">
-              {inStock}
-            </span>{' '}
-            {t('cdInStock')}
-          </span>
+      <section className="relative overflow-hidden border border-fg/20 bg-gradient-to-br from-fg/5 via-surface to-surface p-6 md:p-8">
+        <div className="relative max-w-2xl">
+          <h1 className="shimmer w-fit whitespace-nowrap text-[12px] font-bold tracking-tight text-fg">
+            {t('heroTitle')}
+          </h1>
+          {/* Doubles as the legend for the per-category columns below. */}
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] text-muted">
+            <span className="font-mono tabular-nums">
+              <span data-stat="tracked-total">{DROPS.length}</span> {t('portalTracked')}
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-live-fg">
+              <span className="live-dot h-1.5 w-1.5 rounded-full bg-live-fg" />
+              <span className="font-mono tabular-nums" data-stat="live-total">
+                {live}
+              </span>{' '}
+              {t('heroLive')}
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-easy">
+              <span className="h-1.5 w-1.5 rounded-full bg-easy" />
+              <span className="font-mono tabular-nums" data-stat="stock-total">
+                {inStock}
+              </span>{' '}
+              {t('cdInStock')}
+            </span>
+          </div>
         </div>
+        {/* Sized to the plate, not to the page: the hero panel is short, and a
+            mark taller than its container reads as a mistake rather than a
+            watermark. */}
+        <Logo className="pointer-events-none absolute -right-6 top-1/2 h-24 w-auto -translate-y-1/2 text-fg opacity-[0.07] sm:h-28" />
       </section>
 
       {/*
