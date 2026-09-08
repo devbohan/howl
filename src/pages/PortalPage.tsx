@@ -58,7 +58,7 @@ function CategoryPlate({ category, now }: { category: Category; now: number }) {
   const [a, b, c] = CATEGORY_FIELD[category]
 
   return (
-    <div className="relative overflow-hidden border border-line bg-surface">
+    <div className="relative flex h-full flex-col overflow-hidden border border-line bg-surface">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.22] blur-3xl"
         aria-hidden="true"
@@ -96,8 +96,11 @@ function CategoryPlate({ category, now }: { category: Category; now: number }) {
         </p>
       </Link>
 
-      {/* The same ticker as the category page — it hides itself when empty. */}
-      <div className="relative border-t border-line-soft">
+      {/* The same ticker as the category page — it hides itself when empty.
+          flex-1 hands it the slack so plates in a row end level without
+          leaving a dead gap under the shorter one. min-h-0 is what lets it
+          shrink inside the flex column. */}
+      <div className="relative mt-auto min-h-0 flex-1 border-t border-line-soft">
         <NewsTicker category={category} compact />
       </div>
     </div>
@@ -168,7 +171,7 @@ export function PortalPage() {
         </div>
       )}
 
-      <div className="mt-4 grid items-start gap-4 md:mt-6 lg:grid-cols-2">
+      <div className="mt-4 grid gap-4 md:mt-6 lg:grid-cols-2">
         {CATEGORIES.map((category) => (
           <CategoryPlate key={category} category={category} now={now} />
         ))}

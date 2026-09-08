@@ -51,7 +51,7 @@ export function Tilt3D({
         onMouseMove={tilt}
         onMouseEnter={() => !reduced && setActive(true)}
         onMouseLeave={reset}
-        className={cn('tilt-3d', active && 'is-tilting')}
+        className={cn('tilt-3d h-full', active && 'is-tilting')}
       >
         {children}
       </div>

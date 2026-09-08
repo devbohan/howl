@@ -95,3 +95,32 @@ describe('DropCard', () => {
     expect(screen.getByText('FREE')).toBeInTheDocument()
   })
 })
+
+describe('cards line up in a grid', () => {
+  it('reserves two title lines, so short and long titles align the same', () => {
+    const { container } = renderApp(<DropCard drop={drop({ title: { en: 'Short' } })} now={NOW} currency="JPY" />)
+    // Without the reserve, a one-line title pulls the badges and the footer up
+    // and the row ends up ragged.
+    expect(container.querySelector('h3')?.className).toContain('min-h-')
+  })
+
+  it('reserves the badge row and the countdown label', () => {
+    const { container } = renderApp(<DropCard drop={drop()} now={NOW} currency="JPY" />)
+    const reserved = [...container.querySelectorAll('[class*="min-h-"]')]
+    // Title, badge row, countdown column: the three blocks whose height varies
+    // with content and would otherwise decide the row height.
+    expect(reserved.length).toBeGreaterThanOrEqual(3)
+  })
+
+  it('passes the row height down instead of collapsing to content', () => {
+    const { container } = renderApp(<DropCard drop={drop()} now={NOW} currency="JPY" />)
+    expect(container.querySelector('.tilt-3d-scene')?.className).toContain('h-full')
+    expect(container.querySelector('.tilt-3d')?.className).toContain('h-full')
+    expect(container.querySelector('.glow-card')?.className).toContain('h-full')
+  })
+
+  it('has a floor, for a group that holds only one card', () => {
+    const { container } = renderApp(<DropCard drop={drop()} now={NOW} currency="JPY" />)
+    expect(container.querySelector('.glow-card')?.className).toMatch(/min-h-\[/)
+  })
+})

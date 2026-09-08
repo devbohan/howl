@@ -16,15 +16,21 @@ export function DropCard({ drop, now, currency }: { drop: Drop; now: number; cur
   const dim = state.phase === 'ended'
   const offer = state.phase === 'in-stock' ? bestOffer(drop) : null
 
+  // A grid row stretches its items, but only if every wrapper passes the
+  // height on. Without h-full at each level the card collapses to its content
+  // and the row ends up ragged.
   return (
-    <Tilt3D>
+    <Tilt3D className="h-full">
       <GlowCard
         as="div"
-      className={`group rounded-xl border border-line bg-surface transition hover:border-faint hover:-translate-y-0.5 ${
-        dim ? 'opacity-55' : ''
-      }`}
+        // A floor as well as a stretch: rows align on their own, but a group
+        // holding a single card has nothing to align against, and those came
+        // out a few pixels shorter than every other card on the page.
+        className={`group flex h-full min-h-[22.6rem] flex-col rounded-xl border border-line bg-surface transition hover:border-faint hover:-translate-y-0.5 ${
+          dim ? 'opacity-55' : ''
+        }`}
     >
-      <Link to={`/${locale}/drop/${drop.slug}`} className="flex flex-col">
+      <Link to={`/${locale}/drop/${drop.slug}`} className="flex flex-1 flex-col">
       {/* Product photography goes here; until then, just the gradient. */}
       <div
         className="relative h-36 overflow-hidden"
@@ -64,9 +70,16 @@ export function DropCard({ drop, now, currency }: { drop: Drop; now: number; cur
           <span>{t(CATEGORY_KEY[drop.category])}</span>
         </div>
 
-        <h3 className="text-[15px] font-semibold leading-snug text-fg line-clamp-2">{tl(drop.title)}</h3>
+                {/* Two lines are reserved whether or not the title needs them, so the
+            badges and the footer sit on the same line across the whole grid. */}
+        <h3 className="line-clamp-2 min-h-[2.75em] text-[15px] font-semibold leading-snug text-fg">
+          {tl(drop.title)}
+        </h3>
 
-        <div className="flex flex-wrap items-center gap-1.5">
+        {/* Reserved like the title: a long mechanic label wraps to a second
+            line on some cards and not others, which was the last thing making
+            rows uneven. */}
+        <div className="flex min-h-[1.9rem] flex-wrap items-center gap-1.5">
           <span className="rounded border border-line bg-surface-2 px-2 py-0.5 text-[11px] text-muted">
             {t(MECHANIC_KEY[drop.mechanic])}
           </span>
@@ -74,7 +87,9 @@ export function DropCard({ drop, now, currency }: { drop: Drop; now: number; cur
         </div>
 
         <div className="mt-auto flex items-end justify-between gap-3 border-t border-line-soft pt-3">
-          <div className="flex flex-col gap-0.5">
+          {/* Reserved: an ended card has no "closes in" label, and losing that
+              line is what made those cards ten pixels shorter than the rest. */}
+          <div className="flex min-h-[2.6rem] flex-col justify-end gap-0.5">
             <CountdownLabel state={state} />
             <Countdown state={state} />
           </div>
